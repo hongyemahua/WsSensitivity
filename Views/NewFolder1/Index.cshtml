@@ -1,0 +1,313 @@
+﻿@if (Session["Admin"] == null)
+{
+    <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
+}
+@{
+    var name = Session["Admin"] == null ? string.Empty : ((WsSensitivity.Models.Admin)Session["Admin"]).name;
+    var limit = Session["limit"] == null ? string.Empty : Session["limit"];
+    var id = Session["Admin"] == null ? 0 : ((WsSensitivity.Models.Admin)Session["Admin"]).id;
+    string[] sArray = new string[5];
+    if (Session["limit"] == null)
+    {
+        string str1 = "close-close-close-close-close-close";
+        sArray = str1.Split('-');
+    }
+    else
+    {
+        string str = limit.ToString();
+        sArray = str.Split('-');
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>感度数据分析</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
+</head>
+<body class="layui-layout-body">
+    <div id="LAY_app">
+        <div class="layui-layout layui-layout-admin">
+            <div class="layui-header">
+                <!-- 头部区域 -->
+                <ul class="layui-nav layui-layout-left">
+                    <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                            <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="HomePage/Index" target="_blank" title="前台">
+                            <i class="layui-icon layui-icon-website"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                            <i class="layui-icon layui-icon-refresh-3"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                    <!--主题设置-->
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="theme">
+                            <i class="layui-icon layui-icon-theme"></i>
+                        </a>
+                    </li>
+                    <!--全屏-->
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="fullscreen">
+                            <i class="layui-icon layui-icon-screen-full"></i>
+                        </a>
+                    </li>
+                    <!--在线管理员-->
+                    <li class="layui-nav-item" lay-unselect style="margin-right:15px">
+                        <a href="javascript:;">
+                            <cite>@name</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a lay-href="@Url.Action("MyInfo","MySetting")">基本资料</a></dd>
+                            <dd><a lay-href="@Url.Action("PassWord","MySetting")">修改密码</a></dd>
+                            <hr>
+                            <dd><a href="@Url.Action("AdminLoginoff","AdminHome")">退出</a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+            </div>
+
+            <!-- 侧边菜单 -->
+            <div class="layui-side layui-side-menu">
+                <div class="layui-side-scroll">
+                    <div class="layui-logo" lay-href="@Url.Action("HomePage","AdminHome")">
+                        <span>感度数据分析</span>
+                    </div>
+                    <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+
+                        <li data-name="home" class="layui-nav-item layui-nav-itemed">
+                            <a href="javascript:;" lay-href="@Url.Action("HomePage","AdminHome")" lay-tips="主页" lay-direction="2">
+                                <i class="layui-icon layui-icon-home"></i>
+                                <cite>主页</cite>
+                            </a>
+                        </li>
+
+                        @if (sArray[0] != "close")
+                        {
+                            <li data-name="admin" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="管理员" lay-direction="2">
+                                    <i class="layui-icon layui-icon-user"></i>
+                                    <cite>管理员</cite>
+                                </a>
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a lay-href="@Url.Action("AdminList","Admin")">后台管理员</a>
+                                    </dd>
+                                    <dd>
+                                        <a lay-href="@Url.Action("RoleList","Role")">角色管理</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (sArray[1] != "close")
+                        {
+                            <li data-name="admin" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="兰利法" lay-direction="2">
+                                    <i class="layui-icon layui-icon-user"></i>
+                                    <cite>兰利法</cite>
+                                </a>
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a lay-href="@Url.Action("LangleyExperiment","Langley")" class="Lang_click" data-type="notice">兰利法实验</a>
+                                    </dd>
+                                    <dd>
+                                        <a lay-href="@Url.Action("LangleyQuery","Langley")">兰利法查询</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (sArray[2] != "close")
+                        {
+                            <li data-name="mysetting" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="升降法" lay-direction="2">
+                                    <i class="layui-icon layui-icon-username"></i>
+                                    <cite>升降法</cite>
+                                </a>
+
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a lay-href="#">升降法实验</a>
+                                    </dd>
+                                    <dd>
+                                        <a lay-href="#">升降法查询</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (sArray[3] != "close")
+                        {
+                            <li data-name="mysetting" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="D优化" lay-direction="2">
+                                    <i class="layui-icon layui-icon-username"></i>
+                                    <cite>D优化</cite>
+                                </a>
+
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a lay-href="#">D优化实验</a>
+                                    </dd>
+                                    <dd>
+                                        <a lay-href="#">D优化查询</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (sArray[4] != "close")
+                        {
+                            <li data-name="mysetting" class="layui-nav-item">
+                                <a href="javascript:;" lay-tips="我的设置" lay-direction="2">
+                                    <i class="layui-icon layui-icon-username"></i>
+                                    <cite>我的设置</cite>
+                                </a>
+
+                                <dl class="layui-nav-child">
+                                    <dd>
+                                        <a lay-href="@Url.Action("MyInfo","MySetting")">基本资料</a>
+                                    </dd>
+                                    <dd>
+                                        <a lay-href="@Url.Action("PassWord","MySetting")">修改密码</a>
+                                    </dd>
+                                </dl>
+                            </li>
+                        }
+                        @if (sArray[5] != "close")
+                        {
+                            <li data-name="potion" class="layui-nav-item">
+                                <a href="javascript:;" lay-href="#" lay-tips="关于" lay-direction="2">
+                                    <i class="layui-icon layui-icon-link"></i>
+                                    <cite>关于</cite>
+                                </a>
+                            </li>
+                        }
+
+                        <li data-name="get" class="layui-nav-item">
+                            <a href="javascript:;" lay-href="@Url.Action("PotionList","Potion")" lay-tips="退出" lay-direction="2">
+                                <i class="layui-icon layui-icon-auz"></i>
+                                <cite>退出</cite>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 页面标签 -->
+            <div class="layadmin-pagetabs" id="LAY_app_tabs">
+                <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                    <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                        <li class="layui-nav-item" lay-unselect>
+                            <a href="javascript:;"></a>
+                            <dl class="layui-nav-child layui-anim-fadein">
+                                <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                                <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                                <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                    <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                        <li lay-id="@Url.Action("HomePage","AdminHome")" lay-attr="@Url.Action("HomePage","AdminHome")" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <!-- 主体内容 -->
+            <div class="layui-body" id="LAY_app_body">
+                <div class="layadmin-tabsbody-item layui-show">
+                    <iframe src="@Url.Action("HomePage","AdminHome")" frameborder="0" class="layadmin-iframe"></iframe>
+                </div>
+            </div>
+
+            <!-- 辅助元素，一般用于移动设备下遮罩 -->
+            <div class="layadmin-body-shade" layadmin-event="shade"></div>
+        </div>
+    </div>
+
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script>
+       layui.config({
+            base: '../Static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index','layer'], function () { //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+            var active = {
+                notice: function () {
+                    //示范一个公告层
+                    var index=layer.open({
+                        type: 2
+                        , title: "兰利法参数设置" //不显示标题栏
+                        , area: ['700px','900px']
+                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        , content: "@Url.Action("LanglieParameterSettings", "Langley")"
+                        ,btnAlign:'c'
+                        , btn: '确定'
+                        , anim: 1
+                        ,closeBtn: 0
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'submit_Btn'
+                                , submit = layero.find('iframe').contents().find("#" + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                var role = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: role,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            layer.msg('设置成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                             //关闭弹层
+                                            layer.close(index);
+                                        }
+                                    }
+                                });
+                                table.reload('role_list');
+
+
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                }
+            }
+            $('.Lang_click').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+

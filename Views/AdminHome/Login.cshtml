@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>登入 - 感度实验数据综合</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
+    <link href="~/Static/layui/style/login.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+
+        <div class="layadmin-user-login-main">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>感度实验数据综合</h2>
+                <h2>分析软件</h2>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+                    <input type="text" name="name" id="name" lay-verify="required" placeholder="用户名" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                    <input type="password" name="pass" id="pass" lay-verify="required" placeholder="密码" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                            <input type="text" name="imgVercode" id="imgVercode" lay-verify="required"  autocomplete="off" placeholder="图形验证码" class="layui-input">
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 10px;">
+                                <div id="get-vercode"  class="login-codeimg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="login_submit">登 入</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-trans layadmin-user-login-footer">
+            <p>陕西应用物理化学研究所</p>
+            <p>火工品安全性可靠性技术国防科技重点实验室</p>
+        </div>
+
+    </div>
+
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script src="~/Static/layui/lib/ImgCodeVerify.js"></script>
+    <script>
+        layui.config({
+            base: '../Static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'login_validation'], function () {
+            var $ = layui.$
+                , setter = layui.setter
+                , admin = layui.admin
+                , form = layui.form
+                , router = layui.router()
+                , search = router.search;
+
+            form.render();
+
+            //图形验证
+            var verifyCode = new GVerify("get-vercode");
+            layui.use(['form', 'jquery'], function () {
+                var form = layui.form,
+                    $ = layui.$;
+
+            });
+
+            //提交
+            form.on('submit(login_submit)', function (obj) {
+                var res = verifyCode.validate($('#imgVercode').val());
+                if (res) {
+                    var name = document.getElementById("name").value;
+                    var pass = document.getElementById("pass").value;
+                    //提交 Ajax 成功后，静态更新表格中的数据
+                    $.ajax({
+                        type: "post",
+                        url: '@Url.Action("AdminLogin","AdminHome")',
+                        datatype: "json",
+                        contenttype: "application/json; charset=utf-8",
+                        data: {
+                            "name": name,
+                            "pass": pass,
+                        },
+                        async: false, 
+                        success: function (data) {
+                            if (data) {
+                                //登入成功的提示与跳转
+                                layer.msg('登入成功', {
+                                    offset: '15px'
+                                    , icon: 1
+                                    , time: 1000
+                                }, function () {
+                                    location.href = '@Url.Action("Index","NewFolder1")'; //后台主页
+                                });
+                            } else {
+                                layer.msg('登入失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                                verifyCode.refresh();
+                            }
+                        }                                   
+                    });
+                } else {
+                    layer.msg('验证码错误', {
+                        icon: 2,
+                        shift: 6,  //震动效果
+                        time: 1000  //1秒关闭
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

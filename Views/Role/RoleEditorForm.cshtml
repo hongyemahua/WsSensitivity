@@ -1,0 +1,63 @@
+﻿@if (Session["Admin"] == null)
+{
+    <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑角色</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="layui-form" lay-filter="layuiadmin-form-role" id="layuiadmin-form-role" style="padding: 20px 30px 0 0;">
+        <input type="hidden" name="id" id="id">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <input type="text" name="rolename" id="rolename" lay-verify="rolename" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限范围</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="admin" id="admin" value="admin" lay-skin="primary" title="管理员">
+                <input type="checkbox" name="langley" id="langley" value="langley" lay-skin="primary" title="兰利法">
+                <input type="checkbox" name="liftingMethod" id="liftingMethod" value="liftingMethod" lay-skin="primary" title="升降法">
+                <input type="checkbox" name="Doptimize" id="Doptimize" value="Doptimize" lay-skin="primary" title="D优化">
+                <input type="checkbox" name="mysetting" id="mysetting" value="mysetting" lay-skin="primary" title="我的设置">
+                <input type="checkbox" name="about" id="about" value="about" lay-skin="primary" title="关于">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">具体描述</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="descr" id="descr" lay-verify="required" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-hide">
+            <button class="layui-btn" lay-submit lay-filter="role_editor_submit" id="role_editor_submit">提交</button>
+        </div>
+    </div>
+
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'role_validation'], function () {
+            var $ = layui.$
+                , form = layui.form;
+        })
+    </script>
+</body>
+</html>

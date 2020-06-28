@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>药剂查询中心</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/static/layui/style/admin.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space5">
+            <div class="layui-col-sm6 layui-col-md12">
+
+                <div class="layui-card">
+                    <div style="text-align:center;">
+                        <img src="~/static/image/index_logo.png" style="height:58px;" />
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <ul class="layui-nav layui-bg-blue">
+                            <li class="layui-nav-item">
+                                <div class="layui-inline">
+                                    <input type="text" id="querystring" name="querystring" autocomplete="off" class="layui-input">
+                                </div>
+                                <button class="layui-btn" lay-filter="LAY-user-front-search" id="query">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                </button>
+                            </li>
+                            <li class="layui-nav-item" style="float:right;"><a target="_blank" href="@Url.Action("Login","AdminHome")">登入后台</a></li>
+                            <li class="layui-nav-item" style="float:right;"><a href="">版本信息</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--数据表格-->
+            <div class="layui-col-md12">
+                <div class="layui-card" style="width:auto;height:auto">
+                    <div class="layui-fluid">
+                        <div class="layui-card-body">
+                            <table class="layui-hide" id="potion_list" lay-filter="potion_list"></table>
+                            <script type="text/html" id="imgTpl">
+                                <img style="display: inline-block; width: 100%; height: 100%;" src={{ d.fzs }}>
+                            </script>
+                            <script type="text/html" id="table-useradmin-webuser">
+                                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>详情</a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/static/layui/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'index_table'], function () {
+            var $ = layui.$
+                , table = layui.table;
+            /**简单查询*/
+            $("#query").on("click", function () {
+                var querystring = $("#querystring").val();
+                table.reload('potion_list', {
+                    url: "@Url.Action("Query","Potion")"
+                    , method: "post"
+                    , where: {"querystring": querystring}
+                    , contentType: 'application/json'
+                    , parseData: function (res) { //res 即为原始返回的数据
+                        if (this.page.curr) {
+                            var result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                        } else {
+                            var result = res.data.slice(0, this.limit);
+                        }
+                        return {
+                            "code": res.code,
+                            "msg": "",
+                            "count": res.data.length,
+                            "data": result
+                        };
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            })
+
+            $("#querystring").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    document.getElementById("query").click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
