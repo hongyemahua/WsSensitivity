@@ -147,6 +147,7 @@
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Langlie.cs" />
     <Compile Include="Models\Langley\AlgorithmReconstruct.cs" />
     <Compile Include="Models\Class_区间估计.cs" />
     <Compile Include="Models\DB\IDbDrives\IDbDrive.cs" />
@@ -175,7 +176,6 @@
     <Content Include="Static\image\Product_img4.jpg" />
     <Content Include="Static\image\true.jpg" />
     <Content Include="Static\jquery-3.3.1.min.js" />
-    <Content Include="Static\lanlay.js" />
     <Content Include="Static\layui\config.js" />
     <Content Include="Static\layui\json\console\prograss.js" />
     <Content Include="Static\layui\json\console\top-card.js" />

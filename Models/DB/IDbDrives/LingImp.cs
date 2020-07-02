@@ -201,7 +201,70 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
+        public override List<LangleyExperimentTable> GetAllLangleyExperimentTables()
+        {
+            List<LangleyExperimentTable> lets = db.LangleyExperimentTable.ToList();
+            return lets;
+        }
 
+        public override bool Delete(LangleyExperimentTable let)
+        {
+            LangleyExperimentTable modle = db.LangleyExperimentTable.FirstOrDefault(m => m.let_Id == let.let_Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.LangleyExperimentTable.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override bool Update(LangleyExperimentTable let)
+        {
+            try
+            {
+                var entry = db.Set<LangleyExperimentTable>().Find(let.let_Id);
+                if (entry != null)
+                {
+                    db.Entry<LangleyExperimentTable>(entry).State = EntityState.Detached; //这个是在同一个上下文能修改的关键
+                }
+                db.LangleyExperimentTable.Attach(let);
+                db.Entry(let).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override LangleyExperimentTable GetLangleyExperimentTable(int let_id)
+        {
+            LangleyExperimentTable let = db.LangleyExperimentTable.Where(m => m.let_Id == let_id).First();
+            return let;
+        }
+
+
+        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        {
+            List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
+            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime,m.let_ExperimentalDate)<= 0 && DateTime.Compare(endTime,m.let_ExperimentalDate) >= 0  ).ToList();
+            return lets;
+        }
+
+        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName)
+        {
+            List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
+            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName)).ToList();
+            return lets;
+        }
         #endregion
 
         #region 兰利数据表操作
@@ -225,6 +288,55 @@ namespace WsSensitivity.Models.IDbDrives
             ldts = db.LangleyDataTable.Where(m => m.ldt_ExperimentTableId == id).ToList();
             return ldts;
         }
+
+        public override bool UpDate(LangleyDataTable ldt)
+        {
+            try
+            {
+                var entry = db.Set<LangleyDataTable>().Find(ldt.ldt_Id);
+                if (entry != null)
+                {
+                    db.Entry<LangleyDataTable>(entry).State = EntityState.Detached; //这个是在同一个上下文能修改的关键
+                }
+                db.LangleyDataTable.Attach(ldt);
+                db.Entry(ldt).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override bool Delete(LangleyDataTable ldt)
+        {
+            LangleyDataTable modle = db.LangleyDataTable.FirstOrDefault(m => m.ldt_Id == ldt.ldt_Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.LangleyDataTable.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+      
+
+
+
+
+
+
+
+
         #endregion
 
     }

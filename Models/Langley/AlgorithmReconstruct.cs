@@ -50,6 +50,13 @@ namespace WsSensitivity.Models
                 outputParameters.μ0_final = StandardSelection.ProcessValue(outputParameters.μ0_final);
                 return outputParameters;
             }
+
+            public double MaxAndMinValue(double value) => pub_function.resolution_getReso(StandardSelection.ProcessValue(value), 0.000001);
+
+            public double Prec99(double μ0_final, double σ0_final) => pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) + 3.090232 * σ0_final), 0.000001);
+
+            public double Prec01(double μ0_final, double σ0_final) => pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) - 3.090232 * σ0_final), 0.000001);
+
             public List<IntervalEstimation> ResponseProbabilityIntervalEstimate(double[] x, int[] v, double reponseProbability, double confidenceLevel)
             {
                 List<IntervalEstimation> intervalEstimations = new List<IntervalEstimation>();
@@ -84,47 +91,45 @@ namespace WsSensitivity.Models
                 return intervalEstimations;
             }
 
-            public double ResponsePointCalculate(double fq, double favg, double fsigma) => StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + DistributionSelection.ResponsePointDistribution(fq, fsigma));
+            public double ResponsePointCalculate(double fq, double favg, double fsigma) => StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + (DistributionSelection.QnormAndQlogisDistribution(fq) * fsigma));
 
             public double ResponseProbabilityCalculate(double fq, double favg, double fsigma) => DistributionSelection.PointIntervalDistribution(StandardSelection.InverseProcessValue(fq), StandardSelection.InverseProcessValue(favg), fsigma);
             public IntervalEstimation SingleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(xArray, vArray, reponseProbability, 2 * confidenceLevel - 1);
             public IntervalEstimation DoubleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(xArray, vArray, reponseProbability, confidenceLevel);
 
-            public SideReturnData ViewData(double Y_Ceiling, double Y_LowerLimit, int Y_PartitionNumber, double ConfidenceLevel, double average, double variance, double[] xArray, int[] vArray)
+            public double CorrectionAlgorithm(double fsigma, int count) => DistributionSelection.CorrectionDistribution(count) * fsigma;
+
+            public SideReturnData BatchIntervalCalculate(double Y_Ceiling, double Y_LowerLimit, int Y_PartitionNumber, double ConfidenceLevel, double favg, double fsigma, double[] xArray, int[] vArray,int intervalChoose)
             {
                 SideReturnData sideReturnData = new SideReturnData();
-                double Y_ScaleLength = (pub_function.qnorm(Y_Ceiling) - pub_function.qnorm(Y_LowerLimit)) / Y_PartitionNumber;
+                double Y_ScaleLength = (DistributionSelection.QnormAndQlogisDistribution(Y_Ceiling) - DistributionSelection.QnormAndQlogisDistribution(Y_LowerLimit)) / Y_PartitionNumber;
                 sideReturnData.responseProbability = new double[Y_PartitionNumber + 1];
                 for (int i = 0; i <= Y_PartitionNumber; i++)
                 {
                     if (i == 0)
                         sideReturnData.responseProbability[i] = Y_LowerLimit;
                     else
-                        sideReturnData.responseProbability[i] = pub_function.pnorm(pub_function.qnorm(Y_LowerLimit) + i * Y_ScaleLength, 0, 1);
+                        sideReturnData.responseProbability[i] = DistributionSelection.PointIntervalDistribution(DistributionSelection.QnormAndQlogisDistribution(Y_LowerLimit) + i * Y_ScaleLength, 0, 1);
                 }
                 sideReturnData.Y_Ceilings = new double[sideReturnData.responseProbability.Length];
                 sideReturnData.Y_LowerLimits = new double[sideReturnData.responseProbability.Length];
                 sideReturnData.responsePoints = new double[sideReturnData.responseProbability.Length];
-                double favg = average;
-                double fsigma = variance;
+                
                 for (int i = 0; i < sideReturnData.responseProbability.Length; i++)
                 {
-                    var rt = DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
-                    ////sideReturnData = SideSelection.GetValue(rt, i, sideReturnData);
-                    //if ("单侧")
-                    //{
-                    //    var ie = SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
-                    //    sideReturnData.Y_LowerLimits[i] = ie.Confidence.Down;
-                    //    sideReturnData.Y_Ceilings[i] = ie.Confidence.Up;
-                    //}
-                    //else
-                    //{
-                    //    var ie = DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
-                    //    sideReturnData.Y_LowerLimits[i] = ie.Confidence.Down;
-                    //    sideReturnData.Y_Ceilings[i] = ie.Confidence.Up;
-                    //}
+                    IntervalEstimation ie = new IntervalEstimation();
+                    if (intervalChoose == 0)
+                    {
+                        ie = SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
+                    }
+                    else
+                    {
+                        ie = DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
+                    }
+                    sideReturnData.Y_LowerLimits[i] = ie.Confidence.Down;
+                    sideReturnData.Y_Ceilings[i] = ie.Confidence.Up;
                     double fq = sideReturnData.responseProbability[i];
-                    sideReturnData.responsePoints[i] = StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + pub_function.qnorm(fq) * fsigma);
+                    sideReturnData.responsePoints[i] = StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + (DistributionSelection.QnormAndQlogisDistribution(fq) * fsigma));
                 }
                 return sideReturnData;
             }

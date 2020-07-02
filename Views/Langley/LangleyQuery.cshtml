@@ -2,6 +2,11 @@
 {
     <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
 }
+
+@{ 
+    List<string> pn = (List<string>)ViewData["pn"];
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +27,15 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">产品名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                            @*<input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">*@
+                            <div class="layui-input-inline">
+                                <select name="modules" lay-verify="required" lay-search="">
+                                    @foreach (var p in pn)
+                                    { 
+                                    <option value="@p">@p</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -38,7 +51,7 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="langley_search">
+                        <button class="layui-btn layuiadmin-btn-langleyquery" lay-submit lay-filter="langley_search">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                         </button>
                     </div>
@@ -46,25 +59,26 @@
             </div>
 
             <div class="layui-card-body">
-                <table id="langley_list" lay-filter="langley_list"></table>
+                <table id="langley_list" lay-filter="langleylist"></table>
 
                 <script type="text/html" id="correct_state">
-                    {{#  if(d.correct == "是"){ }}
-                    <button class="layui-btn layui-btn-xs">是</button>
+                    {{#  if(d.Correction == "0"){ }}
+                    <button class="layui-btn layui-btn-xs">修正</button>
                     {{#  } else { }}
-                    <button class="layui-btn layui-btn-primary layui-btn-xs">否</button>
+                    <button class="layui-btn layui-btn-primary layui-btn-xs">不修正</button>
                     {{#  } }}
                 </script>
 
                 <script type="text/html" id="reverse_state">
-                    {{#  if(d.reverse == "是"){ }}
-                    <button class="layui-btn layui-btn-xs">是</button>
+                    {{#  if(d.FlipTheResponse == "0"){ }}
+                    <button class="layui-btn layui-btn-xs">不翻转</button>
                     {{#  } else { }}
-                    <button class="layui-btn layui-btn-primary layui-btn-xs">否</button>
+                    <button class="layui-btn layui-btn-primary layui-btn-xs">翻转</button>
                     {{#  } }}
                 </script>
 
                 <script type="text/html" id="table-langleyquery-tool">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
                 </script>
 
@@ -74,7 +88,7 @@
 
     <script src="~/Static/layui/layui/layui.js"></script>
     <script>
-        layui.config({
+       layui.config({
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
@@ -96,12 +110,14 @@
             //监听搜索
             form.on('submit(langley_search)', function (data) {
                 var field = data.field;
-                var name =field.name;
+                var modules = field.modules;
+                var start = field.start;
+                var stop = field.stop;
                 //执行重载
                 table.reload('langley_list', {
-                    url: "@Url.Action("Admin_query","Admin")"
+                    url: "@Url.Action("Langley_query", "Langley")"
                     , method: "post"
-                    , where: {"name": name}
+                    , where: { "productName": modules, "startTime": start, "endTime": stop}
                     , contentType: 'application/json'
                     , parseData: function (res) { //res 即为原始返回的数据
                         if (this.page.curr) {

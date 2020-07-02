@@ -28,8 +28,6 @@ namespace WsSensitivity.Models
         public int let_StandardState { get; set; }
         [DisplayName("标准差修正")]
         public int let_Correction { get; set; }
-        [DisplayName("数据数量")]
-        public int let_NumberOfData { get; set; }
         [DisplayName("翻转响应")]
         public int let_FlipTheResponse { get; set; }
         [DisplayName("技术条件")]

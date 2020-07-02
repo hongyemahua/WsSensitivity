@@ -28,9 +28,9 @@ namespace WsSensitivity.Models
         public double ldt_MeanVariance { get; set; }
         [DisplayName("标准差方差")]
         public double ldt_StandardDeviationVariance { get; set; }
+        [DisplayName("备注")]
+        public double ldt_Covmusigma { get; set; }
         [DisplayName("备注1")]
         public string ldt_Note1 { get; set; }
-        [DisplayName("备注2")]
-        public string ldt_Note2 { get; set; }
     }
 }

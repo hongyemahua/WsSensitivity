@@ -11,12 +11,18 @@ namespace WsSensitivity.Models
         public abstract OutputParameters DotDistribution(double[] xArray, int[] vArray);
         public abstract IntervalEstimation IntervalDistribution(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel);
         public abstract double PointIntervalDistribution(double fq, double favg, double fsigma);
-        public abstract double ResponsePointDistribution(double fq, double fsigma);
+        public abstract double CorrectionDistribution(int count);
+        public abstract double QnormAndQlogisDistribution(double value);
     }
 
     public class Normal : LangleyDistributionSelection
     {
         public LangleyMethodStandardSelection Standard { get; set; }
+
+        public override double CorrectionDistribution(int count)
+        {
+            return Langlie.get_langlie_sigma_norm_correct(count);
+        }
 
         public override OutputParameters DotDistribution(double[] xArray, int[] vArray)
         {
@@ -46,15 +52,20 @@ namespace WsSensitivity.Models
             return pub_function.pnorm(fq, favg, fsigma);
         }
 
-        public override double ResponsePointDistribution(double fq, double fsigma)
+        public override double QnormAndQlogisDistribution(double value)
         {
-            return pub_function.qnorm(fq) * fsigma;
+            return pub_function.qnorm(value);
         }
     }
 
     public class Logistic : LangleyDistributionSelection
     {
         public LangleyMethodStandardSelection Standard { get; set; }
+
+        public override double CorrectionDistribution(int count)
+        {
+            return Langlie.get_langlie_sigma_logis_correct(count);
+        }
 
         public override OutputParameters DotDistribution(double[] xArray, int[] vArray)
         {
@@ -83,9 +94,9 @@ namespace WsSensitivity.Models
             return pub_function.plogis(fq, favg, fsigma);
         }
 
-        public override double ResponsePointDistribution(double fq, double fsigma)
+        public override double QnormAndQlogisDistribution(double value)
         {
-            return pub_function.qlogis(fq) * fsigma;
+            return pub_function.qlogis(value);
         }
     }
 }

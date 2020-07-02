@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data;
 
 namespace WsSensitivity.Models.IDbDrives
 {
@@ -45,12 +46,28 @@ namespace WsSensitivity.Models.IDbDrives
         #region 兰利实验表操作
         public abstract bool Insert(LangleyExperimentTable let);
 
+        public abstract List<LangleyExperimentTable> GetAllLangleyExperimentTables();
+
+        public abstract LangleyExperimentTable GetLangleyExperimentTable(int id);
+
+        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime);
+
+        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName);
+
+        public abstract bool Delete(LangleyExperimentTable let);
+
+        public abstract bool Update(LangleyExperimentTable let);
+
         #endregion
 
         #region 兰利数据表操作
         public abstract bool Insert(LangleyDataTable ldt);
 
         public abstract List<LangleyDataTable> GetAllLangleyDataTable(int id);
+
+        public abstract bool UpDate(LangleyDataTable ldt);
+
+        public abstract bool Delete(LangleyDataTable ldt);
 
         #endregion
     }
