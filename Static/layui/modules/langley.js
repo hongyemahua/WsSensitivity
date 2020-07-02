@@ -19,7 +19,6 @@ layui.define(['table', 'form'], function (exports) {
         //, toolbar: 'default' 
        // , toolbar: '#toolbarDemo' 
         , cols: [[
-                
             { field: 'ldt_Number', width: 80, title: '编号', sort: true }
             , { field: 'ldt_StimulusQuantity', title: '刺激量' }
             , { field: 'ldt_Response', title: '响应', templet: '#response_state', minWidth: 80, align: 'center'}

@@ -47,6 +47,9 @@ namespace WsSensitivity.Controllers
         //兰利法分析参数设置
         public ActionResult ParameterSetting()
         {
+            var let = dbDrive.GetLangleyExperimentTable(let_id);
+            ViewData["ds"] = let.let_DistributionState;
+            ViewData["correction"] = let.let_Correction;
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace WsSensitivity.Controllers
         public ActionResult TechnicalConditions()
         {
             var let = dbDrive.GetLangleyExperimentTable(let_id);
-            string tc = let.let_TechnicalConditions;
+            ViewData["tc"]= let.let_TechnicalConditions;
             return View();
         }
 
@@ -149,14 +152,14 @@ namespace WsSensitivity.Controllers
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(let_id);
             return Json(dbDrive.Delete(ldts[ldts.Count]));
         }
-          
+
+        [HttpPost]
         //修改分析参数
         public JsonResult UpdateParameter()
         {
             var str = new StreamReader(Request.InputStream);
             var stream = str.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            js.Deserialize<LangleyExperimentTable>(stream);
             LangleyExperimentTable let = dbDrive.GetLangleyExperimentTable(let_id);
             let.let_DistributionState = js.Deserialize<LangleyExperimentTable>(stream).let_DistributionState;
             let.let_Correction = js.Deserialize<LangleyExperimentTable>(stream).let_Correction;
@@ -219,7 +222,6 @@ namespace WsSensitivity.Controllers
         {
             var lets = dbDrive.GetAllLangleyExperimentTables();
             List<string> productName = new List<string>();
-            List<string> pn = new List<string>();
             foreach (var let in lets)
             {
                 if (!productName.Contains(let.let_ProductName))
@@ -237,18 +239,18 @@ namespace WsSensitivity.Controllers
             {
                 DateTime st = Convert.ToDateTime(startTime);
                 DateTime et = Convert.ToDateTime(endTime);
-                lets = dbDrive.QueryLangleyExperimentTable(productName, st, et);
+                lets = dbDrive.QueryLangleyExperimentTable(productName, st, et.AddDays(1));
             }
             else
                 lets = dbDrive.QueryLangleyExperimentTable(productName);
-            return Json(new { code = 0, msg = "", count = lets.Count, data = lets }, JsonRequestBehavior.AllowGet);
+            return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         //获取全部let_id的兰利法表
-        public ActionResult GetAllLangleys(int id)
+        public ActionResult GetAllLangleys()
         {
-            List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(id);
+            List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(let_id);
             return Json(new { code = 0, msg = "", count = ldts.Count, data = ldts }, JsonRequestBehavior.AllowGet);
         }
 
@@ -256,8 +258,14 @@ namespace WsSensitivity.Controllers
         public ActionResult GetAllLangleysExperiment()
         {
             List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
-            List<Langley_list> langletlists = new List<Langley_list>(); 
-            for (int i = 0;i < lets.Count;i++)
+            
+            return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
+        }
+
+        private List<Langley_list> Langley_lists(List<LangleyExperimentTable> lets)
+        {
+            List<Langley_list> langletlists = new List<Langley_list>();
+            for (int i = 0; i < lets.Count; i++)
             {
                 Langley_list langley_List = new Langley_list();
                 langley_List.number = i + 1;
@@ -273,7 +281,7 @@ namespace WsSensitivity.Controllers
                 langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
                 langletlists.Add(langley_List);
             }
-            return Json(new { code = 0, msg = "", count = lets.Count, data = langletlists }, JsonRequestBehavior.AllowGet);
+            return langletlists;
         }
 
         private string DistributionState(int ds,int ss)

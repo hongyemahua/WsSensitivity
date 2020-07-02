@@ -35,10 +35,10 @@ layui.define(['table', 'form'], function(exports){
   });
   
     //监听工具条
-    table.on('tool(langley_list)', function (obj) {
+    table.on('tool(langleylist)', function (obj) {
         var data = obj.data;
         if (obj.event === 'delete') {  //删除
-            var massage = '确认删除管理员' + data.number + '么？'
+            var massage = '确认删除编号' + data.number + '么？'
             layer.confirm(massage, {
                 btn: ['确认', '取消'] //按钮
             }, function () {
@@ -68,12 +68,11 @@ layui.define(['table', 'form'], function(exports){
             });
         } else if (obj.event === 'edit') {     //编辑
             var tr = $(obj.tr);
-
             layer.open({
                 type: 2
                 , title: '编辑管理员'
-                , content: '../Admin/AdminEditorForm'
-                , area: ['500px', '450px']
+                , content: '../Langley/LangleyExperiment'
+                , area: ['90%', '85%']
                 , btn: ['确定', '取消']
                 , yes: function (index, layero) {
                     var iframeWindow = window['layui-layer-iframe' + index]
