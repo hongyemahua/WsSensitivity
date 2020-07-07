@@ -322,6 +322,7 @@
     <Content Include="Static\layui\lib\index.js" />
     <Content Include="Static\layui\lib\ImgCodeVerify.js" />
     <Content Include="Static\layui\lib\view.js" />
+    <Content Include="Static\layui\modules\langleyexperiment.js" />
     <Content Include="Static\layui\modules\langleyquery_table.js" />
     <Content Include="Static\layui\modules\index_table.js" />
     <Content Include="Static\layui\modules\langley.js" />
@@ -397,6 +398,7 @@
     <Content Include="Static\layui\layui\font\iconfont.woff" />
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
     <Content Include="Views\Langley\LanglieParameterSettings.cshtml" />
+    <Content Include="Views\Langley\LangleyExperimentEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

@@ -26,20 +26,35 @@ namespace WsSensitivity.Controllers
         public string ExperimentalDate;
         public int count;
     }
+
+    struct Langley
+    {
+        public int ldt_Id;
+        public int ldt_Number;
+        public double ldt_StimulusQuantity;
+        public int ldt_Response;
+        public double ldt_Mean;
+        public double ldt_StandardDeviation;
+        public double ldt_MeanVariance;
+        public double ldt_StandardDeviationVariance;
+        public double ldt_Covmusigma;
+        public double number;
+    }
     public class LangleyController : Controller
     {
         IDbDrive dbDrive = new LingImp();
-        private static double pow = 0;
-        private static int let_id = 1;
-        private static int distributionState = 0;
-        private static int standardState = 0;
         private static double[] xArray = { };
         private static int[] vArray = { };
-        private static double stimulusQuantityCeiling = 0;
-        private static double stimulusQuantityFloor = 0;
-        private static double precisionInstruments = 0;
-        //兰利法主页面
+
+        private static LangleyExperimentTable langlryExpTable = new LangleyExperimentTable();
+        private static List<LangleyDataTable> langleyDataTables = new List<LangleyDataTable>();
+        //兰利法主页面(有弹窗)
         public ActionResult LangleyExperiment()
+        {
+            return View();
+        }
+        //兰利法主页面(无弹窗)
+        public ActionResult LangleyExperimentEdit()
         {
             return View();
         }
@@ -47,7 +62,7 @@ namespace WsSensitivity.Controllers
         //兰利法分析参数设置
         public ActionResult ParameterSetting()
         {
-            var let = dbDrive.GetLangleyExperimentTable(let_id);
+            var let = dbDrive.GetLangleyExperimentTable(langlryExpTable.let_Id);
             ViewData["ds"] = let.let_DistributionState;
             ViewData["correction"] = let.let_Correction;
             return View();
@@ -56,7 +71,7 @@ namespace WsSensitivity.Controllers
         //技术条件
         public ActionResult TechnicalConditions()
         {
-            var let = dbDrive.GetLangleyExperimentTable(let_id);
+            var let = dbDrive.GetLangleyExperimentTable(langlryExpTable.let_Id);
             ViewData["tc"]= let.let_TechnicalConditions;
             return View();
         }
@@ -65,10 +80,9 @@ namespace WsSensitivity.Controllers
         //编辑技术条件
         public ActionResult TechnicalConditions_Update()
         {
-            var let = dbDrive.GetLangleyExperimentTable(let_id);
+            var let = dbDrive.GetLangleyExperimentTable(langlryExpTable.let_Id);
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
-            //string jsonText = stream;
             JavaScriptSerializer js = new JavaScriptSerializer();
             let.let_TechnicalConditions = js.Deserialize<LangleyExperimentTable>(stream).let_TechnicalConditions;
             return Json(dbDrive.Update(let));
@@ -76,21 +90,21 @@ namespace WsSensitivity.Controllers
 
         //增加数据
         [HttpPost]
-        public JsonResult InsertData(int response)
+        public ActionResult InsertData(int response)
         {
-            List<LangleyDataTable> ldts = new List<LangleyDataTable>();
-            LangleyDataTable ldt = new LangleyDataTable();
-            ldts = dbDrive.GetAllLangleyDataTable(let_id);
-
-            for (int i = 0; i<ldts.Count;i++)
+            langleyDataTables = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
+            xArray = new double[langleyDataTables.Count];
+            vArray = new int[langleyDataTables.Count];
+            for (int i = 0; i< langleyDataTables.Count;i++)
             {
-                xArray[i] = ldts[i].ldt_StimulusQuantity;
-                vArray[i] = ldts[i].ldt_Response;
+                xArray[i] = langleyDataTables[i].ldt_StimulusQuantity;
+                vArray[i] = langleyDataTables[i].ldt_Response;
             }
-            vArray[ldts.Count-1] = response;
-            var lr = SelectState(distributionState, standardState);
+            vArray[langleyDataTables.Count-1] = response;
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             var pointCalculateValue = lr.GetResult(xArray, vArray);
-            ldt = ldts[ldts.Count-1];
+            LangleyDataTable ldt = langleyDataTables[langleyDataTables.Count-1];
+            ldt.ldt_Response = response;
             ldt.ldt_Mean = pointCalculateValue.μ0_final;
             ldt.ldt_StandardDeviation = pointCalculateValue.σ0_final;
             ldt.ldt_MeanVariance = pointCalculateValue.varmu;
@@ -98,42 +112,46 @@ namespace WsSensitivity.Controllers
             ldt.ldt_Covmusigma = pointCalculateValue.covmusigma;
             dbDrive.UpDate(ldt);
             //增加一条新数据
-            double sq = SelectState(distributionState, standardState).CalculateStimulusQuantity(xArray, vArray, stimulusQuantityCeiling, stimulusQuantityFloor, precisionInstruments);
+            double sq =lr.CalculateStimulusQuantity(xArray, vArray, langlryExpTable.let_StimulusQuantityCeiling, langlryExpTable.let_StimulusQuantityFloor, langlryExpTable.let_PrecisionInstruments);
             return Json(dbDrive.Insert(LangleyDataTables(sq)));
         }
 
         //点计算
         [HttpPost]
-        public JsonResult PointCalculate()
+        public ActionResult PointCalculate()
         {
             List<LangleyDataTable> ldts = new List<LangleyDataTable>();
             LangleyDataTable ldt = new LangleyDataTable();
-            ldts = dbDrive.GetAllLangleyDataTable(let_id);
+            ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
+            xArray = new double[ldts.Count];
+            vArray = new int[ldts.Count];
             for (int i = 0; i < ldts.Count; i++)
             {
                 xArray[i] = ldts[i].ldt_StimulusQuantity;
                 vArray[i] = ldts[i].ldt_Response;
             }
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             var pointCalculateValue = lr.GetResult(xArray,vArray);
             ldt = ldts[ldts.Count-1];
             ldt.ldt_Mean = pointCalculateValue.μ0_final;
+            if (langlryExpTable.let_Correction == 0)
+                pointCalculateValue.σ0_final = lr.CorrectionAlgorithm(pointCalculateValue.σ0_final, ldts.Count);
             ldt.ldt_StandardDeviation = pointCalculateValue.σ0_final;
             ldt.ldt_MeanVariance = pointCalculateValue.varmu;
             ldt.ldt_StandardDeviationVariance = pointCalculateValue.varsigma;
             ldt.ldt_Covmusigma = pointCalculateValue.covmusigma;
             double maxX = lr.MaxAndMinValue(pointCalculateValue.Maxf);
             double minX = lr.MaxAndMinValue(pointCalculateValue.Mins);
-            double prec99 = lr.Prec99(pointCalculateValue.μ0_final,pointCalculateValue.σ0_final);
-            double prec01 = lr.Prec01(pointCalculateValue.μ0_final, pointCalculateValue.σ0_final);
-            return Json(dbDrive.UpDate(ldt));
+            string[] value = {lr.Prec99(pointCalculateValue.μ0_final, pointCalculateValue.σ0_final).ToString(), lr.Prec01(pointCalculateValue.μ0_final, pointCalculateValue.σ0_final).ToString() , ldt.ldt_Mean.ToString() ,   ldt.ldt_MeanVariance.ToString()};
+            dbDrive.UpDate(ldt);
+            return Json(value);
         }
 
         [HttpPost]
         //响应点计算
         public ActionResult ResponsePointCalculate(double fq,double favg,double fsigma)
         {
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             return Json(lr.ResponsePointCalculate(fq, favg, fsigma));
         }
 
@@ -141,16 +159,17 @@ namespace WsSensitivity.Controllers
         //响应概率计算
         public ActionResult ResponseProbabilityCalculate(double fq, double favg, double fsigma)
         {
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             return Json(lr.ResponseProbabilityCalculate(fq, favg, fsigma));
         }
 
         [HttpPost]
         //撤销
-        public ActionResult RevocationData()
+        public ActionResult RevocationData(int id)
         {
-            List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(let_id);
-            return Json(dbDrive.Delete(ldts[ldts.Count]));
+            LangleyDataTable langleyDataTable = new LangleyDataTable();
+            langleyDataTable.ldt_Id = id;
+            return Json(dbDrive.Delete(langleyDataTable));
         }
 
         [HttpPost]
@@ -160,7 +179,7 @@ namespace WsSensitivity.Controllers
             var str = new StreamReader(Request.InputStream);
             var stream = str.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            LangleyExperimentTable let = dbDrive.GetLangleyExperimentTable(let_id);
+            LangleyExperimentTable let = dbDrive.GetLangleyExperimentTable(langlryExpTable.let_Id);
             let.let_DistributionState = js.Deserialize<LangleyExperimentTable>(stream).let_DistributionState;
             let.let_Correction = js.Deserialize<LangleyExperimentTable>(stream).let_Correction;
             return Json(dbDrive.Update(let));
@@ -170,49 +189,27 @@ namespace WsSensitivity.Controllers
         [HttpPost]
         public ActionResult ResponseProbabilityIntervalEstimate(double reponseProbability, double confidenceLevel)
         {
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             var ies = lr.ResponseProbabilityIntervalEstimate(xArray,vArray, reponseProbability, confidenceLevel);
-            var 单侧响应点下限 =  ies[0].Mu.Down;
-            var 单侧响应点上限 = ies[0].Mu.Up;
-            var 单侧均值下限 = ies[0].Sigma.Down;
-            var 单侧均值上限 = ies[0].Sigma.Up;
-            var 单侧标准差下限 = ies[0].Confidence.Down;
-            var 单侧标准差上限 = ies[0].Confidence.Up;
-            var 双侧响应点下限 = ies[1].Mu.Down;
-            var 双侧响应点上限 = ies[1].Mu.Up;
-            var 双侧均值下限 = ies[1].Sigma.Down;
-            var 双侧均值上限 = ies[1].Sigma.Up;
-            var 双侧标准差下限 = ies[1].Confidence.Down;
-            var 双侧标准差上限 = ies[1].Confidence.Up;
-            return Json(true);
+            string[] value = {"("+ ies[0].Mu.Down+","+ ies[0].Mu.Up + ")", "(" + ies[0].Sigma.Down + "," + ies[0].Sigma.Up + ")", "(" + ies[0].Confidence.Down + "," + ies[0].Confidence.Up + ")", "(" + ies[1].Mu.Down + "," + ies[1].Mu.Up + ")", "(" + ies[1].Sigma.Down + "," + ies[1].Sigma.Up + ")", "(" + ies[1].Confidence.Down + "," + ies[1].Confidence.Up + ")" };
+            return Json(value);
         }
 
         //响应点区间估计
         [HttpPost]
         public ActionResult ResponsePointIntervalEstimate(double reponseProbability, double confidenceLevel, double cjl, double favg, double fsigma)
         {
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             var ies = lr.ResponsePointIntervalEstimate(xArray,vArray, reponseProbability, confidenceLevel, cjl, favg, fsigma);
-            var 单侧响应点下限 = ies[0].Mu.Down;
-            var 单侧响应点上限 = ies[0].Mu.Up;
-            var 单侧均值下限 = ies[0].Sigma.Down;
-            var 单侧均值上限 = ies[0].Sigma.Up;
-            var 单侧标准差下限 = ies[0].Confidence.Down;
-            var 单侧标准差上限 = ies[0].Confidence.Up;
-            var 双侧响应点下限 = ies[1].Mu.Down;
-            var 双侧响应点上限 = ies[1].Mu.Up;
-            var 双侧均值下限 = ies[1].Sigma.Down;
-            var 双侧均值上限 = ies[1].Sigma.Up;
-            var 双侧标准差下限 = ies[1].Confidence.Down;
-            var 双侧标准差上限 = ies[1].Confidence.Up;
-            return Json(true);
+            string[] value = { "(" + ies[0].Mu.Down + "," + ies[0].Mu.Up + ")", "(" + ies[0].Sigma.Down + "," + ies[0].Sigma.Up + ")", "(" + ies[0].Confidence.Down + "," + ies[0].Confidence.Up + ")", "(" + ies[1].Mu.Down + "," + ies[1].Mu.Up + ")", "(" + ies[1].Sigma.Down + "," + ies[1].Sigma.Up + ")", "(" + ies[1].Confidence.Down + "," + ies[1].Confidence.Up + ")" };
+            return Json(value);
         }
 
         //批量区间估计
         [HttpPost]
         public ActionResult BatchIntervalCalculate(double Y_Ceiling, double Y_LowerLimit, int Y_PartitionNumber, double ConfidenceLevel, double favg, double fsigma, int intervalChoose)
         {
-            var lr = SelectState(distributionState, standardState);
+            var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
             var srd = lr.BatchIntervalCalculate(Y_Ceiling, Y_LowerLimit, Y_PartitionNumber, ConfidenceLevel, favg, fsigma,xArray,vArray, intervalChoose);
             return Json(true);
         }
@@ -246,19 +243,19 @@ namespace WsSensitivity.Controllers
             return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        //获取全部let_id的兰利法表
+       
+        //获取let_id全部兰利法表
         public ActionResult GetAllLangleys()
         {
-            List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(let_id);
-            return Json(new { code = 0, msg = "", count = ldts.Count, data = ldts }, JsonRequestBehavior.AllowGet);
+            List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
+            
+            return Json(new { code = 0, msg = "", count = ldts.Count, data = Langleys(ldts) }, JsonRequestBehavior.AllowGet);
         }
 
         //获取全部的兰利法实验
         public ActionResult GetAllLangleysExperiment()
         {
             List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
-            
             return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
         }
 
@@ -282,6 +279,28 @@ namespace WsSensitivity.Controllers
                 langletlists.Add(langley_List);
             }
             return langletlists;
+        }
+
+        private List<Langley> Langleys(List<LangleyDataTable> ldts) 
+        {
+            List<Langley> langleys = new List<Langley>();
+            for (int i = 0; i<ldts.Count; i++)
+            {
+                Langley langley = new Langley();
+                langley.ldt_Id = ldts[i].ldt_Id;
+                langley.ldt_Number = ldts[i].ldt_Number;
+                langley.ldt_StimulusQuantity = ldts[i].ldt_StimulusQuantity;
+                langley.ldt_Response = ldts[i].ldt_Response;
+                langley.ldt_Mean = ldts[i].ldt_Mean;
+                langley.ldt_MeanVariance = ldts[i].ldt_MeanVariance;
+                langley.ldt_StandardDeviation = ldts[i].ldt_StandardDeviation;
+                langley.ldt_StandardDeviationVariance = ldts[i].ldt_StandardDeviationVariance;
+                langley.ldt_Covmusigma = ldts[i].ldt_Covmusigma;
+                langley.number = ldts.Count;
+                langleys.Add(langley);
+            }
+            langleys.Reverse();
+            return langleys;
         }
 
         private string DistributionState(int ds,int ss)
@@ -323,31 +342,22 @@ namespace WsSensitivity.Controllers
         {
             var str = new StreamReader(Request.InputStream);
             var stream = str.ReadToEnd();
-            //string jsonText = stream;
             JavaScriptSerializer js = new JavaScriptSerializer();
             LangleyExperimentTable let = js.Deserialize<LangleyExperimentTable>(stream);
             let.let_ExperimentalDate = DateTime.Now;
-            pow = Convert.ToDouble(let.let_Power);
-            distributionState = let.let_DistributionState;
-            standardState = let.let_StandardState;
-            stimulusQuantityCeiling = let.let_StimulusQuantityCeiling;
-            stimulusQuantityFloor = let.let_StimulusQuantityFloor;
-            precisionInstruments = let.let_PrecisionInstruments;
-
-            double sq = SelectState(distributionState, standardState).CalculateStimulusQuantity(xArray, vArray, stimulusQuantityCeiling, stimulusQuantityFloor, precisionInstruments);
-
             dbDrive.Insert(let);
-            let_id = let.let_Id;
-            dbDrive.Insert(LangleyDataTables(sq));
-            return Json(true);
+            langlryExpTable = let;
+            double sq = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState).CalculateStimulusQuantity(xArray, vArray, langlryExpTable.let_StimulusQuantityCeiling, langlryExpTable.let_StimulusQuantityFloor, langlryExpTable.let_PrecisionInstruments);
+          
+            return Json(dbDrive.Insert(LangleyDataTables(sq)));
         }
 
         private LangleyDataTable LangleyDataTables(double sq = 0, int resp = 0, double mean = 0,double sd = 0,double mv = 0,double sdv = 0,double covmusigma= 0 ,string note = null)
         {
             LangleyDataTable ldt = new LangleyDataTable();
-            ldt.ldt_ExperimentTableId = let_id;
+            ldt.ldt_ExperimentTableId = langlryExpTable.let_Id;
             ldt.ldt_StimulusQuantity = sq;
-            ldt.ldt_Number = dbDrive.GetAllLangleyDataTable(let_id).Count +1;
+            ldt.ldt_Number = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id).Count +1;
             ldt.ldt_Response = resp;
             ldt.ldt_Mean = mean;
             ldt.ldt_StandardDeviation = sd;
@@ -377,7 +387,7 @@ namespace WsSensitivity.Controllers
             }
             if (let_DistributionState == 0 && let_StandardState == 3)
             {
-                LangleyAlgorithm langley = new LangleyAlgorithm(new Normal(), new Pow(pow));
+                LangleyAlgorithm langley = new LangleyAlgorithm(new Normal(), new Pow(double.Parse(langlryExpTable.let_Power)));
                 return langley;
             }
             if (let_DistributionState == 1 && let_StandardState == 0)
@@ -397,7 +407,7 @@ namespace WsSensitivity.Controllers
             }
             if (let_DistributionState == 1 && let_StandardState == 3)
             {
-                LangleyAlgorithm langley = new LangleyAlgorithm(new Logistic(), new Pow(pow));
+                LangleyAlgorithm langley = new LangleyAlgorithm(new Logistic(), new Pow(double.Parse(langlryExpTable.let_Power)));
                 return langley;
             }
             throw new Exception("错误");
