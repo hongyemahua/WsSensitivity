@@ -19,8 +19,8 @@
                 </div>*@
                 <div class="layui-card layui-col-sm12">
                     <div class="layui-card-body">
-                        <form class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" action="../Langley/LanglieParameterSettings" method="post">
-                            @*<div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">*@
+                        @*<form class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" action="../Langley/LanglieParameterSettings" method="post">*@
+                        <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
                             <div class="layui-fluid">
                                 <div class="layui-row layui-col-space4">
                                     <div class="layui-col-md12">
@@ -33,13 +33,13 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">产品名称</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="let_ProductName" id="productname" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
+                                                                <input type="text" name="let_ProductName" id="productname"  lay-verify="required" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
                                                             </div>
                                                         </div>
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">仪器分辨率</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="let_PrecisionInstruments" id="Instrument" placeholder="0.001" value="0.001" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="let_PrecisionInstruments" id="Instrument" lay-verify="required|number" placeholder="0.001" value="0.001" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -48,13 +48,13 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">刺激量下限</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="let_StimulusQuantityFloor" id="let_StimulusQuantityFloor" placeholder="0" value="0" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="let_StimulusQuantityFloor" id="let_StimulusQuantityFloor" lay-verify="required|number" placeholder="0" value="0" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">刺激量上限</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="let_StimulusQuantityCeiling" id="let_StimulusQuantityCeiling" placeholder="100" value="100" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="let_StimulusQuantityCeiling" id="let_StimulusQuantityCeiling" lay-verify="required|number" placeholder="100" value="100" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +123,7 @@
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space15">
                                                                             <input type="radio" name="let_StandardState" value="3" title="幂">
-                                                                            = <input type="text" name="let_Power" placeholder="0" id="getPow" class="layui-input-inline" value="0">
+                                                                            = <input type="text" name="let_Power" placeholder="0" id="getPow" lay-verify="required|number" class="layui-input-inline" value="0">
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space3 layui-input-block ">
                                                                             <input type="checkbox" name="let_FlipTheResponse" title="翻转响应" value="1">
@@ -167,7 +167,8 @@
 
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        @*</form>*@
                     </div>
                 </div>
             </div>
