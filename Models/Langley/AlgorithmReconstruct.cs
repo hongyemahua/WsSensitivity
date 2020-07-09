@@ -137,6 +137,10 @@ namespace WsSensitivity.Models
                 pub_function.resolution_getReso(StandardSelection.ProcessValue(z), reso, out z);
                 return z;
             }
+
+            public string GetNM(double[] xArray, int[] vArray) => pub_function.getNM(xArray, vArray).ToString();//取得混合区间的个数
+
+            public string GetConversionNumber(int[] vArray) => Langlie.turn_number(vArray, vArray.Length).ToString();
         }
     }
 }

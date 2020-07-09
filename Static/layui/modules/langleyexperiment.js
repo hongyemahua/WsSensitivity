@@ -95,12 +95,15 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
                             },
                             dataType: "json",
                             success: function (data) {
-                                if (data) {
+                                if (data[0]) {
                                     layer.msg('增加成功', {
                                         icon: 1,
                                         time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                     });
                                     table.reload('langley_listExperiment'); //数据刷新
+                                    document.getElementById("testNumber").value = data[1];
+                                    document.getElementById("NM").value = data[2];
+                                    document.getElementById("conversionNumber").value = "";
                                 } else {
                                     layer.msg('增加失败', {
                                         icon: 2,
@@ -124,12 +127,15 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
                             },
                             dataType: "json",
                             success: function (data) {
-                                if (data) {
+                                if (data[0]) {
                                     layer.msg('增加成功', {
                                         icon: 1,
                                         time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                     });
                                     table.reload('langley_listExperiment'); //数据刷新
+                                    document.getElementById("testNumber").value = data[1];
+                                    document.getElementById("NM").value = data[2];
+                                    document.getElementById("conversionNumber").value = "";
                                 } else {
                                     layer.msg('增加失败', {
                                         icon: 2,

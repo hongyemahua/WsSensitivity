@@ -121,5 +121,26 @@ namespace WsSensitivity.Models
             return Math.Round(x1 - (x1 - x0) * (xArrayLength - n0) / (n1 - n0), 3);
 
         }
+        //转换次数
+        public static double turn_number(int[] vArray, int xArrayLength)
+        {
+            int number = 0;
+            if (xArrayLength > 1)
+            {
+
+                int temp = vArray[0];
+                for (int i = 1; i < xArrayLength; i++)
+                {
+                    if (temp != vArray[i])
+                    {
+                        temp = vArray[i];
+                        number++;
+                    }
+                }
+            }
+            else
+                number = 0;
+            return number;
+        }
     }
 }

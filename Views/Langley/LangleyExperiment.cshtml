@@ -35,7 +35,7 @@
                         <div class="layui-col-md12">
                             <label class="layui-form-label" style="width:40%">测试次数：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" value="1" readonly style="width:60%;background-color:darkgray">
+                                <input type="text" name="testNumber" id="testNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                         <div class="layui-col-md12">
                             <label class="layui-form-label" style="width:40%">混合区间刺激量个数：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly style="width:60%;background-color:darkgray">
+                                <input type="text" name="NM" id="NM" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                         <div class="layui-col-md12">
                             <label class="layui-form-label" style="width:40%">0，1转换次数：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly style="width:60%;background-color:darkgray">
+                                <input type="text" name="conversionNumber" id="conversionNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
@@ -494,10 +494,6 @@
                                             document.getElementById("sigma").value = data[3];
                                             document.getElementById("prec99").value = data[0];
                                             document.getElementById("prec01").value = data[1];
-                                            document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
-                                            document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
-                                            document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
-                                            document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                                         } else {
                                             layer.msg('添加失败', {
                                                 icon: 2,
@@ -573,6 +569,7 @@
                             document.getElementById("sigma").value = data[3];
                             document.getElementById("prec99").value = data[0];
                             document.getElementById("prec01").value = data[1];
+                            document.getElementById("conversionNumber").value = data[4];
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
