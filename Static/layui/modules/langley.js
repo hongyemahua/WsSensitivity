@@ -18,6 +18,15 @@ layui.define(['table', 'form'], function (exports) {
         , height: 'full-130'//高度最大化减去差值
         //, toolbar: 'default' 
         //, toolbar: '#toolbarDemo' 
+        , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+            layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+            , curr: 1 //设定初始在第 5 页
+            , groups: 3 //只显示 1 个连续页码
+            , first: false //不显示首页
+            , last: false //不显示尾页
+
+        }
+        , limit: 20
         , cols: [[
             { field: 'ldt_Number', width: 80, title: '编号', sort: true }
             , { field: 'ldt_StimulusQuantity', title: '刺激量' }
@@ -29,8 +38,6 @@ layui.define(['table', 'form'], function (exports) {
             , { field: 'ldt_Covmusigma', title: 'Covmusigma' }
             , { title: '操作', align: 'center', fixed: 'right', toolbar: '#response_state' }
         ]]
-        , page: true
-        , limit: 30
         , text: '对不起，加载出现异常！'
     });
 
