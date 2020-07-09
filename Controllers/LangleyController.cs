@@ -222,7 +222,7 @@ namespace WsSensitivity.Controllers
                 vArray[i] = ldts[i].ldt_Response;
             }
             var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
-            var ies = lr.ResponseProbabilityIntervalEstimate(xArray, vArray, reponseProbability, confidenceLevel);
+            var ies = lr.ResponseProbabilityIntervalEstimate(xArray, vArray, reponseProbability2, confidenceLevel);
             string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")","(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")","(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
             return Json(value);
         }
@@ -240,7 +240,7 @@ namespace WsSensitivity.Controllers
                 vArray[i] = ldts[i].ldt_Response;
             }
             var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
-            var ies = lr.ResponsePointIntervalEstimate(xArray, vArray, reponseProbability, confidenceLevel, cjl, favg, fsigma);
+            var ies = lr.ResponsePointIntervalEstimate(xArray, vArray, reponseProbability2, confidenceLevel2, cjl, favg, fsigma);
             string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
             return Json(value);
         }
