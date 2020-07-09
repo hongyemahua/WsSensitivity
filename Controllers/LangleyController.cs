@@ -57,8 +57,9 @@ namespace WsSensitivity.Controllers
             return View();
         }
         //兰利法主页面(无弹窗)
-        public ActionResult LangleyExperimentEdit()
+        public ActionResult LangleyExperimentEdit(int let_id)
         {
+            int id = let_id;
             return View();
         }
 
@@ -276,19 +277,45 @@ namespace WsSensitivity.Controllers
 
 
         //获取let_id全部兰利法表
-        public ActionResult GetAllLangleys()
+        public ActionResult GetAllLangleys(int page = 1, int limit = 20)
         {
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
-            return Json(new { code = 0, msg = "", count = ldts.Count, data = Langleys(ldts) }, JsonRequestBehavior.AllowGet);
+            List<LangleyDataTable> PagesLdt = new List<LangleyDataTable>();
+            int first = (page - 1) * limit;
+            int last = page * limit;
+            if (ldts.Count < last)
+            {
+                last = ldts.Count;
+            }
+            for (int i = first; i < last; i++)
+            {
+                PagesLdt.Add(ldts[i]);
+            }
+            return Json(new { code = 0, msg = "", count = ldts.Count, data = Langleys(PagesLdt,first) }, JsonRequestBehavior.AllowGet);
         }
 
-        //获取全部的兰利法实验
-        public ActionResult GetAllLangleysExperiment()
+        ////获取全部的兰利法实验
+        //public ActionResult GetAllLangleysExperiment()
+        //{
+        //    List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
+        //    return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
+        //}
+
+        //获取全部的兰利法实验并分页显示(前台带参访问)
+        public ActionResult GetAllLangleysExperiment(int page=1,int limit=20)
         {
             List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
-            return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
+            List<LangleyExperimentTable> PagesLet = new List<LangleyExperimentTable>();
+            int first = (page-1) * limit;
+            int last = page * limit;
+            if (lets.Count<last) {
+                last = lets.Count;
+            }
+            for (int i= first; i<last;i++) {
+                PagesLet.Add(lets[i]);
+            }
+            return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(PagesLet,first) }, JsonRequestBehavior.AllowGet);
         }
-
         private List<Langley_list> Langley_lists(List<LangleyExperimentTable> lets)
         {
             List<Langley_list> langletlists = new List<Langley_list>();
@@ -310,15 +337,36 @@ namespace WsSensitivity.Controllers
             }
             return langletlists;
         }
+        private List<Langley_list> Langley_lists(List<LangleyExperimentTable> lets,int first)
+        {
+            List<Langley_list> langletlists = new List<Langley_list>();
+            for (int i = 0; i < lets.Count; i++)
+            {
+                Langley_list langley_List = new Langley_list();
+                langley_List.number = i + 1+first;
+                langley_List.Id = lets[i].let_Id;
+                langley_List.PrecisionInstruments = lets[i].let_PrecisionInstruments;
+                langley_List.StimulusQuantityFloor = lets[i].let_StimulusQuantityFloor;
+                langley_List.StimulusQuantityCeiling = lets[i].let_StimulusQuantityCeiling;
+                langley_List.Power = lets[i].let_Power;
+                langley_List.DistributionState = DistributionState(lets[i].let_DistributionState, lets[i].let_StandardState);
+                langley_List.Correction = lets[i].let_Correction;
+                langley_List.count = dbDrive.GetAllLangleyDataTable(lets[i].let_Id).Count;
+                langley_List.FlipTheResponse = lets[i].let_FlipTheResponse;
+                langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
+                langletlists.Add(langley_List);
+            }
+            return langletlists;
+        }
 
-        private List<Langley> Langleys(List<LangleyDataTable> ldts)
+        private List<Langley> Langleys(List<LangleyDataTable> ldts,int first)
         {
             List<Langley> langleys = new List<Langley>();
             for (int i = 0; i < ldts.Count; i++)
             {
                 Langley langley = new Langley();
                 langley.ldt_Id = ldts[i].ldt_Id;
-                langley.ldt_Number = ldts[i].ldt_Number;
+                langley.ldt_Number = ldts[i].ldt_Number+first;
                 langley.ldt_StimulusQuantity = ldts[i].ldt_StimulusQuantity;
                 langley.ldt_Response = ldts[i].ldt_Response;
                 langley.ldt_Mean = ldts[i].ldt_Mean;

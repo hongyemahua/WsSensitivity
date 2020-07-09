@@ -12,10 +12,20 @@ layui.define(['table', 'form'], function(exports){
   ,form = layui.form;
 
   //管理员表
-  table.render({
-    elem: '#langley_list'
-      , url: '../Langley/GetAllLangleysExperiment' //模拟接口
-    , height: 'full-130' //高度最大化减去差值
+    table.render({
+        elem: '#langley_list'
+        , url: '../Langley/GetAllLangleysExperiment' //模拟接口
+        //, data: { 'page': Id }
+      , height: 'full-130' //高度最大化减去差值
+      , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+          , curr: 1 //设定初始在第 5 页
+          , groups: 3 //只显示 1 个连续页码
+          , first: false //不显示首页
+          , last: false //不显示尾页
+
+      }
+      , limit: 20
       , cols: [[
           { field: 'number', title: '编号', sort: true }
         , { field: 'PrecisionInstruments',title: '仪器精度', minWidth: 100}
@@ -29,8 +39,6 @@ layui.define(['table', 'form'], function(exports){
         , { field: 'ExperimentalDate', title: '日期' }
       ,{title: '操作',align:'center', fixed: 'right', toolbar: '#table-langleyquery-tool'}
     ]]
-    ,page: true
-    ,limit: 30
     ,text: '对不起，加载出现异常！'
   });
   
@@ -67,8 +75,7 @@ layui.define(['table', 'form'], function(exports){
                 });
             });
         } else if (obj.event === 'edit') {     //编辑
-            var tr = $(obj.tr);
-            location.href = '../Langley/LangleyExperimentEdit';
+            location.href = '../Langley/LangleyExperimentEdit?let_id='+data.Id;
             //layer.open({
             //    type: 2
             //    , title: '编辑管理员'
