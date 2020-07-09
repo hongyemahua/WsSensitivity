@@ -13,6 +13,7 @@ namespace WsSensitivity.Models
         public abstract double PointIntervalDistribution(double fq, double favg, double fsigma);
         public abstract double CorrectionDistribution(int count);
         public abstract double QnormAndQlogisDistribution(double value);
+        public abstract double[] PrecValues(double value ,double fsigma);
     }
 
     public class Normal : LangleyDistributionSelection
@@ -28,8 +29,8 @@ namespace WsSensitivity.Models
         {
             OutputParameters outputParameters = new OutputParameters();
             pub_function.norm_MLS_getMLS(xArray, vArray, out outputParameters.μ0_final, out outputParameters.σ0_final, out outputParameters.Maxf, out outputParameters.Mins);
-            Class_区间估计.NormalInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
-            return outputParameters;
+            
+            return Class_区间估计.NormalInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
         }
         public override IntervalEstimation IntervalDistribution(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel)
         {
@@ -52,6 +53,14 @@ namespace WsSensitivity.Models
             return pub_function.pnorm(fq, favg, fsigma);
         }
 
+        public override double[] PrecValues(double value, double fsigma)
+        {
+            double[] ds = new double[2];
+            ds[0] = value + 3.090232 * fsigma;
+            ds[1] = value - 3.090232 * fsigma;
+            return ds;
+        }
+
         public override double QnormAndQlogisDistribution(double value)
         {
             return pub_function.qnorm(value);
@@ -71,8 +80,8 @@ namespace WsSensitivity.Models
         {
             OutputParameters outputParameters = new OutputParameters();
             pub_function.logit_MLS_getMLS(xArray, vArray, out outputParameters.μ0_final, out outputParameters.σ0_final, out outputParameters.Maxf, out outputParameters.Mins);
-            Class_区间估计.LogisticInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
-            return outputParameters;
+           
+            return Class_区间估计.LogisticInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
         }
 
         public override IntervalEstimation IntervalDistribution(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel)
@@ -92,6 +101,14 @@ namespace WsSensitivity.Models
         public override double PointIntervalDistribution(double fq, double favg, double fsigma)
         {
             return pub_function.plogis(fq, favg, fsigma);
+        }
+
+        public override double[] PrecValues(double value, double fsigma)
+        {
+            double[] ds = new double[2];
+            ds[0] = value + 6.906755 * fsigma;
+            ds[1] = value - 6.906755 * fsigma;
+            return ds;
         }
 
         public override double QnormAndQlogisDistribution(double value)

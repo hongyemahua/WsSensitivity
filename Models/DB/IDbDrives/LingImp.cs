@@ -255,7 +255,7 @@ namespace WsSensitivity.Models.IDbDrives
         public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime)
         {
             List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
-            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime,m.let_ExperimentalDate)<= 0 && DateTime.Compare(endTime,m.let_ExperimentalDate) >= 0  ).ToList();
+            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime, m.let_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.let_ExperimentalDate) >= 0).ToList();
             return lets;
         }
 
@@ -328,7 +328,7 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
-      
+
 
 
 

@@ -23,7 +23,7 @@ layui.define(['table', 'form'], function (exports) {
             , { field: 'ldt_StimulusQuantity', title: '刺激量' }
             , { field: 'ldt_Response', title: '响应', toolbar: '#response_state', minWidth: 80, align: 'center'}
             , { field: 'ldt_Mean', title: '均值' }
-            , { field: 'ldt_StandardDeviation', title: '标准值' }
+            , { field: 'ldt_StandardDeviation', title: '标准差' }
             , { field: 'ldt_MeanVariance', title: '均值的方差' }
             , { field: 'ldt_StandardDeviationVariance', title: '标准值的方差' }
             , { field: 'ldt_Note1', title: '备注' }

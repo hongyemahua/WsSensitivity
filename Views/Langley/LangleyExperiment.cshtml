@@ -489,6 +489,14 @@
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
+                                            document.getElementById("avg").value = data[2];
+                                            document.getElementById("sigma").value = data[3];
+                                            document.getElementById("prec99").value = data[0];
+                                            document.getElementById("prec01").value = data[1];
+                                            document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                                            document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                                            document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
+                                            document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                                         } else {
                                             layer.msg('添加失败', {
                                                 icon: 2,
@@ -498,7 +506,7 @@
                                         }
                                     }
                                 });
-                                table.reload('langley_list');
+                                table.reload('langley_listExperiment');
                                 layer.close(index); //关闭弹层
                             });
                             submit.trigger('click');
@@ -545,7 +553,6 @@
                                         }
                                     }
                                 });
-                                table.reload('langley_list');
                                 layer.close(index); //关闭弹层
                             });
                             submit.trigger('click');
@@ -562,16 +569,17 @@
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            document.getElementById("avg").value = data[0];
-                            document.getElementById("sigma").value = data[1];
-                            document.getElementById("prec99").value = data[2];
-                            document.getElementById("prec01").value = data[3];
+                            document.getElementById("avg").value = data[2];
+                            document.getElementById("sigma").value = data[3];
+                            document.getElementById("prec99").value = data[0];
+                            document.getElementById("prec01").value = data[1];
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                         }
                     });
+                    table.reload('langley_listExperiment');
                 },
 
             //响应点计算

@@ -38,24 +38,21 @@ namespace WsSensitivity.Models
             public LangleyMethodStandardSelection StandardSelection { get; set; }
             public OutputParameters GetResult(double[] xArray, int[] vArray)
             {
-                OutputParameters outputParameters = new OutputParameters();
-                double[] X = new double[xArray.Length];
-                int[] V = new int[xArray.Length];
-                for (int w = 0; w < xArray.Length; w++)
-                {
-                    X[w] = xArray[w];
-                    V[w] = vArray[w];
-                }
-                outputParameters = DistributionSelection.DotDistribution(X, V);
+                OutputParameters outputParameters = DistributionSelection.DotDistribution(xArray, vArray);
                 outputParameters.μ0_final = StandardSelection.ProcessValue(outputParameters.μ0_final);
                 return outputParameters;
             }
 
             public double MaxAndMinValue(double value) => pub_function.resolution_getReso(StandardSelection.ProcessValue(value), 0.000001);
 
-            public double Prec99(double μ0_final, double σ0_final) => pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) + 3.090232 * σ0_final), 0.000001);
-
-            public double Prec01(double μ0_final, double σ0_final) => pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) - 3.090232 * σ0_final), 0.000001);
+            public double[] Precs(double μ0_final, double σ0_final)
+            {
+                double[] precs = new double[2];
+                double[] precValues = DistributionSelection.PrecValues(StandardSelection.InverseProcessValue(μ0_final), σ0_final);
+                precs[0] = pub_function.resolution_getReso(StandardSelection.ProcessValue(precValues[0]), 0.000001);
+                precs[1] = pub_function.resolution_getReso(StandardSelection.ProcessValue(precValues[1]), 0.000001);
+                return precs;
+            }
 
             public List<IntervalEstimation> ResponseProbabilityIntervalEstimate(double[] x, int[] v, double reponseProbability, double confidenceLevel)
             {
@@ -136,7 +133,7 @@ namespace WsSensitivity.Models
 
             public double CalculateStimulusQuantity(double[] xArray,int[] vArray, double maxStimulusQuantity, double minStimulusQuantity,double reso)
             {
-                pub_function.Lanlie_getz(xArray.Length, xArray, vArray, maxStimulusQuantity, minStimulusQuantity, out double z);
+                pub_function.Lanlie_getz(xArray.Length, xArray, vArray, minStimulusQuantity, maxStimulusQuantity,out double z);
                 pub_function.resolution_getReso(StandardSelection.ProcessValue(z), reso, out z);
                 return z;
             }

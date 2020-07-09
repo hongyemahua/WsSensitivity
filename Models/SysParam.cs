@@ -7,19 +7,6 @@ namespace WsSensitivity.Models
 {
     class SysParam
     {
-        public static string SystemDirectory;
-
-        public static string Allfire_Reverse;
-        public static double Allfire_Precision;
-        public static string Allfire_Production;
-        public static int Allfire_TestTimes = 1;
-        public static int Allfire_MastId;
-        public static int Allfire_DetailId;
-        public static string wsExePath = "";
-
-
-        //public static DataBase.数据 电容充电电压修正数据;
-        public static string DefaultSessionName = "";
 
         //全局串口名称
         public static string Sys_PortName = "COM3";
@@ -61,19 +48,12 @@ namespace WsSensitivity.Models
         public static double LangLie_Prec01;
         public static string LangLie_Reverse;
         public static double LangLie_Precision;
-        public static string LangLie_Production;
-        public static double LangLie_Power = 0;
         public static double LangLie_UpperLimit = 0;
         public static double LangLie_LowLimit = 0;
         public static int LangLie_TestTimes = 1;
         public static string CurUserName;
         public static int LangLie_MastId;
         public static int LangLie_DetailId;
-        public static string LangLie_Memo = "";
-        public static double LangLie_normc = 0;
-        public static int LangLie_NM = 0;
-        public static double LangLie_avg = 0;
-        public static string LangLie_correct = "否";
 
 
         /// <summary>
