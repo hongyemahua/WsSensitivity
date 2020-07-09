@@ -18,7 +18,7 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
         , title: "兰利法参数设置" //不显示标题栏
         , area: ['70%', '85%']
         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-        , content: '../Langley/LanglieParameterSettings'
+        , content: ['../Langley/LanglieParameterSettings', 'no']
         , btnAlign: 'c'
         , btn: '确定'
         , anim: 1

@@ -15,8 +15,6 @@
     <div class="layui-fluid">
         <div class="layui-row">
             <div class="layui-col-sm12">
-                @*<div class="layui-card layui-col-sm3">
-                </div>*@
                 <div class="layui-card layui-col-sm12">
                     <div class="layui-card-body">
                         @*<form class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" action="../Langley/LanglieParameterSettings" method="post">*@
@@ -91,8 +89,8 @@
                                                                 <div class="layui-card">
                                                                     <div class="layui-col-md12 layui-col-space10">
                                                                         <div class="layui-col-md12 layui-col-space3">
-                                                                            <input type="radio" name="let_Correction" value="1" title="标准差不修正">
                                                                             <input type="radio" name="let_Correction" value="0" title="标准差修正" checked>
+                                                                            <input type="radio" name="let_Correction" value="1" title="标准差不修正">
                                                                         </div>
                                                                         
                                                                     </div>
@@ -117,13 +115,13 @@
                                                                 <div class="layui-card">
                                                                     <div class="layui-col-md12 layui-col-space15">
                                                                         <div class="layui-col-md12 layui-col-space15">
-                                                                            <input type="radio" name="let_StandardState" value="0" title="标准" checked>
-                                                                            <input type="radio" name="let_StandardState" value="1" title="对数ln">
-                                                                            <input type="radio" name="let_StandardState" value="2" title="对数log">
+                                                                            <input type="radio" name="let_StandardState" lay-filter="let_StandardState" value="0" title="标准" checked>
+                                                                            <input type="radio" name="let_StandardState" lay-filter="let_StandardState" value="1" title="对数ln">
+                                                                            <input type="radio" name="let_StandardState" lay-filter="let_StandardState" value="2" title="对数log">
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space15">
-                                                                            <input type="radio" name="let_StandardState" value="3" title="幂">
-                                                                            = <input type="text" name="let_Power" placeholder="0" id="getPow" lay-verify="required|number" class="layui-input-inline" value="0">
+                                                                            <input type="radio" name="let_StandardState" lay-filter="let_StandardState" value="3" title="幂">
+                                                                            = <input type="text" name="let_Power" placeholder="0" id="getPow" lay-verify="required|number" class="layui-input-inline" value="0" disabled>
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space3 layui-input-block ">
                                                                             <input type="checkbox" name="let_FlipTheResponse" title="翻转响应" value="1">
@@ -186,8 +184,14 @@
             var $ = layui.$
                 , form = layui.form;
 
-            @*var active = {
+            form.on('radio(let_StandardState)', function (data) {
+                var value = data.value;
+                if (value == "3") {
+                    $("#getPow").removeAttr("disabled", "disabled");
+                }
+            });
 
+            @*var active = {
                 nocyte: function (layero) {
 
                         $.ajax({
@@ -221,7 +225,9 @@
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });*@
-        });
+            });
+        
+        
     </script>
 </body>
 </html>
