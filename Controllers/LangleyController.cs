@@ -211,7 +211,7 @@ namespace WsSensitivity.Controllers
 
         //响应概率区间估计
         [HttpPost]
-        public ActionResult ResponseProbabilityIntervalEstimate(double reponseProbability, double confidenceLevel)
+        public ActionResult ResponseProbabilityIntervalEstimate(double reponseProbability2, double confidenceLevel)
         {
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
             double[] xArray = new double[ldts.Count];
@@ -229,7 +229,7 @@ namespace WsSensitivity.Controllers
 
         //响应点区间估计
         [HttpPost]
-        public ActionResult ResponsePointIntervalEstimate(double reponseProbability, double confidenceLevel, double cjl, double favg, double fsigma)
+        public ActionResult ResponsePointIntervalEstimate(double reponseProbability2, double confidenceLevel2, double cjl, double favg, double fsigma)
         {
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
             double[] xArray = new double[ldts.Count];
@@ -400,6 +400,13 @@ namespace WsSensitivity.Controllers
             double sq = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState).CalculateStimulusQuantity(xArray, vArray, langlryExpTable.let_StimulusQuantityCeiling, langlryExpTable.let_StimulusQuantityFloor, langlryExpTable.let_PrecisionInstruments);
 
             return Json(dbDrive.Insert(LangleyDataTables(sq)));
+        }
+        [HttpPost]
+        public JsonResult BatchIntervalCalculation(double BatchConfidenceLevel,double yMin,double yMax,double Y_Axis,int intervalTypeSelection,double xMax,double xMin)
+        {
+            if (BatchConfidenceLevel.ToString()=="NaN") {
+                return Json(false);
+            }else return Json(true);
         }
 
         private LangleyDataTable LangleyDataTables(double sq = 0, int resp = 0, double mean = 0, double sd = 0, double mv = 0, double sdv = 0, double covmusigma = 0, string note = null)
