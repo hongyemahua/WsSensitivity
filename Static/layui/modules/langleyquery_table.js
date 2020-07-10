@@ -76,55 +76,6 @@ layui.define(['table', 'form'], function(exports){
             });
         } else if (obj.event === 'edit') {     //编辑
             location.href = '../Langley/LangleyExperimentEdit?let_id='+data.Id;
-            //layer.open({
-            //    type: 2
-            //    , title: '编辑管理员'
-            //    , content: '../Langley/LangleyExperiment'
-            //    , area: ['90%', '85%']
-            //    , btn: ['确定', '取消']
-            //    , yes: function (index, layero) {
-            //        var iframeWindow = window['layui-layer-iframe' + index]
-            //            , submitID = 'LAY-user-front-submit'
-            //            , submit = layero.find('iframe').contents().find('#' + submitID);
-
-            //        //监听提交
-            //        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-            //            var field = data.field; //获取提交的字段
-            //            if (field.state == 'on') {
-            //                field.state = '启用';
-            //            } else {
-            //                field.state = '禁用';
-            //            }
-            //            var admin = JSON.stringify(field);
-            //            //提交 Ajax 成功后，静态更新表格中的数据
-            //            $.ajax({
-            //                type: "post",
-            //                url: '../Admin/Admin_editor',
-            //                datatype: "json",
-            //                contenttype: "application/json; charset=utf-8",
-            //                data: admin,
-            //                async: false,
-            //                success: function (data) {
-            //                    if (data) {
-            //                        layer.msg('修改成功', {
-            //                            icon: 1,
-            //                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
-            //                        });
-            //                        table.reload('admin_list'); //数据刷新
-            //                    } else {
-            //                        layer.msg('修改失败', {
-            //                            icon: 2,
-            //                            shift: -1,  //震动效果
-            //                            time: 1000  //1秒关闭
-            //                        });
-            //                    }
-            //                }
-            //            });
-            //            layer.close(index); //关闭弹层
-            //        });
-            //        submit.trigger('click');
-            //    }
-            //});
         }
     });
     exports('langleyquery_table', {})
