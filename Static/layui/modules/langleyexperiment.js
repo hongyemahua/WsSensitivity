@@ -22,7 +22,7 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
         , btnAlign: 'c'
         , btn: '确定'
         , anim: 1
-        , closeBtn: 1
+        , closeBtn: 0
         , yes: function (index, layero) {
             var iframeWindow = window['layui-layer-iframe' + index]
                 , submitID = 'submit_Btn'
