@@ -38,8 +38,10 @@ namespace WsSensitivity.Models
             public LangleyMethodStandardSelection StandardSelection { get; set; }
             public OutputParameters GetResult(double[] xArray, int[] vArray)
             {
+                for (int i = 0; i < xArray.Length; i++)
+                    xArray[i] = StandardSelection.InverseProcessValue(xArray[i]);
                 OutputParameters outputParameters = DistributionSelection.DotDistribution(xArray, vArray);
-                outputParameters.μ0_final = StandardSelection.ProcessValue(outputParameters.μ0_final);
+                outputParameters.μ0_final = StandardSelection.GetAvgValue(outputParameters.μ0_final);
                 return outputParameters;
             }
 
@@ -133,7 +135,7 @@ namespace WsSensitivity.Models
 
             public double CalculateStimulusQuantity(double[] xArray,int[] vArray, double maxStimulusQuantity, double minStimulusQuantity,double reso)
             {
-                pub_function.Lanlie_getz(xArray.Length, xArray, vArray, minStimulusQuantity, maxStimulusQuantity,out double z);
+                pub_function.Lanlie_getz(xArray.Length,xArray, vArray, StandardSelection.InverseProcessValue(minStimulusQuantity), StandardSelection.InverseProcessValue(maxStimulusQuantity), out double z);
                 pub_function.resolution_getReso(StandardSelection.ProcessValue(z), reso, out z);
                 return z;
             }

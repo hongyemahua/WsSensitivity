@@ -169,6 +169,7 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Static\echarts\echarts.min.js" />
     <Content Include="Static\image\index_logo.png" />
     <Content Include="Static\image\Product_img1.jpg" />
     <Content Include="Static\image\Product_img2.jpg" />
@@ -399,6 +400,7 @@
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
     <Content Include="Views\Langley\LanglieParameterSettings.cshtml" />
     <Content Include="Views\Langley\LangleyExperimentEdit.cshtml" />
+    <Content Include="Views\Langley\LangleyLineChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

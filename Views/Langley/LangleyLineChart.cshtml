@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <script src="~/Static/echarts/echarts.min.js"></script>
+    <script>
+        option = {
+            xAxis: {},
+            yAxis: {},
+            series: [{
+                data: [[20, 120], [50, 200], [40, 50]],
+                type: 'line'
+            },
+            {
+                data: [[20, 120], [50, 200], [100, 50]],
+                type: 'line'
+            }]
+        };
+
+    </script>
+    <title></title>
+</head>
+<body>
+    <div style="position: relative; width: 1132px; height: 496px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+        <canvas style="position: absolute; left: 0px; top: 0px; width: 1132px; height: 496px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;" data-zr-dom-id="zr_0" width="1132" height="496"></canvas>
+    </div>
+</body>
+</html>

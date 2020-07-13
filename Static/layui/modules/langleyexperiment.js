@@ -73,87 +73,58 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
                 }
                 , limit: 20
                 , cols: [[
-                    { field: 'ldt_Number', width: 80, title: '编号', sort: true }
-                    , { field: 'ldt_StimulusQuantity', title: '刺激量' }
-                    , { field: 'ldt_Response', title: '响应', align: 'center' }
+                    { field: 'ldt_Number', width:'3%', title: '编号', sort: true }
+                    , { field: 'ldt_StimulusQuantity', title: '刺激量'}
+                    , { field: 'ldt_Response', title: '响应', align: 'center', width:'3%'}
                     , { field: 'ldt_Mean', title: '均值' }
                     , { field: 'ldt_StandardDeviation', title: '标准差' }
-                    , { field: 'ldt_MeanVariance', title: '均值的方差' }
-                    , { field: 'ldt_StandardDeviationVariance', title: '标准值的方差' }
-                    , { field: 'ldt_Covmusigma', title: 'Covmusigma' }
-                    , { title: '操作', align: 'center', fixed: 'right', toolbar:'#response_state'}
+                    , { field: 'ldt_MeanVariance', title: '均值的方差'}
+                    , { field: 'ldt_StandardDeviationVariance', title: '标准值的方差'}
+                    , { field: 'ldt_Covmusigma', title: 'Covmusigma'}
+                    , { title: '操作', align: 'center', fixed: 'right', toolbar: '#response_state', width: '28%'}
                 ]]
                 , text: '对不起，加载出现异常！'
             });
 
+            
             //监听工具条
             table.on('tool(langleylist)', function (obj) {
                 var data = obj.data;
-                if (obj.event === 'response') { 
-                    var massage = '确认增加响应么？'
-                    layer.confirm(massage, {
-                        btn: ['确认', '取消'] //按钮
-                    }, function () {
+                $("#response").on('keydown', function (event) {
+                    if (event.keyCode == 13) {
+
+                        var response = document.getElementById("response").value;
+                        var sq = document.getElementById("sq").value;
                         $.ajax({
-                            url: "../Langley/InsertData",
-                            type: "post",
-                            data: {
-                                "response": 1
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                if (data[0]) {
-                                    layer.msg('增加成功', {
-                                        icon: 1,
-                                        time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                    });
-                                    table.reload('langley_listExperiment'); //数据刷新
-                                    document.getElementById("testNumber").value = data[1];
-                                    document.getElementById("NM").value = data[2];
-                                    document.getElementById("conversionNumber").value = "";
-                                } else {
-                                    layer.msg('增加失败', {
-                                        icon: 2,
-                                        shift: 6,  //震动效果
-                                        time: 1000  //1秒关闭
-                                    });
-                                }
+                        url: "../Langley/InsertData",
+                        type: "post",
+                        data: {
+                            "response": response,
+                            "StimulusQuantity":sq
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data[0]) {
+                                layer.msg('增加成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+                                table.reload('langley_listExperiment'); //数据刷新
+                                $("#label1").text(data[1]);
+                                $("#label2").text(data[2]);
+                                $("#label3").text("");
+                            } else {
+                                layer.msg('增加失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
                             }
-                        });
+                        }
                     });
-                } else if (obj.event === 'notResponse') { 
-                    var massage = '确认增加不响应么？'
-                    layer.confirm(massage, {
-                        btn: ['确认', '取消'] //按钮
-                    }, function () {
-                        $.ajax({
-                            url: "../Langley/InsertData",
-                            type: "post",
-                            data: {
-                                "response": 0
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                if (data[0]) {
-                                    layer.msg('增加成功', {
-                                        icon: 1,
-                                        time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                    });
-                                    table.reload('langley_listExperiment'); //数据刷新
-                                    document.getElementById("testNumber").value = data[1];
-                                    document.getElementById("NM").value = data[2];
-                                    document.getElementById("conversionNumber").value = "";
-                                } else {
-                                    layer.msg('增加失败', {
-                                        icon: 2,
-                                        shift: 6,  //震动效果
-                                        time: 1000  //1秒关闭
-                                    });
-                                }
-                            }
-                        });
-                    });
-                } else if (obj.event === 'remove') {  
+                    }
+                });
+                if (obj.event === 'remove') {  
                     var massage = '确认撤销编号为' + data.ldt_Number + '么？'
                     layer.confirm(massage, {
                         btn: ['确认', '取消'] //按钮
