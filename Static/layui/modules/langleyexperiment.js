@@ -46,7 +46,6 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
                                 icon: 1,
                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                             });
-                            layer.close(index);
                             //关闭弹层
                         }
                     }
@@ -155,7 +154,13 @@ layui.define(['table', 'form', 'index', 'layer'], function (exports) {
                     });
                 } 
 
+                            });
+                        }
+                    }
+                });
             });
+
+            submit.trigger('click');
         }
     });
 

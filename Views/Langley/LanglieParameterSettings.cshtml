@@ -121,7 +121,7 @@
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space15">
                                                                             <input type="radio" name="let_StandardState" lay-filter="let_StandardState" value="3" title="幂">
-                                                                            = <input type="text" name="let_Power" placeholder="0" id="getPow" lay-verify="required|number" class="layui-input-inline" value="0" disabled>
+                                                                            = <input type="text" name="let_Power" placeholder="1" id="getPow" lay-verify="required|number" class="layui-input-inline" value="1" disabled>
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space3 layui-input-block ">
                                                                             <input type="checkbox" name="let_FlipTheResponse" title="翻转响应" value="1">
@@ -225,7 +225,7 @@
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });*@
-            });
+        });
         
         
     </script>
