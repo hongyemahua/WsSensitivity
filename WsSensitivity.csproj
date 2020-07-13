@@ -322,7 +322,6 @@
     <Content Include="Static\layui\lib\index.js" />
     <Content Include="Static\layui\lib\ImgCodeVerify.js" />
     <Content Include="Static\layui\lib\view.js" />
-    <Content Include="Static\layui\modules\langleyexperiment.js" />
     <Content Include="Static\layui\modules\langleyquery_table.js" />
     <Content Include="Static\layui\modules\index_table.js" />
     <Content Include="Static\layui\modules\langley.js" />

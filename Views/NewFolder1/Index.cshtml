@@ -122,7 +122,7 @@
                                 </a>
                                 <dl class="layui-nav-child">
                                     <dd>
-                                        <a lay-href="@Url.Action("LangleyExperiment","Langley")" @*class="Lang_click" data-type="notice"*@>兰利法实验</a>
+                                        <a href="javascript:;" class="click" data-type="notice">兰利法实验</a>
                                     </dd>
                                     <dd>
                                         <a lay-href="@Url.Action("LangleyQuery","Langley")">兰利法查询</a>
@@ -250,19 +250,19 @@
         }).use(['index','layer'], function () { //独立版的layer无需执行这一句
             var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
 
-            @*var active = {
+            var active = {
                 notice: function () {
                     //示范一个公告层
                     var index=layer.open({
                         type: 2
                         , title: "兰利法参数设置" //不显示标题栏
-                        , area: ['700px','900px']
+                        , area: ['70%', '80%']
                         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
                         , content: "@Url.Action("LanglieParameterSettings", "Langley")"
                         ,btnAlign:'c'
                         , btn: '确定'
                         , anim: 1
-                        ,closeBtn: 0
+                        ,closeBtn: 1
                         , yes: function (index, layero) {
                             var iframeWindow = window['layui-layer-iframe' + index]
                                 , submitID = 'submit_Btn'
@@ -288,11 +288,10 @@
                                             });
                                              //关闭弹层
                                             layer.close(index);
+                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
                                         }
                                     }
                                 });
-                                table.reload('role_list');
-
 
                             });
                             submit.trigger('click');
@@ -300,10 +299,10 @@
                     });
                 }
             }
-            $('.Lang_click').on('click', function () {
+            $('.click').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
-            });*@
+            });
 
         });
     </script>

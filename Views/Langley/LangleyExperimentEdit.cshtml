@@ -10,9 +10,6 @@
     <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
-@{ 
-    var langleyDataTables = (List<WsSensitivity.Models.LangleyDataTable>)ViewData["langleyDataTables"];
-}
 <body>
     <div class="layui-fluid">
         <div class="layui-col-sm12">
@@ -31,30 +28,30 @@
 
         <div class="layui-col-sm12">
 
-            <div class="layui-card layui-col-sm12">
+            <div class="layui-card layui-col-sm6">
 
-                <div class="layui-col-md12 layui-col-space10">
-                    <div class="layui-col-md4 layui-col-space5">
-                        <div class="layui-col-md12">
+                <div class="layui-col-md6 layui-col-space10">
+                    <div class="layui-col-md2 layui-col-space5">
+                        <div class="layui-col-md2">
                             <label class="layui-form-label" style="width:40%">测试次数：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="xh" id="xh"  autocomplete="off" class="layui-input" value="1" readonly style="width:60%;background-color:darkgray" > 
+                                <input type="text" name="testNumber" id="testNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
-                    <div class="layui-col-md4 layui-col-space5">
-                        <div class="layui-col-md12">
+                    <div class="layui-col-md2 layui-col-space5">
+                        <div class="layui-col-md2">
                             <label class="layui-form-label" style="width:40%">混合区间刺激量个数：</label>
-                            <div class="layui-input-block" >
-                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly style="width:60%;background-color:darkgray">
+                            <div class="layui-input-block">
+                                <input type="text" name="NM" id="NM" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
-                    <div class="layui-col-md4 layui-col-space5">
-                        <div class="layui-col-md12">
-                            <label class="layui-form-label"  style="width:40%">0，1转换次数：</label>
+                    <div class="layui-col-md2 layui-col-space5">
+                        <div class="layui-col-md2">
+                            <label class="layui-form-label" style="width:40%">0，1转换次数：</label>
                             <div class="layui-input-block">
-                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly  style="width:60%;background-color:darkgray"> 
+                                <input type="text" name="conversionNumber" id="conversionNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
                             </div>
                         </div>
                     </div>
@@ -80,7 +77,7 @@
                                             <div class="layui-card">
 
                                                 <div class="layui-card-body layui-row layui-col-space10">
-                                                    
+
                                                     <div class="layui-col-md4 layui-col-space10">
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
@@ -126,7 +123,7 @@
                                                             <div class="layui-col-md6">
                                                                 <label class="layui-form-label">响应概率</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="responseProbability" id="responseProbability" autocomplete="off" class="layui-input"  onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                                    <input type="text" name="responseProbability" id="responseProbability" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
@@ -143,7 +140,7 @@
                                                             <div class="layui-col-md6">
                                                                 <label class="layui-form-label">刺激量</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="stimulusQuantity" id="stimulusQuantity" autocomplete="off" class="layui-input"  onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                                    <input type="text" name="stimulusQuantity" id="stimulusQuantity" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
@@ -160,12 +157,12 @@
                                                                 修改分析参数
                                                             </button>
                                                         </div>
-                                                        <div class="layui-btn-group layui-col-md12" >
+                                                        <div class="layui-btn-group layui-col-md12">
 
-                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions" >
+                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions">
                                                                 技术条件
                                                             </button>
-                                                            
+
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
 
@@ -195,17 +192,17 @@
                                                     <div class="layui-col-md4">
                                                         <label class="layui-form-label">响应概率</label>
                                                         <div class="layui-input-block">
-                                                            <input type="text" name="reponseProbability2" id="reponseProbability2" value="0.999" autocomplete="off" class="layui-input"  onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                            <input type="text" name="reponseProbability2" id="reponseProbability2" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
                                                         <label class="layui-form-label">置信水平</label>
                                                         <div class="layui-input-block">
-                                                            <input type="text" name="confidenceLevel1" id="confidenceLevel1" value="0.9" autocomplete="off" class="layui-input"  onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                            <input type="text" name="confidenceLevel1" id="confidenceLevel1" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate" >响应概率区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate">响应概率区间估计</button>
                                                     </div>
                                                 </div>
 
@@ -213,7 +210,7 @@
                                                     <div class="layui-col-md4">
                                                         <label class="layui-form-label">刺激量</label>
                                                         <div class="layui-input-block">
-                                                            <input type="text" name="stimulusQuantity2" id="stimulusQuantity2" value="0" autocomplete="off" class="layui-input"  onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                            <input type="text" name="stimulusQuantity2" id="stimulusQuantity2" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
@@ -223,7 +220,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate" >响应点区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate">响应点区间估计</button>
                                                     </div>
                                                 </div>
                                                 <br />
@@ -460,7 +457,6 @@
             var $ = layui.$
                 , form = layui.form
                 , table = layui.table;
-            //事件
             var active = {
                 //兰利法分析参数设置
                 ParameterSetting: function () {
@@ -492,6 +488,10 @@
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
+                                            document.getElementById("avg").value = data[2];
+                                            document.getElementById("sigma").value = data[3];
+                                            document.getElementById("prec99").value = data[0];
+                                            document.getElementById("prec01").value = data[1];
                                         } else {
                                             layer.msg('添加失败', {
                                                 icon: 2,
@@ -548,15 +548,13 @@
                                         }
                                     }
                                 });
-                                table.reload('langley_list');
                                 layer.close(index); //关闭弹层
                             });
                             submit.trigger('click');
                         }
                     });
                 },
-
-                //点计算
+                //计算
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
@@ -565,22 +563,24 @@
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            document.getElementById("avg").value = data[0];
-                            document.getElementById("sigma").value = data[1];
-                            document.getElementById("prec99").value = data[2];
-                            document.getElementById("prec01").value = data[3];
+                            document.getElementById("avg").value = data[2];
+                            document.getElementById("sigma").value = data[3];
+                            document.getElementById("prec99").value = data[0];
+                            document.getElementById("prec01").value = data[1];
+                            document.getElementById("conversionNumber").value = data[4];
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                         }
                     });
+                    table.reload('langley_list');
                 },
 
-            //响应点计算
+            //响应点
                 responsePoint: function () {
-                      var responseValue = parseFloat(document.getElementById("responseProbability").value);
                     var is = true;
+                    var responseValue = parseFloat(document.getElementById("responseProbability").value);
                     if (responseValue.toString() == "NaN") {
                         is = false;
                         layer.open({
@@ -590,17 +590,17 @@
                             , tips: [1, '#ff2121']
                             ,time:3000
                         });
-                    } 
-                    if ((0.0 >= responseValue) || (responseValue > 1.0)) {
+                    }
+                    if ((0 >= responseValue) || (responseValue > 1.0)) {
                         is = false;
-                               layer.open({
-                                   type: 4
-                                   , title: '输入有误'
-                                   , content: ['响应概率必须在0到1之间', '#responseProbability']
-                                   , tips: [1, '#ff2121']
-                                   ,time:3000
-                               });
-                    } 
+                         layer.open({
+                             type: 4
+                             , title: '输入有误'
+                             , content: ['响应概率必须在0到1之间', '#responseProbability']
+                             , tips: [1, '#ff2121']
+                             ,time:3000
+                         });
+                    }
                     if (is) {
                           //事件
                                 $.ajax({
@@ -618,10 +618,10 @@
                                         document.getElementById("responsePointValue").value = data;
                                     }
                                 });
-                    }   
+                    }
                 },
 
-                 //响应概率计算
+                 //响应概率
                 responseProbability: function () {
                     var stimulusQuantity = parseFloat(document.getElementById("stimulusQuantity").value);
                     if (stimulusQuantity.toString() == "NaN") {
@@ -651,7 +651,7 @@
                     }
                 },
 
-                 //响应概率区间计算
+                 //响应概率区间估计
                 responseProbabilityIntervalEstimate: function () {
                     var isResponse = true;
                     var reponseProbability2 = parseFloat(document.getElementById("reponseProbability2").value);
@@ -706,7 +706,7 @@
                     }
                 },
 
-                  //响应点区间计算
+                  //响应点区间估计
                 responsePointIntervalEstimate: function () {
                     var reponseProbability2 = parseFloat(document.getElementById("reponseProbability2").value);
                     var confidenceLevel2 = parseFloat(document.getElementById("confidenceLevel2").value);
@@ -752,38 +752,38 @@
                     if (sigma == 0) {
                         isresponseEstimaate = false;
                         layer.open({
-                            title: '错误提示'
+                            title:'错误提示'
                             , content: '当前标准方差为0，不能进行响应点区间估计计算'
                             , time: 5000
-                            , icon: 2
+                            ,icon:2
                         });
                     }
                     if (isresponseEstimaate) {
-                        $.ajax({
-                            type: "post",
-                            data: {
-                                "reponseProbability2": reponseProbability2,
-                                "confidenceLevel2": confidenceLevel2,
-                                "cjl": stimulusQuantity2,
-                                "favg": document.getElementById("avg").value,
-                                "fsigma": document.getElementById("sigma").value
-                            },
-                            url: '@Url.Action("ResponsePointIntervalEstimate", "Langley")',
-                            datatype: "json",
-                            contenttype: "application/json; charset=utf-8",
-                            async: false,
-                            success: function (data) {
-                                document.getElementById("danConfidenceInterval1").value = data[0];
-                                document.getElementById("danConfidenceInterval2").value = data[1];
-                                document.getElementById("danConfidenceInterval3").value = data[2];
-                                document.getElementById("shuangConfidenceInterval1").value = data[3];
-                                document.getElementById("shuangConfidenceInterval2").value = data[4];
-                                document.getElementById("shuangConfidenceInterval3").value = data[5];
-                            }
-                        });
+                         $.ajax({
+                             type: "post",
+                             data: {
+                                 "reponseProbability2": reponseProbability2,
+                                 "confidenceLevel2": confidenceLevel2 ,
+                                 "cjl": stimulusQuantity2,
+                                 "favg": document.getElementById("avg").value,
+                                 "fsigma": document.getElementById("sigma").value
+                             },
+                             url: '@Url.Action("ResponsePointIntervalEstimate", "Langley")',
+                             datatype: "json",
+                             contenttype: "application/json; charset=utf-8",
+                             async: false,
+                             success: function (data) {
+                                 document.getElementById("danConfidenceInterval1").value = data[0];
+                                 document.getElementById("danConfidenceInterval2").value = data[1];
+                                 document.getElementById("danConfidenceInterval3").value = data[2];
+                                 document.getElementById("shuangConfidenceInterval1").value = data[3];
+                                 document.getElementById("shuangConfidenceInterval2").value = data[4];
+                                 document.getElementById("shuangConfidenceInterval3").value = data[5];
+                             }
+                         });
                     }
                 }
-                     //批量区间计算
+                //批量区间计算
                 , BatchIntervalCalculation: function () {
                     var isConfi = true;
                     var intervalTypeSelection = 1;
@@ -799,6 +799,7 @@
                             intervalTypeSelection = check[i].value;
                         }
                     }
+                    //alert("add");
                     if (BatchConfidenceLevel.toString() == "NaN") {
                         isConfi = false;
                         layer.open({
@@ -875,12 +876,11 @@
                         });
                     }
                 }
-                
             }
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
-            });
+                });
         });
     </script>
 </body>

@@ -11,12 +11,22 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
+    @{ 
+        var langLeyName = ViewData["langLeyNameString"];
+    }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
             <div clas="layui-card layui-col-ssm12">
-                <table id="langley_listExperiment" lay-filter="langleylist"></table>
+
+                <table id="langley_list" lay-filter="langleylist"></table>
+                <script type="text/html" id="Tool_title">
+                    <div class="layui-input-inline">
+                        <label class="layui-form-label" style="width:auto;height:25px;text-anchor:inherit">@langLeyName</label>
+                    </div>
+                </script>
+
                 <script type="text/html" id="response_state">
-                    {{# if(d.ldt_Number == d.number){}}
+                    {{# if(d.ldt_Number == d.ldt_Number){}}
                     <a class="layui-btn layui-btn-xs" lay-event="response"><i></i>响应</a>
                     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="notResponse"><i></i>不响应</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
@@ -99,9 +109,9 @@
 
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
-                                                                <label class="layui-form-label">99.9%响应点</label>
+                                                                <label class="layui-form-label" style="width:auto">99.9%响应点</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="prec99" id="prec99" autocomplete="off" class="layui-input" readonly>
+                                                                    <input type="text" name="prec99" id="prec99" style="width:99%" autocomplete="off" class="layui-input" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -233,21 +243,21 @@
                                                                 <div class="layui-col-md12 layui-col-space10">
                                                                     <div class="layui-col-md12 layui-col-space5">
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">响应点置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1"style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">均值置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2"style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">标准差置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3"style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -267,21 +277,21 @@
                                                                 <div class="layui-col-md12 layui-col-space10">
                                                                     <div class="layui-col-md12 layui-col-space5">
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">响应点置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval1" id="danConfidenceInterval1" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval1" id="danConfidenceInterval1" style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">均值置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2"style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">标准差置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval3" id="danConfidenceInterval3" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval3" id="danConfidenceInterval3" style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -341,9 +351,9 @@
 
                                                             <div class="layui-col-md12 layui-col-space5">
                                                                 <div class="layui-col-md12">
-                                                                    <label class="layui-form-label">Y轴分隔份数</label>
+                                                                    <label class="layui-form-label" style="width:auto">Y轴分隔份数</label>
                                                                     <div class="layui-input-block">
-                                                                        <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                                        <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" style="width:99.7%" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -453,7 +463,7 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-            }).use(['index', 'langleyexperiment', 'table','layedit'], function () {
+            }).use(['index', 'langley', 'table','layedit'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
@@ -685,6 +695,15 @@
                             , time: 3000
                         });
                     }
+                    if (confidenceLevel1 <= 0 || confidenceLevel1 > 1) {
+                        isResponse = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
                     if (isResponse) {
                       $.ajax({
                          type: "post",
@@ -742,6 +761,15 @@
                             , time: 3000
                         });
                     }
+                    if (confidenceLevel2 <= 0 || confidenceLevel2 > 1) {
+                        isresponseEstimaate = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
                     if (stimulusQuantity2.toString() == "NaN") {
                         isresponseEstimaate = false;
                         layer.open({
@@ -756,7 +784,7 @@
                         layer.open({
                             title:'错误提示'
                             , content: '当前标准方差为0，不能进行响应点区间估计计算'
-                            , time: 5000
+                            , time: 3000
                             ,icon:2
                         });
                     }
@@ -809,6 +837,24 @@
                             , content: ['置信水平不能为空', '#BatchConfidenceLevel3']
                             , tips: [1, '#ff2121']
                             , time: 3000
+                        });
+                    }
+                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel>1) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin > yMax) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: 'Y轴最小值不能大于Y轴最大值'
+                            , time: 3000
+                            , icon: 5
                         });
                     }
                     if (yMin.toString() == "NaN") {

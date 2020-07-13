@@ -17,13 +17,13 @@ layui.define(['table', 'form'], function (exports) {
         , url: '../Langley/GetAllLangleys' //模拟接口
         , height: 'full-130'//高度最大化减去差值
         //, toolbar: 'default' 
-        //, toolbar: '#toolbarDemo' 
+        , toolbar: '#Tool_title' 
         , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
             layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
             , curr: 1 //设定初始在第 5 页
             , groups: 3 //只显示 1 个连续页码
             , first: false //不显示首页
-            , last: false //不显示尾页
+            , last: true //不显示尾页
 
         }
         , limit: 20
