@@ -398,7 +398,6 @@
     <Content Include="Static\layui\layui\font\iconfont.woff" />
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
     <Content Include="Views\Langley\LanglieParameterSettings.cshtml" />
-    <Content Include="Views\Langley\LangleyExperimentEdit.cshtml" />
     <Content Include="Views\Langley\LangleyLineChart.cshtml" />
   </ItemGroup>
   <ItemGroup>

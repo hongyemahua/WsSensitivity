@@ -20,17 +20,20 @@
 
                 <table id="langley_list" lay-filter="langleylist"></table>
                 <script type="text/html" id="Tool_title">
-                    <div class="layui-input-inline">
-                        <label class="layui-form-label" style="width:auto;height:25px;text-anchor:inherit">@langLeyName</label>
+                    <div class="layui-input-inline layui-col-md12">
+                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@langLeyName</label>
+                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">下一组响应状态：</label>
+                         <div class="layui-input-inline">
+                             <select name="modules"lay-verify="required" lay-filter="select_response">
+                                 <option value="0">0</option>
+                                 <option value="1">1</option>
+                             </select>
+                         </div>
                     </div>
                 </script>
 
                 <script type="text/html" id="response_state">
-                    {{# if(d.ldt_Number == d.number){}}
-                    <label>当前响应状态：</label>
-                    <input lay-event="response" id="response" value="0" name="response" style="width:20%" />
-                    <label>当前刺激量：</label>
-                    <input id="sq" name="sq" style="width:20%" />
+                    {{# if(d.ldt_Number == d.number -1){}}
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                     {{# } }}
                 </script>
@@ -40,19 +43,19 @@
         </div>
         <div class="layui-col-sm12">
             <div class="layui-col-md8 layui-col-space10">
-                <div class="layui-col-md3 layui-col-space5">
+                <div class="layui-col-md2 layui-col-space5">
                     <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">测试次数：</label>
+                        <label class="layui-form-label" style="width:auto">测试次数：</label>
                         <div class="layui-input-block">
-                            <label class="layui-form-label" style="width:5%" id="label1"></label>
+                            <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber"></label>
                         </div>
                     </div>
                 </div>
                 <div class="layui-col-md3 layui-col-space5">
                     <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">混合区间刺激量个数：</label>
+                        <label class="layui-form-label" style="width:auto">混合区间刺激量个数：</label>
                         <div class="layui-input-block">
-                            <label class="layui-form-label" style="width:5%" id="label2"></label>
+                            <label class="layui-form-label" style="width:5%" id="NM" name="NM"></label>
                         </div>
                     </div>
                 </div>
@@ -64,8 +67,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="layui-col-md4 layui-col-space5">
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input" id="sq" name="sq" style="width:auto" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-
             <div class="layui-card layui-col-sm12">
                 <div class="layui-tab">
                     <ul class="layui-tab-title">
@@ -108,7 +118,7 @@
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label" style="width:auto">99.9%响应点</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="prec99" id="prec99" style="width:99%" autocomplete="off" class="layui-input" readonly>
+                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -242,19 +252,19 @@
                                                                         <div class="layui-col-md4">
                                                                             <label class="layui-form-label" style="width:auto">响应点置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1"style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1" style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
                                                                             <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2"style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2" style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
                                                                             <label class="layui-form-label" style="width:auto">标准差置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3"style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3" style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -282,7 +292,7 @@
                                                                         <div class="layui-col-md4">
                                                                             <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2"style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2" style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
@@ -359,11 +369,11 @@
                                                                 <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
                                                             </div>
 
-                                                            <div class="layui-col-md12">
-                                                                <div class="layui-progress layui-progress-big" lay-showPercent="true">
-                                                                    <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                                                            @*<div class="layui-col-md12">
+                                                                <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="demo">
+                                                                    <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" id="demo1"></div>
                                                                 </div>
-                                                            </div>
+                                                            </div>*@
                                                         </div>
                                                     </div>
                                                 </div>
@@ -402,47 +412,6 @@
 
                                     </div>
                                 </div>
-
-                                <div class="layui-card layui-col-sm12">
-                                    <div class="layui-card-body">
-                                        <fieldset class="layui-elem-field">
-                                            <legend>设置X轴的最小及最大值</legend>
-                                            <div class="layui-field-box">
-                                                <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
-                                                    <div class="layui-fluid">
-                                                        <div class="layui-row layui-col-space15">
-
-                                                            <div class="layui-card">
-                                                                <div class="layui-col-md12 layui-col-space10">
-
-                                                                    <div class="layui-col-md12 layui-col-space5">
-                                                                        <div class="layui-col-md12">
-                                                                            <label class="layui-form-label">X最大值</label>
-                                                                            <div class="layui-input-block">
-                                                                                <input type="text" name="xMax" id="xMax" value="100" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="layui-col-md12 layui-col-space5">
-                                                                        <div class="layui-col-md12">
-                                                                            <label class="layui-form-label">X最小值</label>
-                                                                            <div class="layui-input-block">
-                                                                                <input type="text" name="xMin" id="xMin" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 
@@ -460,11 +429,12 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-            }).use(['index', 'langley', 'table','layedit'], function () {
+        }).use(['index', 'langley', 'table', 'layedit','element'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
-                , table = layui.table;
+                , table = layui.table
+                , element = layui.element; 
 
                 var active = {
                 //兰利法分析参数设置
@@ -492,15 +462,15 @@
                                     data: role,
                                     async: false,
                                     success: function (data) {
-                                        if (data) {
+                                        if (data[0]) {
                                             layer.msg('添加成功', {
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
-                                            document.getElementById("avg").value = data[2];
-                                            document.getElementById("sigma").value = data[3];
-                                            document.getElementById("prec99").value = data[0];
-                                            document.getElementById("prec01").value = data[1];
+                                            document.getElementById("avg").value = data[3];
+                                            document.getElementById("sigma").value = data[4];
+                                            document.getElementById("prec99").value = data[1];
+                                            document.getElementById("prec01").value = data[2];
                                         } else {
                                             layer.msg('添加失败', {
                                                 icon: 2,
@@ -510,7 +480,7 @@
                                         }
                                     }
                                 });
-                                table.reload('langley_listExperiment');
+                                location.href = '../Langley/LangleyExperiment';
                                 layer.close(index); //关闭弹层
                             });
                             submit.trigger('click');
@@ -813,7 +783,7 @@
                     }
                 }
                 //批量区间计算
-                , BatchIntervalCalculation: function () {
+                    , BatchIntervalCalculation: function () {
                     var isConfi = true;
                     var intervalTypeSelection = 1;
                     var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
@@ -828,7 +798,6 @@
                             intervalTypeSelection = check[i].value;
                         }
                     }
-                    //alert("add");
                     if (BatchConfidenceLevel.toString() == "NaN") {
                         isConfi = false;
                         layer.open({
@@ -883,25 +852,27 @@
                             , time: 3000
                         });
                     }
-                    if (xMax.toString() == "NaN") {
-                        isConfi = false;
-                        layer.open({
-                            type: 4
-                            , content: ['X轴最大值不能为空', '#xMax']
-                            , tips: [1, '#ff2121']
-                            , time: 3000
-                        });
-                    }
-                    if (xMin.toString() == "NaN") {
-                        isConfi = false;
-                        layer.open({
-                            type: 4
-                            , content: ['X轴最小值不能为空', '#xMin']
-                            , tips: [1, '#ff2121']
-                            , time: 3000
-                        });
-                    }
-                    if (isConfi) {
+                    //if (xMax.toString() == "NaN") {
+                    //    isConfi = false;
+                    //    layer.open({
+                    //        type: 4
+                    //        , content: ['X轴最大值不能为空', '#xMax']
+                    //        , tips: [1, '#ff2121']
+                    //        , time: 3000
+                    //    });
+                    //}
+                    //if (xMin.toString() == "NaN") {
+                    //    isConfi = false;
+                    //    layer.open({
+                    //        type: 4
+                    //        , content: ['X轴最小值不能为空', '#xMin']
+                    //        , tips: [1, '#ff2121']
+                    //        , time: 3000
+                    //    });
+                    //}
+                   
+                        if (isConfi) {
+                            document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
                         $.ajax({
                             type: "post"
                             , data: {
@@ -918,12 +889,24 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                alert(data);
+                                document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                                var index = layer.open({
+                                    type: 2
+                                    , area: ['70%', '80%']
+                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                                    , data: { "data": data }
+                                    , content: ['../Langley/LangleyLineChart', 'no']
+                                    , btnAlign: 'c'
+                                    , anim: 1
+                                    , closeBtn: 1
+
+                                });
                             }
                         });
                     }
-                }
+                    }
             }
+
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
