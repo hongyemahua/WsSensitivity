@@ -11,54 +11,57 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
+    @{
+        var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
+    }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
-            <div class="layui-card">
-                <table id="langley_list" lay-filter="langleylist"></table>
+            <div clas="layui-card layui-col-ssm12">
+
+                <table id="doptimize_list" lay-filter="doptimizelist"></table>
+                <script type="text/html" id="Tool_title">
+                    <div class="layui-input-inline layui-col-md12">
+                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@DoptimizeNameSeting</label>
+                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">当前响应状态：</label>
+                        @*<input class="layui-input" lay-event="response" id="response" value="0" name="response" style="width:20%" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>*@
+                        <div class="layui-input-inline">
+                            <select name="modules" lay-verify="required" lay-filter="select_response">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                    </div>
+                </script>
 
                 <script type="text/html" id="response_state">
-                    {{# if(d.ldt_Number == d.number){}}
-                    <a class="layui-btn layui-btn-xs" lay-event="response"><i></i>响应</a>
-                    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="notResponse"><i></i>不响应</a>
+                    {{# if(d.ddt_Number == d.number -1){}}
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                     {{# } }}
                 </script>
             </div>
+
+
         </div>
-
         <div class="layui-col-sm12">
-
-            <div class="layui-card layui-col-sm6">
-
-                <div class="layui-col-md6 layui-col-space10">
-                    <div class="layui-col-md2 layui-col-space5">
-                        <div class="layui-col-md2">
-                            <label class="layui-form-label" style="width:40%">测试次数：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="testNumber" id="testNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
-                            </div>
+            <div class="layui-col-md6 layui-col-space10">
+                <div class="layui-col-md4 layui-col-space5">
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label" style="width:auto">测试次数：</label>
+                        <div class="layui-input-block">
+                            <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber"></label>
                         </div>
                     </div>
-                    <div class="layui-col-md2 layui-col-space5">
-                        <div class="layui-col-md2">
-                            <label class="layui-form-label" style="width:40%">混合区间刺激量个数：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="NM" id="NM" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md2 layui-col-space5">
-                        <div class="layui-col-md2">
-                            <label class="layui-form-label" style="width:40%">0，1转换次数：</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="conversionNumber" id="conversionNumber" autocomplete="off" class="layui-input" value=" " readonly style="width:60%;background-color:darkgray">
-                            </div>
+                </div>
+                
+                <div class="layui-col-md6 layui-col-space5">
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label" style="width:40%">当前刺激量：</label>
+                        <div class="layui-input-inline">
+                            <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                         </div>
                     </div>
                 </div>
             </div>
-
-
             <div class="layui-card layui-col-sm12">
                 <div class="layui-tab">
                     <ul class="layui-tab-title">
@@ -79,6 +82,7 @@
                                                 <div class="layui-card-body layui-row layui-col-space10">
 
                                                     <div class="layui-col-md4 layui-col-space10">
+                                                       
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label">平均值</label>
@@ -90,7 +94,7 @@
 
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
-                                                                <label class="layui-form-label">标准方差</label>
+                                                                <label class="layui-form-label">标准差</label>
                                                                 <div class="layui-input-block">
                                                                     <input type="text" name="sigma" id="sigma" autocomplete="off" class="layui-input" readonly>
                                                                 </div>
@@ -99,9 +103,9 @@
 
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
-                                                                <label class="layui-form-label">99.9%响应点</label>
+                                                                <label class="layui-form-label" style="width:auto">99.9%响应点</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="prec99" id="prec99" autocomplete="off" class="layui-input" readonly>
+                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -152,20 +156,20 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4 layui-col-space10">
-                                                        <div class="layui-btn-group layui-col-md12">
-                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="ParameterSetting">
-                                                                修改分析参数
-                                                            </button>
+                                                        <div class="layui-col-md12 ">
+                                                            <div class="layui-col-md12">
+                                                                <label class="layui-form-label" style="width:auto">测试次数：</label>
+                                                                <div class="layui-input-block">
+                                                                    <label class="layui-form-label" id="dtestNumber" name="dtestNumber" readonly style="background-color: darkgray;width:100%"></label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
-
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions">
                                                                 技术条件
                                                             </button>
-
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
-
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="pointcalculate">
                                                                 计算
                                                             </button>
@@ -233,21 +237,21 @@
                                                                 <div class="layui-col-md12 layui-col-space10">
                                                                     <div class="layui-col-md12 layui-col-space5">
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">响应点置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval1" id="shuangConfidenceInterval1" style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">均值置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval2" id="shuangConfidenceInterval2" style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">标准差置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="shuangConfidenceInterval3" id="shuangConfidenceInterval3" style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -267,21 +271,21 @@
                                                                 <div class="layui-col-md12 layui-col-space10">
                                                                     <div class="layui-col-md12 layui-col-space5">
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">响应点置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval1" id="danConfidenceInterval1" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval1" id="danConfidenceInterval1" style="width:93%" readonly placeholder="响应点置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">均值置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval2" id="danConfidenceInterval2" style="width:93%" readonly placeholder="均值置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                         <div class="layui-col-md4">
-                                                                            <label class="layui-form-label">标准差置信区间</label>
+                                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
                                                                             <div class="layui-input-block">
-                                                                                <input type="text" name="danConfidenceInterval3" id="danConfidenceInterval3" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
+                                                                                <input type="text" name="danConfidenceInterval3" id="danConfidenceInterval3" style="width:93%" readonly placeholder="标准差置信区间" autocomplete="off" class="layui-input">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -341,21 +345,24 @@
 
                                                             <div class="layui-col-md12 layui-col-space5">
                                                                 <div class="layui-col-md12">
-                                                                    <label class="layui-form-label">Y轴分隔份数</label>
+                                                                    <label class="layui-form-label" style="width:auto">Y轴分隔份数</label>
                                                                     <div class="layui-input-block">
-                                                                        <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                                        <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" style="width:99.7%" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             <div class="layui-col-md12 layui-col-space5">
-                                                                <button type="button" class="layui-btn" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
                                                             </div>
 
                                                             <div class="layui-col-md12">
                                                                 <div class="layui-progress layui-progress-big" lay-showPercent="true">
                                                                     <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
                                                                 </div>
+                                                            </div>
+                                                            <div class="layui-col-md12 layui-col-space5">
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -395,47 +402,6 @@
 
                                     </div>
                                 </div>
-
-                                <div class="layui-card layui-col-sm12">
-                                    <div class="layui-card-body">
-                                        <fieldset class="layui-elem-field">
-                                            <legend>设置X轴的最小及最大值</legend>
-                                            <div class="layui-field-box">
-                                                <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
-                                                    <div class="layui-fluid">
-                                                        <div class="layui-row layui-col-space15">
-
-                                                            <div class="layui-card">
-                                                                <div class="layui-col-md12 layui-col-space10">
-
-                                                                    <div class="layui-col-md12 layui-col-space5">
-                                                                        <div class="layui-col-md12">
-                                                                            <label class="layui-form-label">X最大值</label>
-                                                                            <div class="layui-input-block">
-                                                                                <input type="text" name="xMax" id="xMax" value="100" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="layui-col-md12 layui-col-space5">
-                                                                        <div class="layui-col-md12">
-                                                                            <label class="layui-form-label">X最小值</label>
-                                                                            <div class="layui-input-block">
-                                                                                <input type="text" name="xMin" id="xMin" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 
@@ -453,68 +419,19 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'langley', 'table'], function () {
+            }).use(['index', 'doptimize', 'table','layedit'], function () {
             var $ = layui.$
                 , form = layui.form
+                , layedit = layui.layedit
                 , table = layui.table;
-            var active = {
-                //兰利法分析参数设置
-                ParameterSetting: function () {
-                    layer.open({
-                        type: 2
-                        , title: '兰利法分析参数设置'
-                        , content: '@Url.Action("ParameterSetting","Langley")'
-                        , area: ['450px', '260px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submit = layero.find('iframe').contents().find("#role_submit");
 
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(role_submit)', function (data) {
-                                var field = data.field; //获取提交的字段
-                                var role = JSON.stringify(field);
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    type: "post",
-                                    url: '@Url.Action("UpdateParameter", "Langley")',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    data: role,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data) {
-                                            layer.msg('添加成功', {
-                                                icon: 1,
-                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                            });
-                                            document.getElementById("avg").value = data[2];
-                                            document.getElementById("sigma").value = data[3];
-                                            document.getElementById("prec99").value = data[0];
-                                            document.getElementById("prec01").value = data[1];
-                                        } else {
-                                            layer.msg('添加失败', {
-                                                icon: 2,
-                                                shift: -1,  //震动效果
-                                                time: 1000  //1秒关闭
-                                            });
-                                        }
-                                    }
-                                });
-                                table.reload('langley_list');
-                                layer.close(index); //关闭弹层
-                            });
-                            submit.trigger('click');
-                        }
-                    });
-                },
-
+                var active = {
                 //技术条件
                 technicalconditions: function () {
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: '@Url.Action("TechnicalConditions", "Langley")'
+                        , content: '@Url.Action("TechnicalConditions", "Doptimize")'
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -528,7 +445,7 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("TechnicalConditions_Update", "Langley")',
+                                    url: '@Url.Action("TechnicalConditions_Update", "Doptimize")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
@@ -558,7 +475,7 @@
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
-                        url: '@Url.Action("PointCalculate", "Langley")',
+                        url: '@Url.Action("PointCalculate", "Doptimize")',
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
@@ -567,14 +484,17 @@
                             document.getElementById("sigma").value = data[3];
                             document.getElementById("prec99").value = data[0];
                             document.getElementById("prec01").value = data[1];
-                            document.getElementById("conversionNumber").value = data[4];
+                            //document.getElementById("conversionNumber").value = data[4];
+                            $("#label3").text(data[4]);
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
+                            document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            document.getElementById("InputIntervalCalculation").classList.remove('layui-btn-disabled');
                         }
                     });
-                    table.reload('langley_list');
+                    table.reload('doptimize_list');
                 },
 
             //响应点
@@ -683,6 +603,15 @@
                             , time: 3000
                         });
                     }
+                    if (confidenceLevel1 <= 0 || confidenceLevel1 > 1) {
+                        isResponse = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
                     if (isResponse) {
                       $.ajax({
                          type: "post",
@@ -740,6 +669,15 @@
                             , time: 3000
                         });
                     }
+                    if (confidenceLevel2 <= 0 || confidenceLevel2 > 1) {
+                        isresponseEstimaate = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
                     if (stimulusQuantity2.toString() == "NaN") {
                         isresponseEstimaate = false;
                         layer.open({
@@ -754,7 +692,7 @@
                         layer.open({
                             title:'错误提示'
                             , content: '当前标准方差为0，不能进行响应点区间估计计算'
-                            , time: 5000
+                            , time: 3000
                             ,icon:2
                         });
                     }
@@ -792,14 +730,13 @@
                     var yMax = parseFloat(document.getElementById("yMax").value);
                     var Y_Axis = parseFloat(document.getElementById("Y_Axis").value);
                     var check =document.getElementsByName("intervalTypeSelection3");
-                    var xMax = parseFloat(document.getElementById("xMax").value);
-                    var xMin = parseFloat(document.getElementById("xMin").value);
+                    var avg = parseFloat(document.getElementById("avg").value);
+                    var sigma = parseFloat(document.getElementById("sigma").value);
                     for (var i = 0; i < check.length; i++) {
                         if (check[i].checked) {
                             intervalTypeSelection = check[i].value;
                         }
                     }
-                    //alert("add");
                     if (BatchConfidenceLevel.toString() == "NaN") {
                         isConfi = false;
                         layer.open({
@@ -807,6 +744,24 @@
                             , content: ['置信水平不能为空', '#BatchConfidenceLevel3']
                             , tips: [1, '#ff2121']
                             , time: 3000
+                        });
+                    }
+                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel>1) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin > yMax) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: 'Y轴最小值不能大于Y轴最大值'
+                            , time: 3000
+                            , icon: 5
                         });
                     }
                     if (yMin.toString() == "NaN") {
@@ -836,26 +791,70 @@
                             , time: 3000
                         });
                     }
-                    if (xMax.toString() == "NaN") {
-                        isConfi = false;
-                        layer.open({
-                            type: 4
-                            , content: ['X轴最大值不能为空', '#xMax']
-                            , tips: [1, '#ff2121']
-                            , time: 3000
-                        });
-                    }
-                    if (xMin.toString() == "NaN") {
-                        isConfi = false;
-                        layer.open({
-                            type: 4
-                            , content: ['X轴最小值不能为空', '#xMin']
-                            , tips: [1, '#ff2121']
-                            , time: 3000
-                        });
-                    }
+                    //if (xMax.toString() == "NaN") {
+                    //    isConfi = false;
+                    //    layer.open({
+                    //        type: 4
+                    //        , content: ['X轴最大值不能为空', '#xMax']
+                    //        , tips: [1, '#ff2121']
+                    //        , time: 3000
+                    //    });
+                    //}
+                    //if (xMin.toString() == "NaN") {
+                    //    isConfi = false;
+                    //    layer.open({
+                    //        type: 4
+                    //        , content: ['X轴最小值不能为空', '#xMin']
+                    //        , tips: [1, '#ff2121']
+                    //        , time: 3000
+                    //    });
+                    //}
                     if (isConfi) {
-                        $.ajax({
+                         var index=layer.open({
+                        type: 2
+                        , title: "兰利法参数设置" //不显示标题栏
+                        , area: ['70%', '80%']
+                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        , content: "@Url.Action("LanglieParameterSettings", "Langley")"
+                        ,btnAlign:'c'
+                        , btn: '确定'
+                        , anim: 1
+                        ,closeBtn: 1
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'submit_Btn'
+                                , submit = layero.find('iframe').contents().find("#" + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                var role = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: role,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            layer.msg('设置成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                             //关闭弹层
+                                            layer.close(index);
+                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
+                                        }
+                                    }
+                                });
+
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                        @*$.ajax({
                             type: "post"
                             , data: {
                                 "BatchConfidenceLevel": BatchConfidenceLevel
@@ -863,25 +862,39 @@
                                 , "yMax": yMax
                                 , "Y_Axis": Y_Axis
                                 , "intervalTypeSelection": intervalTypeSelection
-                                , "xMax": xMax
-                                , "xMin": xMin
+                                , "favg": avg
+                                , "fsigma": sigma
                             }
                             , url: '@Url.Action("BatchIntervalCalculation", "Langley")'
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                alert(data);
+                                var index=layer.open({
+                                    type: 2
+                                    , area: ['70%', '80%']
+                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                                    , data:{"data":data}
+                                    , content: '@Url.Action("LangleyLineChart", "Langley")'
+
+                                    ,btnAlign:'c'
+                                    , btn: '确定'
+                                    , anim: 1
+                                    ,closeBtn: 1
+
+                                });
                             }
-                        });
+                        });*@
                     }
-                }
+                    }
             }
+
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
                 });
         });
     </script>
+
 </body>
 </html>

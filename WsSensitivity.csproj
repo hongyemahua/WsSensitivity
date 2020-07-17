@@ -129,6 +129,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AdminHomeController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DoptimizeController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\LangleyController.cs" />
     <Compile Include="Controllers\MySettingController.cs" />
@@ -147,6 +148,7 @@
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DoptimizeDataTable.cs" />
     <Compile Include="Models\Langlie.cs" />
     <Compile Include="Models\Langley\AlgorithmReconstruct.cs" />
     <Compile Include="Models\Class_区间估计.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Static\echarts\echarts.min.js" />
@@ -323,6 +326,8 @@
     <Content Include="Static\layui\lib\index.js" />
     <Content Include="Static\layui\lib\ImgCodeVerify.js" />
     <Content Include="Static\layui\lib\view.js" />
+    <Content Include="Static\layui\modules\doptimize.js" />
+    <Content Include="Static\layui\modules\doptimizequery_table.js" />
     <Content Include="Static\layui\modules\langleyquery_table.js" />
     <Content Include="Static\layui\modules\index_table.js" />
     <Content Include="Static\layui\modules\langley.js" />
@@ -398,8 +403,11 @@
     <Content Include="Static\layui\layui\font\iconfont.woff" />
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
     <Content Include="Views\Langley\LanglieParameterSettings.cshtml" />
-    <Content Include="Views\Langley\LangleyExperimentEdit.cshtml" />
     <Content Include="Views\Langley\LangleyLineChart.cshtml" />
+    <Content Include="Views\Doptimize\DoptimizeParameterSettings.cshtml" />
+    <Content Include="Views\Doptimize\DoptimizeExperiment.cshtml" />
+    <Content Include="Views\Doptimize\TechnicalConditions.cshtml" />
+    <Content Include="Views\Doptimize\DoptimizeQuery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

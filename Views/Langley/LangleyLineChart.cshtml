@@ -7,28 +7,62 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-
-    <script src="~/Static/echarts/echarts.min.js"></script>
-    <script>
-        option = {
-            xAxis: {},
-            yAxis: {},
-            series: [{
-                data: [[20, 120], [50, 200], [40, 50]],
-                type: 'line'
-            },
-            {
-                data: [[20, 120], [50, 200], [100, 50]],
-                type: 'line'
-            }]
-        };
-
-    </script>
+    <script src="~/Static/layui/lib/extend/echartsTheme.js"></script>
+    <script src="~/Static/layui/lib/extend/echarts.js"></script>
     <title></title>
 </head>
 <body>
-    <div style="position: relative; width: 1132px; height: 496px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
-        <canvas style="position: absolute; left: 0px; top: 0px; width: 1132px; height: 496px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;" data-zr-dom-id="zr_0" width="1132" height="496"></canvas>
-    </div>
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 1200px;height: 600px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: { text: '批量区间计算' },
+            xAxis: {},
+            yAxis: {},
+            legend: {
+                data: ['销量'],
+                data: ['111']
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                },
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    dataView: { readOnly: false },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            series: [{
+                name: '销量',
+                data: [[20, 120], [50, 200], [40, 50]],
+                type: 'line'
+            },
+                {
+                    name: '',
+                    data: [[20, 120], [50, 200], [120, 50]],
+                    type: 'line'
+                },
+                {
+                    name: '',
+                    data: [[20, 120], [50, 200], [140, 50]],
+                    type: 'line'
+                }
+                ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
 </body>
 </html>
