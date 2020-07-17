@@ -75,60 +75,6 @@ layui.define(['table', 'form'], function (exports) {
         });
     });
 
-    ////头工具栏事件
-    //table.on('toolbar(langleylist)', function (obj) {
-    //    //搜索框回车事件
-    //    $('#response').on('keydown', function (event) {
-    //        if (event.keyCode == 13) {
-    //            var is = true;
-    //            var response = parseFloat(document.getElementById("response").value);
-    //            if ((response != 0) && (response != 1)) {
-    //                is = false;
-    //                layer.open({
-    //                    type: 4
-    //                    , title: '输入有误'
-    //                    , content: ['响应状态必须是0或1', '#response']
-    //                    , tips: [1, '#ff2121']
-    //                    , time: 3000
-    //                });
-    //            }
-    //            if (is) {
-    //                $.ajax({
-    //                    url: "../Langley/InsertData",
-    //                    type: "post",
-    //                    data: {
-    //                        "response": response,
-    //                        "sq": document.getElementById("sq").value
-    //                    },
-    //                    dataType: "json",
-    //                    success: function (data) {
-
-    //                        if (data[0]) {
-    //                            layer.msg('增加成功', {
-    //                                icon: 1,
-    //                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-    //                            });
-
-    //                            table.reload('langley_list'); //数据刷新
-    //                            $("#testNumber").text(data[1]);
-    //                            $("#NM").text(data[2]);
-
-    //                            document.getElementById("sq").value = data[3];
-
-    //                        } else {
-    //                            layer.msg('增加失败', {
-    //                                icon: 2,
-    //                                shift: 6,  //震动效果
-    //                                time: 1000  //1秒关闭
-    //                            });
-    //                        }
-    //                    }
-    //                });
-    //            }
-    //        }
-    //    });
-
-    //});
 
     //监听工具条
     table.on('tool(langleylist)', function (obj) {

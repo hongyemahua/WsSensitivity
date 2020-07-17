@@ -1,0 +1,136 @@
+﻿@if (Session["Admin"] == null)
+{
+    <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
+}
+
+@{
+    List<string> pn = (List<string>)ViewData["pn"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>D优化法查询</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">产品名称</label>
+                        <div class="layui-input-block">
+                            @*<input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">*@
+                            <div class="layui-input-inline">
+                                <select name="modules" lay-verify="required" lay-search="">
+                                    @foreach (var p in pn)
+                                    {
+                                        <option value="@p">@p</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">起始日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="start" class="layui-input" id="start">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">终止日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="stop" class="layui-input" id="stop">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-langleyquery" lay-submit lay-filter="doptimize_search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-card-body">
+                <table id="doptimize_list" lay-filter="doptimizelist"></table>
+
+                <script type="text/html" id="reverse_state">
+                    {{#  if(d.FlipTheResponse == "0"){ }}
+                    <button class="layui-btn layui-btn-primary layui-btn-xs">不翻转</button>
+                    {{#  } else { }}
+                    <button class="layui-btn layui-btn-xs">翻转</button>
+                    {{#  } }}
+                </script>
+
+                <script type="text/html" id="table-doptimizequery-tool">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                </script>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script>
+       layui.config({
+            base: '../Static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+           }).use(['laydate', 'index', 'doptimizequery_table', 'table'], function () {
+            var $ = layui.$
+                , form = layui.form
+                , table = layui.table;
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            laydate.render({
+                elem: '#stop' //指定元素
+            });
+
+
+            //监听搜索
+               form.on('submit(doptimize_search)', function (data) {
+                var field = data.field;
+                var modules = field.modules;
+                var start = field.start;
+                var stop = field.stop;
+                //执行重载
+                   table.reload('doptimize_list', {
+                    url: "@Url.Action("doptimize_query", "Doptimize")"
+                    , method: "post"
+                    , where: { "productName": modules, "startTime": start, "endTime": stop}
+                    , contentType: 'application/json'
+                    , parseData: function (res) { //res 即为原始返回的数据
+                        if (this.page.curr) {
+                            var result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                        } else {
+                            var result = res.data.slice(0, this.limit);
+                        }
+                        return {
+                            "code": res.code,
+                            "msg": "",
+                            "count": res.data.length,
+                            "data": result
+                        };
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -11,29 +11,30 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
-    @{ 
-        var langLeyName = ViewData["langLeyNameString"];
+    @{
+        var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
     }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
             <div clas="layui-card layui-col-ssm12">
 
-                <table id="langley_list" lay-filter="langleylist"></table>
+                <table id="doptimize_list" lay-filter="doptimizelist"></table>
                 <script type="text/html" id="Tool_title">
                     <div class="layui-input-inline layui-col-md12">
-                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@langLeyName</label>
-                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">下一组响应状态：</label>
-                         <div class="layui-input-inline">
-                             <select name="modules"lay-verify="required" lay-filter="select_response">
-                                 <option value="0">0</option>
-                                 <option value="1">1</option>
-                             </select>
-                         </div>
+                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@DoptimizeNameSeting</label>
+                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">当前响应状态：</label>
+                        @*<input class="layui-input" lay-event="response" id="response" value="0" name="response" style="width:20%" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>*@
+                        <div class="layui-input-inline">
+                            <select name="modules" lay-verify="required" lay-filter="select_response">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
                     </div>
                 </script>
 
                 <script type="text/html" id="response_state">
-                    {{# if(d.ldt_Number == d.number -1){}}
+                    {{# if(d.ddt_Number == d.number -1){}}
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                     {{# } }}
                 </script>
@@ -42,8 +43,8 @@
 
         </div>
         <div class="layui-col-sm12">
-            <div class="layui-col-md8 layui-col-space10">
-                <div class="layui-col-md2 layui-col-space5">
+            <div class="layui-col-md6 layui-col-space10">
+                <div class="layui-col-md4 layui-col-space5">
                     <div class="layui-col-md12">
                         <label class="layui-form-label" style="width:auto">测试次数：</label>
                         <div class="layui-input-block">
@@ -51,27 +52,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md3 layui-col-space5">
+                
+                <div class="layui-col-md6 layui-col-space5">
                     <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:auto">混合区间刺激量个数：</label>
-                        <div class="layui-input-block">
-                            <label class="layui-form-label" style="width:5%" id="NM" name="NM"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md3 layui-col-space5">
-                    <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">0，1转换次数：</label>
-                        <div class="layui-input-block">
-                            <label class="layui-form-label" style="width:5%" id="label3"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md4 layui-col-space5">
-                    <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
+                        <label class="layui-form-label" style="width:40%">当前刺激量：</label>
                         <div class="layui-input-inline">
-                            <input class="layui-input" id="sq" name="sq"  onkeyup="value=value.replace(/[^\d\.]/g,'')"/>
+                            <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                         </div>
                     </div>
                 </div>
@@ -96,6 +82,7 @@
                                                 <div class="layui-card-body layui-row layui-col-space10">
 
                                                     <div class="layui-col-md4 layui-col-space10">
+                                                       
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label">平均值</label>
@@ -118,7 +105,7 @@
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label" style="width:auto">99.9%响应点</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly >
+                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -169,20 +156,20 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4 layui-col-space10">
-                                                        <div class="layui-btn-group layui-col-md12">
-                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="ParameterSetting">
-                                                                修改分析参数
-                                                            </button>
+                                                        <div class="layui-col-md12 ">
+                                                            <div class="layui-col-md12">
+                                                                <label class="layui-form-label" style="width:auto">测试次数：</label>
+                                                                <div class="layui-input-block">
+                                                                    <label class="layui-form-label" id="dtestNumber" name="dtestNumber" readonly style="background-color: darkgray;width:100%"></label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
-
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions">
                                                                 技术条件
                                                             </button>
-
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
-
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="pointcalculate">
                                                                 计算
                                                             </button>
@@ -369,6 +356,14 @@
                                                                 <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
                                                             </div>
 
+                                                            <div class="layui-col-md12">
+                                                                <div class="layui-progress layui-progress-big" lay-showPercent="true">
+                                                                    <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-col-md12 layui-col-space5">
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -424,71 +419,19 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'langley', 'table', 'layedit','element'], function () {
+            }).use(['index', 'doptimize', 'table','layedit'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
-                , table = layui.table
-                , element = layui.element; 
+                , table = layui.table;
 
                 var active = {
-                //兰利法分析参数设置
-                ParameterSetting: function () {
-                    layer.open({
-                        type: 2
-                        , title: '兰利法分析参数设置'
-                        , content: '@Url.Action("ParameterSetting","Langley")'
-                        , area: ['450px', '260px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submit = layero.find('iframe').contents().find("#role_submit");
-
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(role_submit)', function (data) {
-                                var field = data.field; //获取提交的字段
-                                var role = JSON.stringify(field);
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    type: "post",
-                                    url: '@Url.Action("UpdateParameter", "Langley")',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    data: role,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data[0]) {
-                                            layer.msg('添加成功', {
-                                                icon: 1,
-                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                            });
-                                            document.getElementById("avg").value = data[3];
-                                            document.getElementById("sigma").value = data[4];
-                                            document.getElementById("prec99").value = data[1];
-                                            document.getElementById("prec01").value = data[2];
-                                        } else {
-                                            layer.msg('添加失败', {
-                                                icon: 2,
-                                                shift: -1,  //震动效果
-                                                time: 1000  //1秒关闭
-                                            });
-                                        }
-                                    }
-                                });
-                                location.href = '../Langley/LangleyExperiment';
-                                layer.close(index); //关闭弹层
-                            });
-                            submit.trigger('click');
-                        }
-                    });
-                },
-
                 //技术条件
                 technicalconditions: function () {
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: '@Url.Action("TechnicalConditions", "Langley")'
+                        , content: '@Url.Action("TechnicalConditions", "Doptimize")'
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -502,7 +445,7 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("TechnicalConditions_Update", "Langley")',
+                                    url: '@Url.Action("TechnicalConditions_Update", "Doptimize")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
@@ -532,7 +475,7 @@
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
-                        url: '@Url.Action("PointCalculate", "Langley")',
+                        url: '@Url.Action("PointCalculate", "Doptimize")',
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
@@ -548,9 +491,10 @@
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            document.getElementById("InputIntervalCalculation").classList.remove('layui-btn-disabled');
                         }
                     });
-                    table.reload('langley_list');
+                    table.reload('doptimize_list');
                 },
 
             //响应点
@@ -778,7 +722,7 @@
                     }
                 }
                 //批量区间计算
-                    , BatchIntervalCalculation: function () {
+                , BatchIntervalCalculation: function () {
                     var isConfi = true;
                     var intervalTypeSelection = 1;
                     var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
@@ -865,10 +809,52 @@
                     //        , time: 3000
                     //    });
                     //}
-                   
-                        if (isConfi) {
-                            document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
-                        $.ajax({
+                    if (isConfi) {
+                         var index=layer.open({
+                        type: 2
+                        , title: "兰利法参数设置" //不显示标题栏
+                        , area: ['70%', '80%']
+                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        , content: "@Url.Action("LanglieParameterSettings", "Langley")"
+                        ,btnAlign:'c'
+                        , btn: '确定'
+                        , anim: 1
+                        ,closeBtn: 1
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'submit_Btn'
+                                , submit = layero.find('iframe').contents().find("#" + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                var role = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: role,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            layer.msg('设置成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                             //关闭弹层
+                                            layer.close(index);
+                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
+                                        }
+                                    }
+                                });
+
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                        @*$.ajax({
                             type: "post"
                             , data: {
                                 "BatchConfidenceLevel": BatchConfidenceLevel
@@ -884,20 +870,21 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
-                                var index = layer.open({
+                                var index=layer.open({
                                     type: 2
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , data: { "data": data }
-                                    , content: ['../Langley/LangleyLineChart', 'no']
-                                    , btnAlign: 'c'
+                                    , data:{"data":data}
+                                    , content: '@Url.Action("LangleyLineChart", "Langley")'
+
+                                    ,btnAlign:'c'
+                                    , btn: '确定'
                                     , anim: 1
-                                    , closeBtn: 1
+                                    ,closeBtn: 1
 
                                 });
                             }
-                        });
+                        });*@
                     }
                     }
             }
@@ -908,6 +895,6 @@
                 });
         });
     </script>
-    
+
 </body>
 </html>

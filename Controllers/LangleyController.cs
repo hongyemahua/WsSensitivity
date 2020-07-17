@@ -379,8 +379,6 @@ namespace WsSensitivity.Controllers
         {
             List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
             List<LangleyExperimentTable> PagesLet = new List<LangleyExperimentTable>();
-            //int first = (page-1) * limit;
-            //int last = page * limit;
             int last = lets.Count - (page - 1) * limit;
             int first = 0;
             if (page * limit<lets.Count) {
@@ -493,13 +491,13 @@ namespace WsSensitivity.Controllers
             var let = dbDrive.GetLangleyExperimentTable(id);
             return Json(dbDrive.Delete(let));
         }
-
+        //兰利法参数设置
         public ActionResult LanglieParameterSettings()
         {
             return View();
         }
 
-        public ActionResult LangleyLineChart()
+        public ActionResult LangleyLineChart(string data)
         {
             ViewData["aArray"] = aArray;
             ViewData["bArray"] = bArray;
