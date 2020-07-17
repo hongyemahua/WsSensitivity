@@ -3,7 +3,19 @@
 }
 
 <!DOCTYPE html>
+@{ 
+    var aArray = (List<string>)ViewData["aArray"];
+    string a = aArray[0] + "," + aArray[1] + "," + aArray[2] + "," + aArray[3] + "," + aArray[4] + "," + aArray[5] + "," + aArray[6] + "," + aArray[7] + "," + aArray[8] + "," + aArray[9] + "," + aArray[10] + "," + aArray[11] + "," + aArray[12] + "," + aArray[13] + "," + aArray[14] + "," + aArray[15] + "," + aArray[16] + "," + aArray[17] + "," + aArray[18] + "," + aArray[19] + "," + aArray[20];
 
+    var bArray = (List<string>)ViewData["bArray"];
+    string b = bArray[0] + "," + bArray[1] + "," + bArray[2] + "," + bArray[3] + "," + bArray[4] + "," + bArray[5] + "," + bArray[6] + "," + bArray[7] + "," + bArray[8] + "," + bArray[9] + "," + bArray[10] + "," + bArray[11] + "," + bArray[12] + "," + bArray[13] + "," + bArray[14] + "," + bArray[15] + "," + bArray[16] + "," + bArray[17] + "," + bArray[18] + "," + bArray[19] + "," + bArray[20];
+
+    var cArray = (List<string>)ViewData["cArray"];
+    string c = cArray[0] + "," + cArray[1] + "," + cArray[2] + "," + cArray[3] + "," + cArray[4] + "," + cArray[5] + "," + cArray[6] + "," + cArray[7] + "," + cArray[8] + "," + cArray[9] + "," + cArray[10] + "," + cArray[11] + "," + cArray[12] + "," + cArray[13] + "," + cArray[14] + "," + cArray[15] + "," + cArray[16] + "," + cArray[17] + "," + cArray[18] + "," + cArray[19] + "," + cArray[20];
+
+    var incredibleLevelName = (string)ViewData["incredibleLevelName"];
+    var incredibleIntervalType = (string)ViewData["incredibleIntervalType"];
+}
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -13,19 +25,29 @@
 </head>
 <body>
     <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-    <div id="main" style="width: 1200px;height: 600px;"></div>
+    <div id="main" style="width:100%;height:500%;"></div>
+    <div class="l-button" style="float:left">
+        <a href="../Langley/DownloadDocument">
+            <span> 导出数据 </span>
+        </a>
+    </div>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
-
+       
         // 指定图表的配置项和数据
         var option = {
-            title: { text: '批量区间计算' },
-            xAxis: {},
-            yAxis: {},
+            title: { text: '@incredibleIntervalType' },
+            xAxis: { name: 'Stimulus'},
+            yAxis: {
+                name: 'Probability', minorTick: {
+                    show: true
+                },
+                minorSplitLine: {
+                    show: true
+                }},
             legend: {
-                data: ['销量'],
-                data: ['111']
+                data: ['Best guess', '@incredibleLevelName','@incredibleLevelName'],
             },
             tooltip: {
                 trigger: 'axis',
@@ -39,30 +61,36 @@
                     dataZoom: {
                         yAxisIndex: 'none'
                     },
-                    dataView: { readOnly: false },
+                    dataView: {
+                        readOnly: true
+                    },
                     restore: {},
                     saveAsImage: {}
                 }
             },
             series: [{
-                name: '销量',
-                data: [[20, 120], [50, 200], [40, 50]],
+                name: 'Best guess',
+                data: [@a],
                 type: 'line'
             },
                 {
-                    name: '',
-                    data: [[20, 120], [50, 200], [120, 50]],
+                    name: '@incredibleLevelName',
+                    data: [@b],
                     type: 'line'
                 },
                 {
-                    name: '',
-                    data: [[20, 120], [50, 200], [140, 50]],
+                    name: '@incredibleLevelName',
+                    data: [@c],
                     type: 'line'
                 }
                 ]
         };
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
+        //监听页面的尺寸变化，动态改变echarts的尺寸
+        window.onresize = function () {
+            myChart.resize();
+        }
     </script>
 </body>
 </html>

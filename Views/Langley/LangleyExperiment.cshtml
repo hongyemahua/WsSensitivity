@@ -22,14 +22,13 @@
                 <script type="text/html" id="Tool_title">
                     <div class="layui-input-inline layui-col-md12">
                         <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@langLeyName</label>
-                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">当前响应状态：</label>
-                        @*<input class="layui-input" lay-event="response" id="response" value="0" name="response" style="width:20%" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>*@
-                        <div class="layui-input-inline">
-                            <select name="modules" lay-verify="required" lay-filter="select_response">
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                            </select>
-                        </div>
+                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">下一组响应状态：</label>
+                         <div class="layui-input-inline">
+                             <select name="modules"lay-verify="required" lay-filter="select_response">
+                                 <option value="0">0</option>
+                                 <option value="1">1</option>
+                             </select>
+                         </div>
                     </div>
                 </script>
 
@@ -370,11 +369,11 @@
                                                                 <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
                                                             </div>
 
-                                                            <div class="layui-col-md12">
-                                                                <div class="layui-progress layui-progress-big" lay-showPercent="true">
-                                                                    <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                                                            @*<div class="layui-col-md12">
+                                                                <div class="layui-progress layui-progress-big" lay-showPercent="true" lay-filter="demo">
+                                                                    <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" id="demo1"></div>
                                                                 </div>
-                                                            </div>
+                                                            </div>*@
                                                         </div>
                                                     </div>
                                                 </div>
@@ -413,8 +412,27 @@
 
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+
+                                <div class="layui-card layui-col-sm12">
+                                    <div class="layui-card-body">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>设置X轴的最小及最大值</legend>
+                                            <div class="layui-field-box">
+                                                <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
+                                                    <div class="layui-fluid">
+                                                        <div class="layui-row layui-col-space15">
+
+                                                            <div class="layui-card">
+                                                                <div class="layui-col-md12 layui-col-space10">
+
+                                                                    <div class="layui-col-md12 layui-col-space5">
+                                                                        <div class="layui-col-md12">
+                                                                            <label class="layui-form-label">X最大值</label>
+                                                                            <div class="layui-input-block">
+                                                                                <input type="text" name="xMax" id="xMax" value="100" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 
                     </div>
                 </div>
@@ -430,11 +448,12 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-            }).use(['index', 'langley', 'table','layedit'], function () {
+        }).use(['index', 'langley', 'table', 'layedit','element'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
-                , table = layui.table;
+                , table = layui.table
+                , element = layui.element; 
 
                 var active = {
                 //兰利法分析参数设置
@@ -783,7 +802,7 @@
                     }
                 }
                 //批量区间计算
-                , BatchIntervalCalculation: function () {
+                    , BatchIntervalCalculation: function () {
                     var isConfi = true;
                     var intervalTypeSelection = 1;
                     var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
@@ -852,70 +871,26 @@
                             , time: 3000
                         });
                     }
-                    //if (xMax.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最大值不能为空', '#xMax']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
-                    //if (xMin.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最小值不能为空', '#xMin']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
+                    if (xMax.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['X轴最大值不能为空', '#xMax']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (xMin.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['X轴最小值不能为空', '#xMin']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
                     if (isConfi) {
-                         var index=layer.open({
-                        type: 2
-                        , title: "兰利法参数设置" //不显示标题栏
-                        , area: ['70%', '80%']
-                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: "@Url.Action("LanglieParameterSettings", "Langley")"
-                        ,btnAlign:'c'
-                        , btn: '确定'
-                        , anim: 1
-                        ,closeBtn: 1
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'submit_Btn'
-                                , submit = layero.find('iframe').contents().find("#" + submitID);
-
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-                                var field = data.field; //获取提交的字段
-                                var role = JSON.stringify(field);
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    type: "post",
-                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    data: role,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data) {
-                                            layer.msg('设置成功', {
-                                                icon: 1,
-                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                            });
-                                             //关闭弹层
-                                            layer.close(index);
-                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
-                                        }
-                                    }
-                                });
-
-                            });
-                            submit.trigger('click');
-                        }
-                    });
-                        @*$.ajax({
+                        $.ajax({
                             type: "post"
                             , data: {
                                 "BatchConfidenceLevel": BatchConfidenceLevel
@@ -931,19 +906,7 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                var index=layer.open({
-                                    type: 2
-                                    , area: ['70%', '80%']
-                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , data:{"data":data}
-                                    , content: '@Url.Action("LangleyLineChart", "Langley")'
-
-                                    ,btnAlign:'c'
-                                    , btn: '确定'
-                                    , anim: 1
-                                    ,closeBtn: 1
-
-                                });
+                                alert(data);
                             }
                         });*@
                     }

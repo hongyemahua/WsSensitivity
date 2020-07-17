@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -51,6 +52,12 @@ namespace WsSensitivity.Controllers
     {
         IDbDrive dbDrive = new LingImp();
 
+        private static List<string> aArray = new List<string>();
+        private static List<string> bArray = new List<string>();
+        private static List<string> cArray = new List<string>();
+        private static SideReturnData sideReturnData = new SideReturnData();
+        private static string incredibleIntervalType = "";
+        private static string incredibleLevelName = "";
         private static LangleyExperimentTable langlryExpTable = new LangleyExperimentTable();
         //兰利法主页面(有弹窗)
         public ActionResult LangleyExperiment(int let_id=-1)
@@ -260,6 +267,35 @@ namespace WsSensitivity.Controllers
             return Json(value);
         }
 
+        //下载数据文档
+        public FileResult DownloadDocument()
+        {
+            var sbHtml = new StringBuilder();
+            sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
+            sbHtml.Append("<tr>");
+            var lstTitle = new List<string> { "Probability", "Stimulus", "Lower", "Upper", "Confidence"};
+            foreach (var item in lstTitle)
+            {
+                sbHtml.AppendFormat("<td style='font-size: 14px;text-align:center;background-color: #DCE0E2; font-weight:bold;' height='25'>{0}</td>", item);
+            }
+            sbHtml.Append("</tr>");
+            for (int i = 0; i<sideReturnData.responsePoints.Length;i++)
+            {
+                sbHtml.Append("<tr>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>" +sideReturnData.responseProbability[i] +"</td>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>" + sideReturnData.responsePoints[i] + "</td>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>" + sideReturnData.Y_LowerLimits[i] + "</td>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>" + sideReturnData.Y_Ceilings[i] + "</td>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>" + incredibleLevelName + "</td>");
+                sbHtml.Append("</tr>");
+            }
+            sbHtml.Append("</table>");
+
+            //第一种:使用FileContentResult
+            byte[] fileContents = Encoding.Default.GetBytes(sbHtml.ToString());
+            return File(fileContents, "application/ms-excel", ""+incredibleIntervalType+".xls");
+        }
+
         //响应概率区间估计
         [HttpPost]
         public ActionResult ResponseProbabilityIntervalEstimate(double reponseProbability2, double confidenceLevel)
@@ -314,7 +350,7 @@ namespace WsSensitivity.Controllers
             }
             else
                 lets = dbDrive.QueryLangleyExperimentTable(productName);
-            return Json(new { code = 0, msg = "", count = lets.Count, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
+            return Json(new { code = 0, msg = "", count = lets.Count - 1, data = Langley_lists(lets) }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -333,9 +369,7 @@ namespace WsSensitivity.Controllers
             {
                 PagesLdt.Add(ldts[i]);
             }
-            if(page == 1)
-                PagesLdt.RemoveRange(PagesLdt.Count-1,1);
-            return Json(new { code = 0, msg = "",  count = ldts.Count , data = Langleys(PagesLdt,first, ldts.Count)}, JsonRequestBehavior.AllowGet);
+            return Json(new { code = 0, msg = "",  count = ldts.Count, data = Langleys(PagesLdt,first) }, JsonRequestBehavior.AllowGet);
         }
 
         //获取全部的兰利法实验并分页显示(前台带参访问)
@@ -412,8 +446,8 @@ namespace WsSensitivity.Controllers
                 langley.ldt_StandardDeviation = ldts[i].ldt_StandardDeviation;
                 langley.ldt_StandardDeviationVariance = ldts[i].ldt_StandardDeviationVariance;
                 langley.ldt_Covmusigma = ldts[i].ldt_Covmusigma;
-                langley.number = count;
-                //langley.LangleyName = DistributionState(langlryExpTable.let_DistributionState,langlryExpTable.let_StandardState)+"/"+ Correction(langlryExpTable.let_Correction);
+                langley.number = ldts.Count;
+                langley.LangleyName = DistributionState(langlryExpTable.let_DistributionState,langlryExpTable.let_StandardState)+"/"+ Correction(langlryExpTable.let_Correction);
                 langleys.Add(langley);
             }
             return langleys;
@@ -463,6 +497,11 @@ namespace WsSensitivity.Controllers
 
         public ActionResult LangleyLineChart(string data)
         {
+            ViewData["aArray"] = aArray;
+            ViewData["bArray"] = bArray;
+            ViewData["cArray"] = cArray;
+            ViewData["incredibleIntervalType"] = incredibleIntervalType;
+            ViewData["incredibleLevelName"] = incredibleLevelName;
             return View();
         }
 
@@ -484,13 +523,14 @@ namespace WsSensitivity.Controllers
 
         [HttpPost]
         //批量区间估计
-        public JsonResult BatchIntervalCalculation(double BatchConfidenceLevel,double yMin,double yMax,int Y_Axis,int intervalTypeSelection,double favg, double fsigma)
+        public ActionResult BatchIntervalCalculation(double BatchConfidenceLevel,double yMin,double yMax,int Y_Axis,int intervalTypeSelection,double favg, double fsigma)
         {
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
+            ldts.RemoveRange(ldts.Count-1,1);
             var xOrVArray = XOrVArrays(ldts);
             var lr = SelectState(langlryExpTable.let_DistributionState, langlryExpTable.let_StandardState);
-            //var srd = lr.BatchIntervalCalculate(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xOrVArray.xArray, xOrVArray.vArray, intervalTypeSelection);
-            return Json("123");
+            var srd = lr.BatchIntervalCalculate(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xOrVArray.xArray, xOrVArray.vArray, intervalTypeSelection);
+            return Json(srd.Y_Ceilings[1]);
         }
 
         private LangleyDataTable LangleyDataTables(double sq = 0, int resp = 0, double mean = 0, double sd = 0, double mv = 0, double sdv = 0, double covmusigma = 0, string note = null)
