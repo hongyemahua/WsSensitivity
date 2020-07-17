@@ -24,7 +24,6 @@ layui.define(['table', 'form'], function (exports) {
             , groups: 3 //只显示 1 个连续页码
             , first: false //不显示首页
             , last: true //不显示尾页
-
         }
         , limit: 20
         , cols: [[
@@ -40,102 +39,125 @@ layui.define(['table', 'form'], function (exports) {
         ]]
         , text: '对不起，加载出现异常！'
     });
+    //下拉框监听事件
+    form.on('select(select_response)', function (obj) {
+        var data = obj.value;
+        $.ajax({
+            url: "../Langley/InsertData",
+            type: "post",
+            data: {
+                "response": data,
+                "sq": document.getElementById("sq").value
+            },
+            dataType: "json",
+            success: function (data) {
+
+                if (data[0]) {
+                    layer.msg('增加成功', {
+                        icon: 1,
+                        time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                    });
+
+                    table.reload('langley_list'); //数据刷新
+                    $("#testNumber").text(data[1]);
+                    $("#NM").text(data[2]);
+
+                    document.getElementById("sq").value = data[3];
+
+                } else {
+                    layer.msg('增加失败', {
+                        icon: 2,
+                        shift: 6,  //震动效果
+                        time: 1000  //1秒关闭
+                    });
+                }
+            }
+        });
+    });
+
+    ////头工具栏事件
+    //table.on('toolbar(langleylist)', function (obj) {
+    //    //搜索框回车事件
+    //    $('#response').on('keydown', function (event) {
+    //        if (event.keyCode == 13) {
+    //            var is = true;
+    //            var response = parseFloat(document.getElementById("response").value);
+    //            if ((response != 0) && (response != 1)) {
+    //                is = false;
+    //                layer.open({
+    //                    type: 4
+    //                    , title: '输入有误'
+    //                    , content: ['响应状态必须是0或1', '#response']
+    //                    , tips: [1, '#ff2121']
+    //                    , time: 3000
+    //                });
+    //            }
+    //            if (is) {
+    //                $.ajax({
+    //                    url: "../Langley/InsertData",
+    //                    type: "post",
+    //                    data: {
+    //                        "response": response,
+    //                        "sq": document.getElementById("sq").value
+    //                    },
+    //                    dataType: "json",
+    //                    success: function (data) {
+
+    //                        if (data[0]) {
+    //                            layer.msg('增加成功', {
+    //                                icon: 1,
+    //                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+    //                            });
+
+    //                            table.reload('langley_list'); //数据刷新
+    //                            $("#testNumber").text(data[1]);
+    //                            $("#NM").text(data[2]);
+
+    //                            document.getElementById("sq").value = data[3];
+
+    //                        } else {
+    //                            layer.msg('增加失败', {
+    //                                icon: 2,
+    //                                shift: 6,  //震动效果
+    //                                time: 1000  //1秒关闭
+    //                            });
+    //                        }
+    //                    }
+    //                });
+    //            }
+    //        }
+    //    });
+
+    //});
 
     //监听工具条
     table.on('tool(langleylist)', function (obj) {
         var data = obj.data;
-        if (obj.event === 'response') {
-            var massage = '确认增加响应么？'
-            layer.confirm(massage, {
-                btn: ['确认', '取消'] //按钮
-            }, function () {
-                $.ajax({
-                    url: "../Langley/InsertData",
-                    type: "post",
-                    data: {
-                        "response": 1
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data[0]) {
-                            layer.msg('增加成功', {
-                                icon: 1,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            });
-                            table.reload('langley_list'); //数据刷新
-                            document.getElementById("testNumber").value = data[1];
-                            document.getElementById("NM").value = data[2];
-                            document.getElementById("conversionNumber").value = "";
-                        } else {
-                            layer.msg('增加失败', {
-                                icon: 2,
-                                shift: 6,  //震动效果
-                                time: 1000  //1秒关闭
-                            });
-                        }
+        if (obj.event === 'remove') {
+            $.ajax({
+                url: "../Langley/RevocationData",
+                type: "post",
+                data: {
+                    "id": data.ldt_Id
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data[0]) {
+                        layer.msg('删除成功', {
+                            icon: 1,
+                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                        });
+                        table.reload('langley_list'); //数据刷新
+                        document.getElementById("sq").value = data[1];
+                        $("#testNumber").text(data[2]);
+                    } else {
+                        layer.msg('删除失败', {
+                            icon: 2,
+                            shift: 6,  //震动效果
+                            time: 1000  //1秒关闭
+                        });
                     }
-                });
-            });
-        } else if (obj.event === 'notResponse') {
-            var massage = '确认增加不响应么？'
-            layer.confirm(massage, {
-                btn: ['确认', '取消'] //按钮
-            }, function () {
-                $.ajax({
-                    url: "../Langley/InsertData",
-                    type: "post",
-                    data: {
-                        "response": 0
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data[0]) {
-                            layer.msg('增加成功', {
-                                icon: 1,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            });
-                            table.reload('langley_list'); //数据刷新
-                            document.getElementById("testNumber").value = data[1];
-                            document.getElementById("NM").value = data[2];
-                            document.getElementById("conversionNumber").value = "";
-                        } else {
-                            layer.msg('增加失败', {
-                                icon: 2,
-                                shift: 6,  //震动效果
-                                time: 1000  //1秒关闭
-                            });
-                        }
-                    }
-                });
-            });
-        } else if (obj.event === 'remove') {
-            var massage = '确认撤销编号为' + data.ldt_Number + '么？'
-            layer.confirm(massage, {
-                btn: ['确认', '取消'] //按钮
-            }, function () {
-                $.ajax({
-                    url: "../Langley/RevocationData",
-                    type: "post",
-                    data: {
-                        "id": data.ldt_Id
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        if (data) {
-                            layer.msg('删除成功', {
-                                icon: 1,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            });
-                            table.reload('langley_listExperiment'); //数据刷新
-                        } else {
-                            layer.msg('删除失败', {
-                                icon: 2,
-                                shift: 6,  //震动效果
-                                time: 1000  //1秒关闭
-                            });
-                        }
-                    }
-                });
+                }
             });
         }
 

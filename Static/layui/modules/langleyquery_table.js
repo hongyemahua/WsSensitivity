@@ -75,7 +75,7 @@ layui.define(['table', 'form'], function(exports){
                 });
             });
         } else if (obj.event === 'edit') {     //编辑
-            location.href = '../Langley/LangleyExperimentEdit?let_id='+data.Id;
+            location.href = '../Langley/LangleyExperiment?let_id='+data.Id;
         }
     });
     exports('langleyquery_table', {})
