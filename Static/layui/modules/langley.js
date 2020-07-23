@@ -14,7 +14,7 @@ layui.define(['table', 'form'], function (exports) {
     //兰利法表格
     table.render({
         elem: '#langley_list'
-        , url: '../Langley/GetAllLangleys' //模拟接口
+        , url: '../LangleyExperiment/GetAllLangleys?=id' + @langlryExpTableId //模拟接口
         , height: 'full-130'//高度最大化减去差值
         //, toolbar: 'default' 
         , toolbar: '#Tool_title' 
@@ -43,7 +43,7 @@ layui.define(['table', 'form'], function (exports) {
     form.on('select(select_response)', function (obj) {
         var data = obj.value;
         $.ajax({
-            url: "../Langley/InsertData",
+            url: "../LangleyExperiment/InsertData",
             type: "post",
             data: {
                 "response": data,
@@ -81,7 +81,7 @@ layui.define(['table', 'form'], function (exports) {
         var data = obj.data;
         if (obj.event === 'remove') {
             $.ajax({
-                url: "../Langley/RevocationData",
+                url: "../LangleyExperiment/RevocationData",
                 type: "post",
                 data: {
                     "id": data.ldt_Id
@@ -94,8 +94,8 @@ layui.define(['table', 'form'], function (exports) {
                             time: 1000 //1秒关闭（如果不配置，默认是3秒）
                         });
                         table.reload('langley_list'); //数据刷新
-                        document.getElementById("sq").value = data[1];
-                        $("#testNumber").text(data[2]);
+                        document.getElementById("sq").value = data[2];
+                        $("#testNumber").text(data[1]);
                     } else {
                         layer.msg('删除失败', {
                             icon: 2,

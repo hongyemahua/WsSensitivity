@@ -14,11 +14,12 @@ namespace WsSensitivity.Models
         public abstract double CorrectionDistribution(int count);
         public abstract double QnormAndQlogisDistribution(double value);
         public abstract double[] PrecValues(double value ,double fsigma);
+        public abstract string DistributionSelection();
     }
 
     public class Normal : LangleyDistributionSelection
     {
-        public LangleyMethodStandardSelection Standard { get; set; }
+        public override string DistributionSelection() => "正态分布";
 
         public override double CorrectionDistribution(int count)
         {
@@ -70,6 +71,8 @@ namespace WsSensitivity.Models
     public class Logistic : LangleyDistributionSelection
     {
         public LangleyMethodStandardSelection Standard { get; set; }
+
+        public override string DistributionSelection() => "逻辑斯蒂分布";
 
         public override double CorrectionDistribution(int count)
         {

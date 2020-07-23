@@ -115,7 +115,7 @@
                 var stop = field.stop;
                 //执行重载
                 table.reload('langley_list', {
-                    url: "@Url.Action("Langley_query", "Langley")"
+                    url: "@Url.Action("Langley_query", "LangleyQuery")"
                     , method: "post"
                     , where: { "productName": modules, "startTime": start, "endTime": stop}
                     , contentType: 'application/json'

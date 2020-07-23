@@ -11,8 +11,9 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
-    @{ 
+    @{
         var langLeyName = ViewData["langLeyNameString"];
+        var langlryExpTableId = (int)ViewData["langlryExpTableId"];
     }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
@@ -20,15 +21,25 @@
 
                 <table id="langley_list" lay-filter="langleylist"></table>
                 <script type="text/html" id="Tool_title">
-                    <div class="layui-input-inline layui-col-md12">
-                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@langLeyName</label>
-                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">下一组响应状态：</label>
-                         <div class="layui-input-inline">
-                             <select name="modules"lay-verify="required" lay-filter="select_response">
-                                 <option value="0">0</option>
-                                 <option value="1">1</option>
-                             </select>
-                         </div>
+                    <div class=" layui-col-md12">
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" id="langLeyName" style="width:auto;text-anchor:inherit">@langLeyName</label>
+                        </div>
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                            </div>
+                        </div>
+                        <div class="layui-col-md5 layui-col-space10">
+                            <label class="layui-form-label" style="width:30%;text-anchor:inherit">下一组响应状态：</label>
+                            <div class="layui-input-inline">
+                                <select name="modules" lay-verify="required" lay-filter="select_response">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </script>
 
@@ -64,14 +75,6 @@
                         <label class="layui-form-label" style="width:40%">0，1转换次数：</label>
                         <div class="layui-input-block">
                             <label class="layui-form-label" style="width:5%" id="label3"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-col-md4 layui-col-space5">
-                    <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
-                        <div class="layui-input-inline">
-                            <input class="layui-input" id="sq" name="sq"  onkeyup="value=value.replace(/[^\d\.]/g,'')"/>
                         </div>
                     </div>
                 </div>
@@ -118,7 +121,7 @@
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label" style="width:auto">99.9%响应点</label>
                                                                 <div class="layui-input-block">
-                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly >
+                                                                    <input type="text" name="prec99" id="prec99" style="width:98%" autocomplete="off" class="layui-input" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -424,20 +427,119 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'langley', 'table', 'layedit','element'], function () {
+        }).use(['index', 'table', 'layedit','element'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
                 , table = layui.table
-                , element = layui.element; 
+                , element = layui.element;
 
+            //兰利法表格
+    table.render({
+        elem: '#langley_list'
+        , url: '../LangleyExperiment/GetAllLangleys?id=' +@langlryExpTableId,//模拟接口
+        height: 'full-130'//高度最大化减去差值
+        //, toolbar: 'default'
+        , toolbar: '#Tool_title'
+        , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+            layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+            , curr: 1 //设定初始在第 5 页
+            , groups: 3 //只显示 1 个连续页码
+            , first: false //不显示首页
+            , last: true //不显示尾页
+        }
+        , limit: 20
+        , cols: [[
+            { field: 'ldt_Number', width: 80, title: '编号', sort: true }
+            , { field: 'ldt_StimulusQuantity', title: '刺激量' }
+            , { field: 'ldt_Response', title: '响应', align: 'center' }
+            , { field: 'ldt_Mean', title: '均值' }
+            , { field: 'ldt_StandardDeviation', title: '标准差' }
+            , { field: 'ldt_MeanVariance', title: '均值的方差' }
+            , { field: 'ldt_StandardDeviationVariance', title: '标准值的方差' }
+            , { field: 'ldt_Covmusigma', title: 'Covmusigma' }
+            , { title: '操作', align: 'center', fixed: 'right', toolbar: '#response_state' }
+        ]]
+        , text: '对不起，加载出现异常！'
+    });
+            //下拉框监听事件
+            form.on('select(select_response)', function (obj) {
+                var data = obj.value;
+                $.ajax({
+                    url: "../LangleyExperiment/InsertData",
+                    type: "post",
+                    data: {
+                        "response": data,
+                        "sq": document.getElementById("sq").value,
+                        "langlryExpTableId": @langlryExpTableId
+                    },
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data[0]) {
+                            layer.msg('增加成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+
+                            table.reload('langley_list'); //数据刷新
+                            $("#testNumber").text(data[1]);
+                            $("#NM").text(data[2]);
+
+                            document.getElementById("sq").value = data[3];
+
+                        } else {
+                            layer.msg('增加失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                    }
+                });
+            });
+
+
+            //监听工具条
+            table.on('tool(langleylist)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'remove') {
+                    $.ajax({
+                        url: "../LangleyExperiment/RevocationData",
+                        type: "post",
+                        data: {
+                            "id": data.ldt_Id,
+                            "langlryExpTableId":@langlryExpTableId
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data[0]) {
+                                layer.msg('删除成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+                                table.reload('langley_list'); //数据刷新
+                                document.getElementById("sq").value = data[2];
+                                $("#testNumber").text(data[1]);
+                            } else {
+                                layer.msg('删除失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                        }
+                    });
+                }
+
+            });
                 var active = {
                 //兰利法分析参数设置
                 ParameterSetting: function () {
                     layer.open({
                         type: 2
                         , title: '兰利法分析参数设置'
-                        , content: '@Url.Action("ParameterSetting","Langley")'
+                        , content: ['/ParameterSetting/ParameterSetting?langlryExpTableId='+@langlryExpTableId]
                         , area: ['450px', '260px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -451,10 +553,10 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("UpdateParameter", "Langley")',
+                                    url: '@Url.Action("UpdateParameter", "ParameterSetting")',
+                                    data: role,
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
-                                    data: role,
                                     async: false,
                                     success: function (data) {
                                         if (data[0]) {
@@ -474,9 +576,12 @@
                                             });
                                         }
                                     }
+                                    
+                                    
                                 });
-                                location.href = '../Langley/LangleyExperiment';
+                                location.href = '../LangleyExperiment/LangleyExperiment?let_id='+@langlryExpTableId;
                                 layer.close(index); //关闭弹层
+                                
                             });
                             submit.trigger('click');
                         }
@@ -488,7 +593,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: '@Url.Action("TechnicalConditions", "Langley")'
+                        , content: ['/TechnicalConditions/TechnicalConditions?langlryExpTableId='+@langlryExpTableId]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -502,10 +607,10 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("TechnicalConditions_Update", "Langley")',
+                                    url: '@Url.Action("TechnicalConditions_Update", "TechnicalConditions")',
+                                    data: role,
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
-                                    data: role,
                                     async: false,
                                     success: function (data) {
                                         if (data) {
@@ -532,7 +637,8 @@
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
-                        url: '@Url.Action("PointCalculate", "Langley")',
+                        url: '@Url.Action("PointCalculate", "LangleyExperiment")',
+                        data:{"langlryExpTableId":@langlryExpTableId},
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
@@ -543,6 +649,8 @@
                             document.getElementById("prec01").value = data[1];
                             //document.getElementById("conversionNumber").value = data[4];
                             $("#label3").text(data[4]);
+                            $("#testNumber").text(data[5]);
+                            $("#NM").text(data[6]);
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
@@ -584,9 +692,10 @@
                                     data: {
                                         "fq": responseValue,
                                         "favg": document.getElementById("avg").value,
-                                        "fsigma": document.getElementById("sigma").value
+                                        "fsigma": document.getElementById("sigma").value,
+                                        "langlryExpTableId":@langlryExpTableId
                                     },
-                                    url: '@Url.Action("ResponsePointCalculate", "Langley")',
+                                    url: '@Url.Action("ResponsePointCalculate", "LangleyExperiment")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     async: false,
@@ -614,9 +723,10 @@
                          data: {
                              "fq": stimulusQuantity,
                              "favg": document.getElementById("avg").value,
-                             "fsigma": document.getElementById("sigma").value
+                             "fsigma": document.getElementById("sigma").value,
+                             "langlryExpTableId":@langlryExpTableId
                          },
-                         url: '@Url.Action("ResponseProbabilityCalculate", "Langley")',
+                         url: '@Url.Action("ResponseProbabilityCalculate", "LangleyExperiment")',
                          datatype: "json",
                          contenttype: "application/json; charset=utf-8",
                          async: false,
@@ -673,9 +783,10 @@
                          type: "post",
                          data: {
                              "reponseProbability2": reponseProbability2,
-                             "confidenceLevel": confidenceLevel1
+                             "confidenceLevel": confidenceLevel1,
+                             "langlryExpTableId":@langlryExpTableId
                          },
-                         url: '@Url.Action("ResponseProbabilityIntervalEstimate", "Langley")',
+                         url: '@Url.Action("ResponseProbabilityIntervalEstimate", "LangleyExperiment")',
                          datatype: "json",
                          contenttype: "application/json; charset=utf-8",
                          async: false,
@@ -760,9 +871,10 @@
                                  "confidenceLevel2": confidenceLevel2 ,
                                  "cjl": stimulusQuantity2,
                                  "favg": document.getElementById("avg").value,
-                                 "fsigma": document.getElementById("sigma").value
+                                 "fsigma": document.getElementById("sigma").value,
+                                 "langlryExpTableId":@langlryExpTableId
                              },
-                             url: '@Url.Action("ResponsePointIntervalEstimate", "Langley")',
+                             url: '@Url.Action("ResponsePointIntervalEstimate", "LangleyExperiment")',
                              datatype: "json",
                              contenttype: "application/json; charset=utf-8",
                              async: false,
@@ -847,25 +959,7 @@
                             , time: 3000
                         });
                     }
-                    //if (xMax.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最大值不能为空', '#xMax']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
-                    //if (xMin.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最小值不能为空', '#xMin']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
-                   
+
                         if (isConfi) {
                             document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
                         $.ajax({
@@ -878,8 +972,9 @@
                                 , "intervalTypeSelection": intervalTypeSelection
                                 , "favg": avg
                                 , "fsigma": sigma
+                                , "langlryExpTableId":@langlryExpTableId
                             }
-                            , url: '@Url.Action("BatchIntervalCalculation", "Langley")'
+                            , url: '@Url.Action("BatchIntervalCalculation", "LangleyExperiment")'
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
@@ -890,7 +985,8 @@
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
                                     , data: { "data": data }
-                                    , content: ['../Langley/LangleyLineChart', 'no']
+                                    , content: ['../LangleyLineChart/LangleyLineChart', 'no']
+                                    , data:{"langlryExpTableId":@langlryExpTableId}
                                     , btnAlign: 'c'
                                     , anim: 1
                                     , closeBtn: 1
@@ -908,6 +1004,6 @@
                 });
         });
     </script>
-    
+
 </body>
 </html>

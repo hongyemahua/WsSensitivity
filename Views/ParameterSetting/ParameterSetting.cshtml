@@ -11,6 +11,7 @@
 @{ 
     int ds = (int)ViewData["ds"];
     int correction = (int)ViewData["correction"];
+    int langlryExpTableId = (int)ViewData["langlryExpTableId"];
 }
 <body>
 
@@ -45,6 +46,7 @@
 
             </div>
         </div>
+        <input value="@langlryExpTableId" type="hidden" name="let_Id"/>
         <div class="layui-form-item layui-hide">
             <button class="layui-btn" lay-submit lay-filter="role_submit" id="role_submit">提交</button>
         </div>

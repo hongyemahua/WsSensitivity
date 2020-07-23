@@ -14,7 +14,7 @@ layui.define(['table', 'form'], function(exports){
   //管理员表
     table.render({
         elem: '#langley_list'
-        , url: '../Langley/GetAllLangleysExperiment' //模拟接口
+        , url: '../LangleyQuery/GetAllLangleysExperiment' //模拟接口
         //, data: { 'page': Id }
       , height: 'full-130' //高度最大化减去差值
       , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -51,7 +51,7 @@ layui.define(['table', 'form'], function(exports){
                 btn: ['确认', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: "../Langley/Langley_delete",
+                    url: "../LangleyQuery/Langley_delete",
                     type: "post",
                     data: {
                         "id": data.Id
@@ -75,7 +75,8 @@ layui.define(['table', 'form'], function(exports){
                 });
             });
         } else if (obj.event === 'edit') {     //编辑
-            location.href = '../Langley/LangleyExperiment?let_id='+data.Id;
+            //location.href = '../LangleyExperiment/LangleyExperiment?let_id=' + data.Id;
+            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + data.Id, '编辑兰利法实验');
         }
     });
     exports('langleyquery_table', {})

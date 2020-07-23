@@ -131,10 +131,16 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DoptimizeController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
-    <Compile Include="Controllers\LangleyController.cs" />
+    <Compile Include="Controllers\LangleyPublic.cs" />
+    <Compile Include="Controllers\LangleyExperimentController.cs" />
+    <Compile Include="Controllers\LangleyLineChartController.cs" />
+    <Compile Include="Controllers\LangleyQueryController.cs" />
+    <Compile Include="Controllers\LanglieParameterSettingsController.cs" />
     <Compile Include="Controllers\MySettingController.cs" />
     <Compile Include="Controllers\NewFolder1Controller.cs" />
+    <Compile Include="Controllers\ParameterSettingController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\TechnicalConditionsController.cs" />
     <Compile Include="Controllers\Tool\JsonNetResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -394,20 +400,20 @@
     <Content Include="Views\HomePage\Index.cshtml" />
     <Content Include="Views\AdminHome\HomePage.cshtml" />
     <Content Include="Views\NewFolder1\Index.cshtml" />
-    <Content Include="Views\Langley\LangleyExperiment.cshtml" />
-    <Content Include="Views\Langley\ParameterSetting.cshtml" />
-    <Content Include="Views\Langley\TechnicalConditions.cshtml" />
-    <Content Include="Views\Langley\LangleyQuery.cshtml" />
     <Content Include="Static\layui\layui\font\iconfont.eot" />
     <Content Include="Static\layui\layui\font\iconfont.ttf" />
     <Content Include="Static\layui\layui\font\iconfont.woff" />
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
-    <Content Include="Views\Langley\LanglieParameterSettings.cshtml" />
-    <Content Include="Views\Langley\LangleyLineChart.cshtml" />
     <Content Include="Views\Doptimize\DoptimizeParameterSettings.cshtml" />
     <Content Include="Views\Doptimize\DoptimizeExperiment.cshtml" />
     <Content Include="Views\Doptimize\TechnicalConditions.cshtml" />
     <Content Include="Views\Doptimize\DoptimizeQuery.cshtml" />
+    <Content Include="Views\LangleyExperiment\LangleyExperiment.cshtml" />
+    <Content Include="Views\LanglieParameterSettings\LanglieParameterSettings.cshtml" />
+    <Content Include="Views\LangleyLineChart\LangleyLineChart.cshtml" />
+    <Content Include="Views\ParameterSetting\ParameterSetting.cshtml" />
+    <Content Include="Views\TechnicalConditions\TechnicalConditions.cshtml" />
+    <Content Include="Views\LangleyQuery\LangleyQuery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

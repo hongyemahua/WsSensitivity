@@ -22,10 +22,14 @@ namespace WsSensitivity.Models
         }
 
         public abstract  double GetAvgValue(double value);
+
+        public abstract string StandardSelection();
     }
 
     public class Standard : LangleyMethodStandardSelection
     {
+        public override string StandardSelection() => "标准";
+
         public override double GetAvgValue(double value) => value;
 
         public override double InverseProcessValue(double value) => value;
@@ -36,6 +40,8 @@ namespace WsSensitivity.Models
 
     public class Ln : LangleyMethodStandardSelection
     {
+        public override string StandardSelection() => "Ln";
+
         public override double GetAvgValue(double value)
         {
             if (Math.Abs(value) < Math.Pow(10, -10))
@@ -52,6 +58,8 @@ namespace WsSensitivity.Models
 
     public class Log : LangleyMethodStandardSelection
     {
+        public override string StandardSelection() => "Log10";
+
         public override double GetAvgValue(double value)
         {
             if (Math.Abs(value) < Math.Pow(10, -10))
@@ -74,6 +82,8 @@ namespace WsSensitivity.Models
         {
             pow = power;
         }
+
+        public override string StandardSelection() => "幂 = "+pow+"";
 
         public override double GetAvgValue(double value)
         {

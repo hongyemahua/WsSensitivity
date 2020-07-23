@@ -143,6 +143,11 @@ namespace WsSensitivity.Models
             public string GetNM(double[] xArray, int[] vArray) => pub_function.getNM(xArray, vArray).ToString();//取得混合区间的个数
 
             public string GetConversionNumber(int[] vArray) => Langlie.turn_number(vArray, vArray.Length).ToString();
+
+            public string Discription()
+            {
+                return DistributionSelection.DistributionSelection() + StandardSelection.StandardSelection();
+            }
         }
     }
 }

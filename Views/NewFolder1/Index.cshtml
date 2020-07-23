@@ -124,7 +124,7 @@
                                         <a href="javascript:;" class="click" data-type="Langlry_ParamSeting">兰利法实验</a>
                                     </dd>
                                     <dd>
-                                        <a lay-href="@Url.Action("LangleyQuery","Langley")">兰利法查询</a>
+                                        <a lay-href="@Url.Action("LangleyQuery","LangleyQuery")">兰利法查询</a>
                                     </dd>
                                 </dl>
                             </li>
@@ -257,7 +257,7 @@
                         , title: "兰利法参数设置" //不显示标题栏
                         , area: ['70%', '75%']
                         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: ['../Langley/LanglieParameterSettings','no']
+                        , content: ['../LanglieParameterSettings/LanglieParameterSettings','no']
                         ,btnAlign:'c'
                         , btn: '确定'
                         , anim: 1
@@ -274,20 +274,20 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
+                                    url: '@Url.Action("LanglieParameterSettingsJson", "LanglieParameterSettings")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
                                     async: false,
                                     success: function (data) {
-                                        if (data) {
+                                        if (data[0]) {
                                             layer.msg('设置成功', {
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
                                              //关闭弹层
                                             layer.close(index);
-                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
+                                            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + parseInt(data[1]), '兰利法实验');
                                         }
                                     }
                                 });
