@@ -160,7 +160,7 @@
                                         <a href="javascript:;" class="click" data-type="D_ParamSeting">D优化法实验</a>
                                     </dd>
                                     <dd>
-                                        <a lay-href="@Url.Action("DoptimizeQuery","Doptimize")">D优化法查询</a>
+                                        <a lay-href="@Url.Action("DoptimizeQuery","DoptimizeQuery")">D优化法查询</a>
                                     </dd>
                                 </dl>
                             </li>
@@ -255,7 +255,7 @@
                     var index=layer.open({
                         type: 2
                         , title: "兰利法参数设置" //不显示标题栏
-                        , area: ['70%', '75%']
+                        , area: ['65%', '55%']
                         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
                         , content: ['../LanglieParameterSettings/LanglieParameterSettings','no']
                         ,btnAlign:'c'
@@ -305,7 +305,7 @@
                         , title: "D优化法参数设置" //不显示标题栏
                         , area: ['60%', '55%']
                         , id: 'D_LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: ['../Doptimize/DoptimizeParameterSettings','no']
+                        , content: ['../DoptimizeParSting/DoptimizeParameterSettings','no']
                         ,btnAlign:'c'
                         , btn: '确定'
                         , anim: 1
@@ -322,7 +322,7 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("DoptimizeParameterSettingsJson", "Doptimize")',
+                                    url: '@Url.Action("DoptimizeParameterSettingsJson", "DoptimizeParSting")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
@@ -335,7 +335,7 @@
                                             });
                                              //关闭弹层
                                             layer.close(index);
-                                            top.layui.index.openTabsPage('/Doptimize/DoptimizeExperiment', 'D优化法实验');
+                                            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id='+data[0], 'D优化法实验');
                                         }
                                     }
                                 });

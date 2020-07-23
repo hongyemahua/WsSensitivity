@@ -10,12 +10,16 @@
 </head>
 @{
     string tc = (string)ViewData["tc"];
+    int dop_id = (int)ViewData["dop_id"];
 }
 <body>
 
     <div class="layui-form" lay-filter="form-technicalconditions" id="form-technicalconditions" style="padding: 20px 10px 10px 10px;">
         <div class="layui-form-item layui-form-text">
             <textarea name="D_TechnicalConditions" placeholder="请输入内容" class="layui-textarea">@tc</textarea>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <textarea  id="dop_id" name="dop_id">@dop_id</textarea>
         </div>
         <div class="layui-form-item layui-hide">
             <button class="layui-btn" lay-submit lay-filter="technicalconditions_submit" id="technicalconditions_submit">提交</button>

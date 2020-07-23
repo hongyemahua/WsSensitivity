@@ -7,7 +7,7 @@ layui.define(['table', 'form'], function (exports) {
     //管理员表
     table.render({
         elem: '#doptimize_list'
-        , url: '../Doptimize/GetAllDoptimizeExperiment' //模拟接口
+        , url: '../DoptimizeQuery/GetAllDoptimizeExperiment' //模拟接口
         //, data: { 'page': Id }
         , height: 'full-130' //高度最大化减去差值
         , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -44,10 +44,10 @@ layui.define(['table', 'form'], function (exports) {
                 btn: ['确认', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: "../Doptimize/Doptimize_delete",
+                    url: "../DoptimizeQuery/Doptimize_delete",
                     type: "post",
                     data: {
-                        "id": data.Id
+                        "dop_id": data.Id
                     },
                     dataType: "json",
                     success: function (data) {
@@ -68,7 +68,7 @@ layui.define(['table', 'form'], function (exports) {
                 });
             });
         } else if (obj.event === 'edit') {     //编辑
-            location.href = '../Doptimize/DoptimizeExperiment?dop_id=' + data.Id;
+            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id=' + data.Id, '编辑' + data.number+ '号D优化法实验');
         }
     });
     exports('doptimizequery_table', {})

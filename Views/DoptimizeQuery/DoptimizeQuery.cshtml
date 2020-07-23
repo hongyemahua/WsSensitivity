@@ -107,7 +107,7 @@
                 var stop = field.stop;
                 //执行重载
                    table.reload('doptimize_list', {
-                    url: "@Url.Action("doptimize_query", "Doptimize")"
+                    url: "@Url.Action("doptimize_query", "DoptimizeQuery")"
                     , method: "post"
                     , where: { "productName": modules, "startTime": start, "endTime": stop}
                     , contentType: 'application/json'

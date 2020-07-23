@@ -30,7 +30,7 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">产品名称</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="let_ProductName" id="productname"  lay-verify="required" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
+                                                                <input type="text" name="let_ProductName" id="productname" lay-verify="required" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
                                                             </div>
                                                         </div>
                                                         <div class="layui-col-md6">
@@ -59,54 +59,46 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="layui-card layui-col-sm6">
+                                    <div class="layui-card layui-col-sm3">
                                         <div class="layui-card-body">
                                             <fieldset class="layui-elem-field">
                                                 <div class="layui-field-box">
                                                     <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
                                                         <div class="layui-fluid">
-                                                            <div class="layui-row layui-col-space3">
-                                                                <div class="layui-card">
-                                                                    <div class="layui-col-md12 layui-col-space10">
-                                                                        <div class="layui-col-md12 layui-col-space5">
-                                                                            <input type="radio" name="let_DistributionState" value="0" title="正态分布" checked>
-                                                                            <input type="radio" name="let_DistributionState" value="1" title="逻辑斯谛分布">
+                                                            <fieldset class="layui-elem-field">
+                                                                <div class="layui-row layui-col-space3">
+                                                                    <div class="layui-card">
+                                                                        <div class="layui-col-md12 layui-col-space10">
+                                                                            <div class="layui-col-md12 layui-col-space5">
+                                                                                <input type="radio" name="let_DistributionState" value="0" title="正态分布" checked>
+                                                                                <input type="radio" name="let_DistributionState" value="1" title="逻辑斯谛分布">
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </fieldset>
+                                                            <fieldset class="layui-elem-field">
+                                                                <div class="layui-row layui-col-space3">
+                                                                    <div class="layui-card">
+                                                                        <div class="layui-col-md12 layui-col-space10">
+                                                                            <div class="layui-col-md12 layui-col-space3">
+                                                                                <input type="radio" name="let_Correction" value="1" title="标准差不修正" checked>
+                                                                                <input type="radio" name="let_Correction" value="0" title="标准差修正">
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
-                                                            </div>
+                                                            </fieldset>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </fieldset>
-                                            <fieldset class="layui-elem-field">
-                                                <div class="layui-field-box">
-                                                    <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin">
-                                                        <div class="layui-fluid">
-                                                            <div class="layui-row layui-col-space3">
-                                                                <div class="layui-card">
-                                                                    <div class="layui-col-md12 layui-col-space10">
-                                                                        <div class="layui-col-md12 layui-col-space3">
-                                                                            <input type="radio" name="let_Correction" value="1" title="标准差不修正" checked>
-                                                                            <input type="radio" name="let_Correction" value="0" title="标准差修正" >
-                                                                        </div>
-                                                                        
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
                                         </div>
                                     </div>
-
-                                    <div class="layui-card layui-col-sm6">
+                                    <div class="layui-card layui-col-sm4" style="height:253px">
                                         <div class="layui-card-body">
-                                            <fieldset class="layui-elem-field" style="height:180px">
+                                            <fieldset class="layui-elem-field" style="height:210px">
                                                 <div class="layui-field-box">
                                                     <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
                                                         <div class="layui-fluid">
@@ -132,16 +124,15 @@
                                                     </div>
                                                 </div>
                                             </fieldset>
-
                                         </div>
                                     </div>
-                                    <div class="layui-card layui-col-sm12">
+                                    <div class="layui-card layui-col-sm5" style="height:253px">
                                         <div class="layui-card-body">
-                                            <fieldset class="layui-elem-field">
+                                            <fieldset class="layui-elem-field" style="height:210px">
                                                 <div class="layui-form-item layui-form-text">
                                                     <label class="layui-form-label">技术条件</label>
                                                     <div class="layui-input-block">
-                                                        <textarea placeholder="请输入......" class="layui-textarea" name="let_TechnicalConditions"></textarea>
+                                                        <textarea placeholder="请输入......" class="layui-textarea" name="let_TechnicalConditions" style="height:170px"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>

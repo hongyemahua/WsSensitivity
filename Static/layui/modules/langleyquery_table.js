@@ -76,7 +76,7 @@ layui.define(['table', 'form'], function(exports){
             });
         } else if (obj.event === 'edit') {     //编辑
             //location.href = '../LangleyExperiment/LangleyExperiment?let_id=' + data.Id;
-            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + data.Id, '编辑兰利法实验');
+            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + data.Id, '编辑' + data.number + '号兰利法实验');
         }
     });
     exports('langleyquery_table', {})

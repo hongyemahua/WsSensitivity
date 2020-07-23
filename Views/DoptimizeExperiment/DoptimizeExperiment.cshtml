@@ -13,6 +13,7 @@
 <body>
     @{
         var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
+        int dop_id = (int)ViewData["dop_id"];
     }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
@@ -20,21 +21,30 @@
 
                 <table id="doptimize_list" lay-filter="doptimizelist"></table>
                 <script type="text/html" id="Tool_title">
-                    <div class="layui-input-inline layui-col-md12">
-                        <label class="layui-form-label" id="langLeyName" style="width:20%;height:25px;text-anchor:inherit">@DoptimizeNameSeting</label>
-                        <label class="layui-form-label" style="width:20%;height:25px;text-anchor:inherit">当前响应状态：</label>
-                        @*<input class="layui-input" lay-event="response" id="response" value="0" name="response" style="width:20%" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>*@
-                        <div class="layui-input-inline">
-                            <select name="modules" lay-verify="required" lay-filter="select_response">
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                            </select>
+                    <div class="layui-col-md12">
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" id="langLeyName" style="width:auto;height:25px;text-anchor:inherit">D优化法：@DoptimizeNameSeting</label>
+                        </div>
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" style="width:40%">当前刺激量：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                            </div>
+                        </div>
+                        <div class="layui-col-md5 layui-col-space10">
+                            <label class="layui-form-label" style="width:30%;height:25px;text-anchor:inherit">当前响应状态：</label>
+                            <div class="layui-input-inline">
+                                <select name="modules" lay-verify="required" lay-filter="select_response">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </script>
 
                 <script type="text/html" id="response_state">
-                    {{# if(d.ddt_Number == d.number -1){}}
+                    {{# if(d.ddt_Number){}}
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                     {{# } }}
                 </script>
@@ -49,15 +59,6 @@
                         <label class="layui-form-label" style="width:auto">测试次数：</label>
                         <div class="layui-input-block">
                             <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber"></label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="layui-col-md6 layui-col-space5">
-                    <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:40%">当前刺激量：</label>
-                        <div class="layui-input-inline">
-                            <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                         </div>
                     </div>
                 </div>
@@ -82,7 +83,7 @@
                                                 <div class="layui-card-body layui-row layui-col-space10">
 
                                                     <div class="layui-col-md4 layui-col-space10">
-                                                       
+
                                                         <div class="layui-col-md12 layui-col-space5">
                                                             <div class="layui-col-md12">
                                                                 <label class="layui-form-label">平均值</label>
@@ -157,11 +158,9 @@
                                                     </div>
                                                     <div class="layui-col-md4 layui-col-space10">
                                                         <div class="layui-col-md12 ">
-                                                            <div class="layui-col-md12">
-                                                                <label class="layui-form-label" style="width:auto">测试次数：</label>
-                                                                <div class="layui-input-block">
-                                                                    <label class="layui-form-label" id="dtestNumber" name="dtestNumber" readonly style="background-color: darkgray;width:100%"></label>
-                                                                </div>
+                                                            <label class="layui-form-label" style="width:auto">测试次数：</label>
+                                                            <div class="layui-input-block">
+                                                                <label class="layui-form-label" id="dtestNumber" name="dtestNumber" readonly style="background-color: darkgray;width:100%"></label>
                                                             </div>
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
@@ -419,19 +418,124 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-            }).use(['index', 'doptimize', 'table','layedit'], function () {
+        }).use(['index', 'form', 'table','layedit'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
                 , table = layui.table;
 
-                var active = {
+                //D优化法表格
+                table.render({
+                    elem: '#doptimize_list'
+                    , url: '../DoptimizeExperiment/GetAllDoptimizes?dop_id=' + @dop_id,//模拟接口
+                     height: 'full-130'//高度最大化减去差值
+                    //, toolbar: 'default'
+                    , toolbar: '#Tool_title'
+                    , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                        layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                        , curr: 1 //设定初始在第 5 页
+                        , groups: 3 //只显示 1 个连续页码
+                        , first: false //不显示首页
+                        , last: true //不显示尾页
+                    }
+                    , limit: 20
+                    , cols: [[
+                        { field: 'ddt_Number', width: 80, title: '编号', sort: true }
+                        , { field: 'ddt_StimulusQuantity', title: '刺激量' }
+                        , { field: 'ddt_Response', title: '响应', align: 'center' }
+                        , { field: 'ddt_Mean', title: '均值' }
+                        , { field: 'ddt_StandardDeviation', title: '标准差' }
+                        , { field: 'ddt_SigmaGuess', title: 'SigmaGuess' }
+                        , { field: 'ddt_MeanVariance', title: '均值的方差' }
+                        , { field: 'ddt_StandardDeviationVariance', title: '标准值的方差' }
+                        , { field: 'ddt_Covmusigma', title: 'Covmusigma' }
+                        , { title: '操作', align: 'center', fixed: 'right', toolbar: '#response_state' }
+                    ]]
+                    , text: '对不起，加载出现异常！'
+                });
+                //下拉框监听事件
+                form.on('select(select_response)', function (obj) {
+                    var data = obj.value;
+                    alert(obj.value);
+                    $.ajax({
+                        url: "../DoptimizeExperiment/InsertData",
+                        type: "post",
+                        data: {
+                            "dop_id":@dop_id,
+                            "response": data,
+                            "sq": document.getElementById("sq").value
+                        },
+                        dataType: "json",
+                        success: function (data) {
+
+                            if (data[0]) {
+                                layer.msg('增加成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+
+                         table.reload('doptimize_list'); //数据刷新
+                                $("#testNumber").text(data[1]);
+                                $("#NM").text(data[2]);
+
+                                document.getElementById("sq").value = data[3];
+
+                            } else {
+                                layer.msg('增加失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                        }
+                    });
+                });
+                //监听工具条
+                table.on('tool(doptimizelist)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'remove') {
+                        var massage = '确认撤销编号为' + data.ddt_Number + '么？'
+                        layer.confirm(massage, {
+                            btn: ['确认', '取消'] //按钮
+                        }, function () {
+                            $.ajax({
+                                url: "../DoptimizeExperiment/RevocationData",
+                                type: "post",
+                                data: {
+                                    "dop_id":@dop_id,
+                                    "id": data.ldt_Id
+                                },
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data[0]) {
+                                        layer.msg('删除成功', {
+                                            icon: 1,
+                                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                        });
+                                        table.reload('dparam_list'); //数据刷新
+                                        document.getElementById("sq").value = data[1];
+                                        $("#testNumber").text(data[2]);
+                                    } else {
+                                        layer.msg('删除失败', {
+                                            icon: 2,
+                                            shift: 6,  //震动效果
+                                            time: 1000  //1秒关闭
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    }
+
+                });
+
+          var active = {
                 //技术条件
                 technicalconditions: function () {
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: '@Url.Action("TechnicalConditions", "Doptimize")'
+                        , content: ['../DoptimizeTechnical/TechnicalConditions?dop_id='+@dop_id]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -445,7 +549,7 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("TechnicalConditions_Update", "Doptimize")',
+                                    url: '@Url.Action("TechnicalConditions_Update", "DoptimizeTechnical")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
@@ -475,7 +579,7 @@
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
-                        url: '@Url.Action("PointCalculate", "Doptimize")',
+                        url:'../DoptimizeExperiment/PointCalculate?dop_id='+@dop_id,
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
@@ -526,11 +630,12 @@
                                 $.ajax({
                                     type: "post",
                                     data: {
+                                        "dop_id":@dop_id,
                                         "fq": responseValue,
                                         "favg": document.getElementById("avg").value,
                                         "fsigma": document.getElementById("sigma").value
                                     },
-                                    url: '@Url.Action("ResponsePointCalculate", "Langley")',
+                                    url: '@Url.Action("ResponsePointCalculate", "DoptimizeExperiment")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     async: false,
@@ -556,11 +661,12 @@
                      $.ajax({
                          type: "post",
                          data: {
+                             "dop_id":@dop_id,
                              "fq": stimulusQuantity,
                              "favg": document.getElementById("avg").value,
                              "fsigma": document.getElementById("sigma").value
                          },
-                         url: '@Url.Action("ResponseProbabilityCalculate", "Langley")',
+                         url: '@Url.Action("ResponseProbabilityCalculate", "DoptimizeExperiment")',
                          datatype: "json",
                          contenttype: "application/json; charset=utf-8",
                          async: false,
@@ -615,11 +721,12 @@
                     if (isResponse) {
                       $.ajax({
                          type: "post",
-                         data: {
+                          data: {
+                             "dop_id":@dop_id,
                              "reponseProbability2": reponseProbability2,
                              "confidenceLevel": confidenceLevel1
                          },
-                         url: '@Url.Action("ResponseProbabilityIntervalEstimate", "Langley")',
+                         url: '@Url.Action("ResponseProbabilityIntervalEstimate", "DoptimizeExperiment")',
                          datatype: "json",
                          contenttype: "application/json; charset=utf-8",
                          async: false,
@@ -700,13 +807,14 @@
                          $.ajax({
                              type: "post",
                              data: {
+                                 "dop_id":@dop_id,
                                  "reponseProbability2": reponseProbability2,
                                  "confidenceLevel2": confidenceLevel2 ,
                                  "cjl": stimulusQuantity2,
                                  "favg": document.getElementById("avg").value,
                                  "fsigma": document.getElementById("sigma").value
                              },
-                             url: '@Url.Action("ResponsePointIntervalEstimate", "Langley")',
+                             url: '@Url.Action("ResponsePointIntervalEstimate", "DoptimizeExperiment")',
                              datatype: "json",
                              contenttype: "application/json; charset=utf-8",
                              async: false,
@@ -791,70 +899,10 @@
                             , time: 3000
                         });
                     }
-                    //if (xMax.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最大值不能为空', '#xMax']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
-                    //if (xMin.toString() == "NaN") {
-                    //    isConfi = false;
-                    //    layer.open({
-                    //        type: 4
-                    //        , content: ['X轴最小值不能为空', '#xMin']
-                    //        , tips: [1, '#ff2121']
-                    //        , time: 3000
-                    //    });
-                    //}
                     if (isConfi) {
-                         var index=layer.open({
-                        type: 2
-                        , title: "兰利法参数设置" //不显示标题栏
-                        , area: ['70%', '80%']
-                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: "@Url.Action("LanglieParameterSettings", "Langley")"
-                        ,btnAlign:'c'
-                        , btn: '确定'
-                        , anim: 1
-                        ,closeBtn: 1
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'submit_Btn'
-                                , submit = layero.find('iframe').contents().find("#" + submitID);
-
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-                                var field = data.field; //获取提交的字段
-                                var role = JSON.stringify(field);
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    type: "post",
-                                    url: '@Url.Action("LanglieParameterSettingsJson", "Langley")',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    data: role,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data) {
-                                            layer.msg('设置成功', {
-                                                icon: 1,
-                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                            });
-                                             //关闭弹层
-                                            layer.close(index);
-                                           top.layui.index.openTabsPage('/Langley/LangleyExperiment', '兰利法实验');
-                                        }
-                                    }
-                                });
-
-                            });
-                            submit.trigger('click');
-                        }
-                    });
-                        @*$.ajax({
+                        document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
+                        document.getElementById("InputIntervalCalculation").classList.add('layui-btn-disabled');
+                        $.ajax({
                             type: "post"
                             , data: {
                                 "BatchConfidenceLevel": BatchConfidenceLevel
@@ -863,37 +911,44 @@
                                 , "Y_Axis": Y_Axis
                                 , "intervalTypeSelection": intervalTypeSelection
                                 , "favg": avg
-                                , "fsigma": sigma
+                                , "dop_id":@dop_id,
+                                 "fsigma": sigma
                             }
-                            , url: '@Url.Action("BatchIntervalCalculation", "Langley")'
+                            , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                var index=layer.open({
+                                document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                                document.getElementById("InputIntervalCalculation").classList.remove('layui-btn-disabled');
+                                var index = layer.open({
                                     type: 2
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , data:{"data":data}
-                                    , content: '@Url.Action("LangleyLineChart", "Langley")'
-
-                                    ,btnAlign:'c'
-                                    , btn: '确定'
+                                    , data: { "data": data }
+                                    , content: ['../DoptimizeExperiment/DoptimizeChart', 'no']
+                                    , data:{"dop_id":@dop_id}
+                                    , btnAlign: 'c'
                                     , anim: 1
-                                    ,closeBtn: 1
+                                    , closeBtn: 1
 
                                 });
                             }
-                        });*@
+                        });
                     }
-                    }
-            }
-
+              },
+              InputBatchIntervalCalculation: function () {
+                  alert("InputBatchIntervalCalculation");
+              }
+          }
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
-                });
+            });
         });
+
+
+
     </script>
 
 </body>
