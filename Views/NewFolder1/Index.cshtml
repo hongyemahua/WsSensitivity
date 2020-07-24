@@ -255,9 +255,11 @@
                     var index=layer.open({
                         type: 2
                         , title: "兰利法参数设置" //不显示标题栏
-                        , area: ['65%', '55%']
+                        , area: ['75%', '60%']
+                        , resize: false
+                        , isOutAnim: true
                         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: ['../LanglieParameterSettings/LanglieParameterSettings','no']
+                        , content: ['../LanglieParameterSettings/LanglieParameterSettings']
                         ,btnAlign:'c'
                         , btn: '确定'
                         , anim: 1
@@ -287,7 +289,7 @@
                                             });
                                              //关闭弹层
                                             layer.close(index);
-                                            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + parseInt(data[1]), '兰利法实验');
+                                            top.layui.index.openTabsPage('/LangleyExperiment/LangleyExperiment?let_id=' + parseInt(data[1]), "兰利法："+data[2]);
                                         }
                                     }
                                 });
@@ -303,9 +305,11 @@
                     var index=layer.open({
                         type: 2
                         , title: "D优化法参数设置" //不显示标题栏
-                        , area: ['60%', '55%']
+                        , area: ['67%', '55%']
+                        , resize: false
+                        , isOutAnim: true
                         , id: 'D_LAY_layuipro' //设定一个id，防止重复弹出
-                        , content: ['../DoptimizeParSting/DoptimizeParameterSettings','no']
+                        , content: ['../DoptimizeParSting/DoptimizeParameterSettings']
                         ,btnAlign:'c'
                         , btn: '确定'
                         , anim: 1
@@ -328,14 +332,14 @@
                                     data: role,
                                     async: false,
                                     success: function (data) {
-                                        if (data) {
+                                        if (data[0]) {
                                             layer.msg('设置成功', {
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
                                              //关闭弹层
                                             layer.close(index);
-                                            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id='+data[0], 'D优化法实验');
+                                            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id='+data[1], 'D优化法：'+data[2]);
                                         }
                                     }
                                 });

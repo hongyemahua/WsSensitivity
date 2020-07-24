@@ -23,6 +23,7 @@ namespace WsSensitivity.Controllers
             public int FlipTheResponse;
             public string ExperimentalDate;
             public int count;
+            public string projectname;
         }
         public struct Langley
         {
@@ -72,6 +73,9 @@ namespace WsSensitivity.Controllers
             return new LangleyAlgorithm(distributionSelection, langleyMethod); ;
 
         }
+        //public static string GetLangleyName(int id) {
+        //    LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(id);
+        //}
 
         public static LangleyDataTable LangleyDataTables(int langlryExpTableId, IDbDrive dbDrive, double sq = 0, int resp = 0, double mean = 0, double sd = 0, double mv = 0, double sdv = 0, double covmusigma = 0, string note = null)
         {
@@ -190,6 +194,7 @@ namespace WsSensitivity.Controllers
                 langley_List.count = dbDrive.GetAllLangleyDataTable(lets[i].let_Id).Count - 1;
                 langley_List.FlipTheResponse = lets[i].let_FlipTheResponse;
                 langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
+                langley_List.projectname = lets[i].let_ProductName;
                 langletlists.Add(langley_List);
             }
             langletlists.Reverse();
@@ -212,6 +217,7 @@ namespace WsSensitivity.Controllers
                 langley_List.count = dbDrive.GetAllLangleyDataTable(lets[i].let_Id).Count - 1;
                 langley_List.FlipTheResponse = lets[i].let_FlipTheResponse;
                 langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
+                langley_List.projectname = lets[i].let_ProductName;
                 langletlists.Add(langley_List);
             }
             return langletlists;

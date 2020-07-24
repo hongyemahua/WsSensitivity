@@ -17,7 +17,7 @@ namespace WsSensitivity.Controllers
         {
             LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(let_id);
             ViewData["langlryExpTableId"] = langlryExpTable.let_Id;
-            ViewData["langLeyNameString"] = "产品名称：" + langlryExpTable.let_ProductName + "" + "/" + LangleyPublic.DistributionState(langlryExpTable) + "/" + LangleyPublic.Correction(langlryExpTable.let_Correction);
+            ViewData["langLeyNameString"] = LangleyPublic.DistributionState(langlryExpTable) + "/" + LangleyPublic.Correction(langlryExpTable.let_Correction);
             return View();
         }
 
