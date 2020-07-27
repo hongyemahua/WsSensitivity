@@ -32,7 +32,9 @@ namespace WsSensitivity.Controllers
             dbDrive.Insert(let);
             double sq = LangleyPublic.SelectState(let).CalculateStimulusQuantity(xArray, vArray, let.let_StimulusQuantityCeiling, let.let_StimulusQuantityFloor, let.let_PrecisionInstruments);
             bool isTure = dbDrive.Insert(LangleyPublic.LangleyDataTables(let.let_Id, dbDrive, sq));
-            string[] value = { isTure.ToString(),let.let_Id.ToString()};
+            string name = let.let_ProductName;
+            string[] value = { isTure.ToString(), let.let_Id.ToString(),name};
+        
             return Json(value);
         }
     }

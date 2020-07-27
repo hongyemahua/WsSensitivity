@@ -5,7 +5,7 @@
             canvasId: "verifyCanvas", //canvas的ID
             width: "100", //默认canvas宽度
             height: "30", //默认canvas高度
-            type: "blend", //图形验证码默认类型blend:数字字母混合类型、number:纯数字、letter:纯字母
+            type: "number", //图形验证码默认类型blend:数字字母混合类型、number:纯数字、letter:纯字母
             code: ""
         }
 
@@ -121,7 +121,7 @@
     }
     /**生成字母数组**/
     function getAllLetter() {
-        var letterStr = "";
+        var letterStr = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
         return letterStr.split(",");
     }
     /**生成一个随机数**/

@@ -22,7 +22,9 @@ namespace WsSensitivity.Controllers
             var str = new StreamReader(Request.InputStream);
             var stream = str.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            return Json("1");
+            string name = "D优化法实验名称";
+            string[] Value = { "1","1",name};
+            return Json(Value);
         }
     }
 }
