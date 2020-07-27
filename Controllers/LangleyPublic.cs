@@ -121,16 +121,7 @@ namespace WsSensitivity.Controllers
         {
             ldt.ldt_Response = vArray[vArray.Length - 1];
             ldt.ldt_StimulusQuantity = xArray[xArray.Length - 1];
-            if (langlryExpTable.let_FlipTheResponse == 1)
-            {
-                for (int i = 0; i < vArray.Length; i++)
-                {
-                    if (vArray[i] == 0)
-                        vArray[i] = 1;
-                    else
-                        vArray[i] = 0;
-                }
-            }
+            vArray = IsFlipTheResponse(langlryExpTable,vArray);
             var pointCalculateValue = langleyAlgorithm.GetResult(xArray, vArray);
             ldt.ldt_Mean = pointCalculateValue.μ0_final;
             ldt.ldt_Mean = double.Parse(ldt.ldt_Mean.ToString("f13"));
@@ -215,6 +206,21 @@ namespace WsSensitivity.Controllers
                 langletlists.Add(langley_List);
             }
             return langletlists;
+        }
+
+        public static int[] IsFlipTheResponse(LangleyExperimentTable let,int[] vArray)
+        {
+            if (let.let_FlipTheResponse == 1)
+            {
+                for (int i = 0; i < vArray.Length; i++)
+                {
+                    if (vArray[i] == 0)
+                        vArray[i] = 1;
+                    else
+                        vArray[i] = 0;
+                }
+            }
+            return vArray;
         }
     }
 }
