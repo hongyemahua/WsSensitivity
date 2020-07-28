@@ -361,7 +361,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md12 layui-col-space5">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>
+                                                                @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation"id="InputIntervalCalculation"  style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -418,10 +419,11 @@
             base: '../Static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'form', 'table','layedit'], function () {
+        }).use(['index', 'form','upload', 'table','layedit'], function () {
             var $ = layui.$
                 , form = layui.form
                 , layedit = layui.layedit
+                , upload = layui.upload
                 , table = layui.table;
 
                 //D优化法表格
@@ -528,6 +530,26 @@
                     }
 
                 });
+            //文件上传
+            var layerindex;
+            var uploadInst = upload.render({
+                elem: '#InputIntervalCalculation'
+                , url: '../DoptimizeExperiment/InputIntervalCalculation'
+                , accept: 'file'
+                , acceptMime: 'file/xls,file/xlsx'
+                , exts: 'xls|xlsx'
+                ,choose: function(obj) {
+                    layerindex=layer.load();
+                 }
+                , done: function (res, index, upload) {//上传成功回调
+                    layer.msg("上传成功", {icon:1});
+                    layer.close(layerindex);
+                }
+                , error: function (index, upload) {//上传失败回调
+                    layer.msg("上传失败", {icon:2});
+                    layer.close(layerindex);
+                }
+            });
 
           var active = {
                 //技术条件
@@ -937,9 +959,10 @@
                         });
                     }
               },
-              InputBatchIntervalCalculation: function () {
-                  alert("InputBatchIntervalCalculation");
-              }
+                //文件上传
+              //InputBatchIntervalCalculation: function () {
+              //    alert("InputBatchIntervalCalculation");
+              //}
           }
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');

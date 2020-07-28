@@ -112,5 +112,11 @@ namespace WsSensitivity.Controllers
            
             return Json(true);
         }
+        //文件接收方法
+        [HttpPost]
+        public ActionResult InputIntervalCalculation()
+        {
+            return Json("1");
+        }
     }
 }
