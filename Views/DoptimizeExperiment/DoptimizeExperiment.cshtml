@@ -14,6 +14,7 @@
     @{
         var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
         int dop_id = (int)ViewData["dop_id"];
+        var DoptimizeStringName = ViewData["DoptimizeStringName"];
     }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
@@ -53,13 +54,22 @@
 
         </div>
         <div class="layui-col-sm12">
-            <div class="layui-col-md6 layui-col-space10">
-                <div class="layui-col-md4 layui-col-space5">
+            <div class="layui-col-md12 layui-col-space10">
+                 <div class="layui-col-md2 layui-col-space5">
+
+                 </div>
+                <div class="layui-col-md5 layui-col-space5">
                     <div class="layui-col-md12">
                         <label class="layui-form-label" style="width:auto">测试次数：</label>
                         <div class="layui-input-block">
                             <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber"></label>
                         </div>
+                    </div>
+                </div>
+                <div class="layui-col-md5 layui-col-space5">
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label" style="width:auto">D优化法：@DoptimizeStringName/@DoptimizeNameSeting</label>
+                       
                     </div>
                 </div>
             </div>
@@ -437,9 +447,11 @@
                         layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                         , curr: 1 //设定初始在第 5 页
                         , groups: 3 //只显示 1 个连续页码
-                        , first: false //不显示首页
-                        , last: true //不显示尾页
+                        , first: '首页' //不显示首页
+                        , last: '尾页'//不显示尾页
+                        , theme: '#c71585'
                     }
+                    , limits: [10, 20, 50, 100, 200, 500, 800]
                     , limit: 20
                     , cols: [[
                         { field: 'ddt_Number', width: 80, title: '编号', sort: true }

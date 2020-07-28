@@ -14,8 +14,9 @@ layui.define(['table', 'form'], function (exports) {
             layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
             , curr: 1 //设定初始在第 5 页
             , groups: 3 //只显示 1 个连续页码
-            , first: false //不显示首页
-            , last: true //不显示尾页
+            , first: '首页' //不显示首页
+            , last: '尾页'//不显示尾页
+            , theme: '#c71585'
 
         }
         , limit: 20
