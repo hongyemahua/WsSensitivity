@@ -93,8 +93,8 @@ namespace WsSensitivity.Models
             public double ResponsePointCalculate(double fq, double favg, double fsigma) => StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + (DistributionSelection.QnormAndQlogisDistribution(fq) * fsigma));
 
             public double ResponseProbabilityCalculate(double fq, double favg, double fsigma) => DistributionSelection.PointIntervalDistribution(StandardSelection.InverseProcessValue(fq), StandardSelection.InverseProcessValue(favg), fsigma);
-            public IntervalEstimation SingleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(xArray, vArray, reponseProbability, 2 * confidenceLevel - 1);
-            public IntervalEstimation DoubleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(xArray, vArray, reponseProbability, confidenceLevel);
+            public IntervalEstimation SingleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(StandardSelection.InverseProcessArray(xArray), vArray, reponseProbability, 2 * confidenceLevel - 1);
+            public IntervalEstimation DoubleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(StandardSelection.InverseProcessArray(xArray), vArray, reponseProbability, confidenceLevel);
 
             public double CorrectionAlgorithm(double fsigma, int count) => DistributionSelection.CorrectionDistribution(count) * fsigma;
 

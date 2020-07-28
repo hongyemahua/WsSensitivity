@@ -42,9 +42,10 @@ namespace WsSensitivity.Controllers
             double StimulusQuantity = lr.CalculateStimulusQuantity(xOrVArray.xArray, xOrVArray.vArray, langlryExpTable.let_StimulusQuantityCeiling, langlryExpTable.let_StimulusQuantityFloor, langlryExpTable.let_PrecisionInstruments);
             var isTrue = dbDrive.Insert(LangleyPublic.LangleyDataTables(langlryExpTableId, dbDrive, double.Parse(StimulusQuantity.ToString("f6"))));
             var xOrVArray2 = LangleyPublic.XAndVArrays(dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id));
+            xOrVArray2.vArray = LangleyPublic.IsFlipTheResponse(langlryExpTable, xOrVArray2.vArray);
             if (langlryExpTable.let_FlipTheResponse == 1)
             {
-                for (int i = 0; i < xOrVArray2.vArray.Length; i++)
+                for (int i = 0; i < xOrVArray2.vArray.Length - 1; i++)
                 {
                     if (xOrVArray2.vArray[i] == 0)
                         xOrVArray2.vArray[i] = 1;
@@ -97,7 +98,7 @@ namespace WsSensitivity.Controllers
             langleyDataTable.ldt_Id = langleyDataTables[langleyDataTables.Count - 1].ldt_Id;
             bool isTure = dbDrive.Delete(langleyDataTable);
             var xOrVArray = LangleyPublic.XAndVArrays(langleyDataTables);
-            string[] value = { isTure.ToString(), (xOrVArray.xArray.Length - 1).ToString(), xOrVArray.xArray[xOrVArray.xArray.Length - 1].ToString() };
+            string[] value = { isTure.ToString(), (xOrVArray.xArray.Length - 1).ToString(), xOrVArray.xArray[xOrVArray.xArray.Length - 2].ToString() };
             return Json(value);
         }
         //响应概率区间估计
@@ -108,16 +109,7 @@ namespace WsSensitivity.Controllers
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
             ldts.RemoveRange(ldts.Count - 1, 1);
             var xOrVArray = LangleyPublic.XAndVArrays(ldts);
-            if (langlryExpTable.let_FlipTheResponse == 1)
-            {
-                for (int i = 0; i < xOrVArray.vArray.Length; i++)
-                {
-                    if (xOrVArray.vArray[i] == 0)
-                        xOrVArray.vArray[i] = 1;
-                    else
-                        xOrVArray.vArray[i] = 0;
-                }
-            }
+            xOrVArray.vArray = LangleyPublic.IsFlipTheResponse(langlryExpTable, xOrVArray.vArray);
             var lr = LangleyPublic.SelectState(langlryExpTable);
             var ies = lr.ResponseProbabilityIntervalEstimate(xOrVArray.xArray, xOrVArray.vArray, reponseProbability2, confidenceLevel);
             string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
@@ -132,16 +124,7 @@ namespace WsSensitivity.Controllers
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
             ldts.RemoveRange(ldts.Count - 1, 1);
             var xOrVArray = LangleyPublic.XAndVArrays(ldts);
-            if (langlryExpTable.let_FlipTheResponse == 1)
-            {
-                for (int i = 0; i < xOrVArray.vArray.Length; i++)
-                {
-                    if (xOrVArray.vArray[i] == 0)
-                        xOrVArray.vArray[i] = 1;
-                    else
-                        xOrVArray.vArray[i] = 0;
-                }
-            }
+            xOrVArray.vArray = LangleyPublic.IsFlipTheResponse(langlryExpTable, xOrVArray.vArray);
             var lr = LangleyPublic.SelectState(langlryExpTable);
             var ies = lr.ResponsePointIntervalEstimate(xOrVArray.xArray, xOrVArray.vArray, reponseProbability2, confidenceLevel2, cjl, favg, fsigma);
             string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
@@ -175,6 +158,7 @@ namespace WsSensitivity.Controllers
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
             ldts.RemoveRange(ldts.Count - 1, 1);
             var xOrVArray = LangleyPublic.XAndVArrays(ldts);
+            xOrVArray.vArray = LangleyPublic.IsFlipTheResponse(langlryExpTable, xOrVArray.vArray);
             var lr = LangleyPublic.SelectState(langlryExpTable);
             var srd = lr.BatchIntervalCalculate(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xOrVArray.xArray, xOrVArray.vArray, intervalTypeSelection);
             LangleyPublic.sideReturnData = srd;

@@ -70,8 +70,6 @@ namespace WsSensitivity.Models
 
     public class Logistic : LangleyDistributionSelection
     {
-        public LangleyMethodStandardSelection Standard { get; set; }
-
         public override string DistributionSelection() => "逻辑斯蒂分布";
 
         public override double CorrectionDistribution(int count)
