@@ -158,6 +158,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
+    <Compile Include="Models\DoptimizeExperimentTable.cs" />
     <Compile Include="Models\Langlie.cs" />
     <Compile Include="Models\LangleyAndD_Optimization\AlgorithmReconstruct.cs" />
     <Compile Include="Models\Class_区间估计.cs" />

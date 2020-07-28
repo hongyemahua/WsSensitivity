@@ -14,5 +14,8 @@ namespace WsSensitivity.Models.DB
         public DbSet<LangleyExperimentTable> LangleyExperimentTable { get; set; }
         public DbSet<LangleyDataTable> LangleyDataTable { get; set; }
 
+        public DbSet<DoptimizeDataTable> DoptimizeDataTable { get; set; }
+        public DbSet<DoptimizeExperimentTable> DoptimizeExperimentTable { get; set; }
+
     }
 }
