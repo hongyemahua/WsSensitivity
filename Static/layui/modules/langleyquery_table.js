@@ -23,6 +23,7 @@ layui.define(['table', 'form'], function(exports){
           , groups: 3 //只显示 1 个连续页码
           , first: '首页' //不显示首页
           , last: '尾页' //不显示尾页
+          , theme: '#c71585'
 
       }
       , limit: 20

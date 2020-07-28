@@ -14,6 +14,7 @@
     @{
         var langLeyName = ViewData["langLeyNameString"];
         var langlryExpTableId = (int)ViewData["langlryExpTableId"];
+        var langLeyStringName = ViewData["langLeyStringName"];
     }
     <div class="layui-fluid">
         <div class="layui-col-sm12">
@@ -28,18 +29,19 @@
                         <div class="layui-col-md3 layui-col-space10">
                             <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
                             <div class="layui-input-inline">
-                                <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                                <input class="layui-input" id="sq" name="sq" style="width:100px" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                             </div>
                         </div>
-                        <div class="layui-col-md5 layui-col-space10">
+                        <div class="layui-col-md4 layui-col-space10">
                             <label class="layui-form-label" style="width:30%;text-anchor:inherit">下一组响应状态：</label>
-                            <div class="layui-input-inline">
+                            <div class="layui-input-inline" style="width:100px">
                                 <select name="modules" lay-verify="required" lay-filter="select_response">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                 </select>
                             </div>
                         </div>
+                       
                     </div>
                 </script>
 
@@ -53,7 +55,7 @@
 
         </div>
         <div class="layui-col-sm12">
-            <div class="layui-col-md8 layui-col-space10">
+            <div class="layui-col-md12 layui-col-space10">
                 <div class="layui-col-md2 layui-col-space5">
                     <div class="layui-col-md12">
                         <label class="layui-form-label" style="width:auto">测试次数：</label>
@@ -76,6 +78,11 @@
                         <div class="layui-input-block">
                             <label class="layui-form-label" style="width:5%" id="label3"></label>
                         </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3 layui-col-space5">
+                    <div class="layui-col-md12">
+                        <label class="layui-form-label" style="width:auto">兰利法: @langLeyStringName/@langLeyName</label>
                     </div>
                 </div>
             </div>
@@ -435,19 +442,28 @@
                 , element = layui.element;
 
             //兰利法表格
-    table.render({
+    var ins=table.render({
         elem: '#langley_list'
         , url: '../LangleyExperiment/GetAllLangleys?id=' +@langlryExpTableId,//模拟接口
         height: 'full-130'//高度最大化减去差值
         //, toolbar: 'default'
         , toolbar: '#Tool_title'
+        , defaultToolbar: ['exports', 'filter', 'print'
+            //{自定义
+            //title: '导出Excel'
+            //, layEvent: 'Export'
+            //, icon: 'layui-icon-export'
+            //},
+            ]
         , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
             layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
             , curr: 1 //设定初始在第 5 页
             , groups: 3 //只显示 1 个连续页码
-            , first: false //不显示首页
-            , last: true //不显示尾页
+            , first: '首页' //不显示首页
+            , last: '尾页' //不显示尾页
+            , theme: '#c71585'
         }
+        ,limits:[10,20,50,100,200,500,800]
         , limit: 20
         , cols: [[
             { field: 'ldt_Number', width: 80, title: '编号', sort: true }
@@ -498,8 +514,6 @@
                     }
                 });
             });
-
-
             //监听工具条
             table.on('tool(langleylist)', function (obj) {
                 var data = obj.data;
@@ -576,12 +590,12 @@
                                             });
                                         }
                                     }
-                                    
-                                    
+
+
                                 });
                                 location.href = '../LangleyExperiment/LangleyExperiment?let_id='+@langlryExpTableId;
                                 layer.close(index); //关闭弹层
-                                
+
                             });
                             submit.trigger('click');
                         }

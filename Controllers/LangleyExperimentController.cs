@@ -17,6 +17,7 @@ namespace WsSensitivity.Controllers
         {
             LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(let_id);
             ViewData["langlryExpTableId"] = langlryExpTable.let_Id;
+            ViewData["langLeyStringName"] = langlryExpTable.let_ProductName;
             ViewData["langLeyNameString"] = LangleyPublic.DistributionState(langlryExpTable) + "/" + LangleyPublic.Correction(langlryExpTable.let_Correction);
             return View();
         }
@@ -131,7 +132,7 @@ namespace WsSensitivity.Controllers
             return Json(value);
         }
         //获取let_id全部兰利法表并分页显示
-        public ActionResult GetAllLangleys(int id,int page = 1, int limit = 20)
+        public ActionResult GetAllLangleys(int id, int page = 1, int limit = 20)
         {
             LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(id);
             List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(id);
@@ -150,6 +151,7 @@ namespace WsSensitivity.Controllers
                 PagesLdt.RemoveRange(PagesLdt.Count - 1, 1);
             return Json(new { code = 0, msg = "", count = ldts.Count - 1, data = LangleyPublic.Langleys(langlryExpTable, PagesLdt, first, ldts.Count) }, JsonRequestBehavior.AllowGet);
         }
+     
         [HttpPost]
         //批量区间估计
         public ActionResult BatchIntervalCalculation(double BatchConfidenceLevel, double yMin, double yMax, int Y_Axis, int intervalTypeSelection, double favg, double fsigma, int langlryExpTableId)

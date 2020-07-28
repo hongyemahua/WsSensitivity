@@ -14,6 +14,7 @@ namespace WsSensitivity.Controllers
         {
             
             ViewData["DoptimizeNameSeting"] = "D优化法";
+            ViewData["DoptimizeStringName"] = "D优化法实验名称";
             ViewData["dop_id"] = dop_id;
             return View();
         }
