@@ -607,7 +607,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: ['/TechnicalConditions/TechnicalConditions?langlryExpTableId='+@langlryExpTableId]
+                        , content: ['/TechnicalConditions/TechnicalConditions?langlryExpTableId='+@langlryExpTableId+'&name='+"L"]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -694,7 +694,7 @@
                          layer.open({
                              type: 4
                              , title: '输入有误'
-                             , content: ['响应概率必须在0到1之间', '#responseProbability']
+                             , content: ['响应概率取值范围(0,1]', '#responseProbability']
                              , tips: [1, '#ff2121']
                              ,time:3000
                          });
@@ -769,7 +769,7 @@
                         isResponse = false;
                             layer.open({
                                 type: 4
-                                , content: ['响应概率必须在0到1之间', '#reponseProbability2']
+                                , content: ['响应概率取值范围(0,1]', '#reponseProbability2']
                                 , tips: [1, '#ff2121']
                                 , time: 3000
                             });
@@ -836,7 +836,7 @@
                         isresponseEstimaate = false;
                         layer.open({
                             type: 4
-                            , content: ['响应概率必须在0到1之间', '#reponseProbability2']
+                            , content: ['响应概率取值范围(0,1]', '#reponseProbability2']
                             , tips: [1, '#ff2121']
                             , time: 3000
                         });
@@ -998,9 +998,7 @@
                                     type: 2
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , data: { "data": data }
-                                    , content: ['../LangleyLineChart/LangleyLineChart', 'no']
-                                    , data:{"langlryExpTableId":@langlryExpTableId}
+                                    , content: ['../LangleyLineChart/LangleyLineChart?type='+"L", 'no']
                                     , btnAlign: 'c'
                                     , anim: 1
                                     , closeBtn: 1

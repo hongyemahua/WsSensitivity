@@ -14,11 +14,21 @@ namespace WsSensitivity.Controllers
     {
         IDbDrive dbDrive = new LingImp();
         // GET: TechnicalConditions
-        public ActionResult TechnicalConditions(int langlryExpTableId)
+        public ActionResult TechnicalConditions(int langlryExpTableId,string name)
         {
+            if (name.Equals("D"))
+            {
+                ViewData["tc"] = "技术条件" + langlryExpTableId;
+                ViewData["id"] = langlryExpTableId;
+                ViewData["type"] = "D";
+            }
+            if (name.Equals("L"))
+            {
             var let = dbDrive.GetLangleyExperimentTable(langlryExpTableId);
             ViewData["tc"] = let.let_TechnicalConditions;
-            ViewData["langlryExpTableId"] = langlryExpTableId;
+            ViewData["id"] = langlryExpTableId;
+            ViewData["type"] = "L";
+            }
             return View();
         }
 

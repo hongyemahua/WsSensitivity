@@ -18,16 +18,6 @@ namespace WsSensitivity.Controllers
             ViewData["dop_id"] = dop_id;
             return View();
         }
-        //批量区间计算成果图
-        public ActionResult DoptimizeChart(int dop_id)
-        {
-            return View();
-        }
-        //导出数据
-        public FileResult DownloadDocument()
-        {
-            return File("1","defef");
-        }
         //点计算
         [HttpPost]
         public JsonResult PointCalculate(int dop_id)

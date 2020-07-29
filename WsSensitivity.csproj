@@ -414,11 +414,9 @@
     <Content Include="Views\ParameterSetting\ParameterSetting.cshtml" />
     <Content Include="Views\TechnicalConditions\TechnicalConditions.cshtml" />
     <Content Include="Views\LangleyQuery\LangleyQuery.cshtml" />
-    <Content Include="Views\DoptimizeExperiment\DoptimizeChart.cshtml" />
     <Content Include="Views\DoptimizeExperiment\DoptimizeExperiment.cshtml" />
     <Content Include="Views\DoptimizeParSting\DoptimizeParameterSettings.cshtml" />
     <Content Include="Views\DoptimizeQuery\DoptimizeQuery.cshtml" />
-    <Content Include="Views\DoptimizeTechnical\TechnicalConditions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

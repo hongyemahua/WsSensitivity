@@ -40,13 +40,6 @@ namespace WsSensitivity.Controllers
     public class DoptimizeTechnicalController : Controller
     {
         // GET: DoptimizeTechnical
-        //技术条件
-        public ActionResult TechnicalConditions(int dop_id)
-        {
-            ViewData["tc"] = "技术条件"+dop_id;
-            ViewData["dop_id"] = dop_id;
-            return View();
-        }
         //修改技术条件
         [HttpPost]
         public JsonResult TechnicalConditions_Update()

@@ -569,7 +569,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: ['../DoptimizeTechnical/TechnicalConditions?dop_id='+@dop_id]
+                        , content: ['../TechnicalConditions/TechnicalConditions?langlryExpTableId='+@dop_id+'&name='+"D"]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -939,14 +939,14 @@
                         $.ajax({
                             type: "post"
                             , data: {
-                                "BatchConfidenceLevel": BatchConfidenceLevel
-                                , "yMin": yMin
-                                , "yMax": yMax
-                                , "Y_Axis": Y_Axis
-                                , "intervalTypeSelection": intervalTypeSelection
-                                , "favg": avg
+                                "BatchConfidenceLevel": 1/*BatchConfidenceLevel*/
+                                , "yMin": /*yMin*/1
+                                , "yMax": /*yMax*/1
+                                , "Y_Axis": /*Y_Axis*/1
+                                , "intervalTypeSelection": /*intervalTypeSelection*/1
+                                , "favg": /*avg*/1
                                 , "dop_id":@dop_id,
-                                 "fsigma": sigma
+                                 "fsigma": /*sigma*/1
                             }
                             , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
                             , datatype: "json"
@@ -959,9 +959,7 @@
                                     type: 2
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , data: { "data": data }
-                                    , content: ['../DoptimizeExperiment/DoptimizeChart', 'no']
-                                    , data:{"dop_id":@dop_id}
+                                    , content: ['../LangleyLineChart/LangleyLineChart?type='+"D", 'no']
                                     , btnAlign: 'c'
                                     , anim: 1
                                     , closeBtn: 1

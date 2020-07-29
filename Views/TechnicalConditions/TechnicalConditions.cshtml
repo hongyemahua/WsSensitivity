@@ -10,7 +10,8 @@
 </head>
 @{ 
     string tc = (string)ViewData["tc"];
-    int langlryExpTableId = (int)ViewData["langlryExpTableId"];
+    int id = (int)ViewData["id"];
+    string type = (string)ViewData["type"];
 }
 <body>
 
@@ -18,7 +19,14 @@
         <div class="layui-form-item layui-form-text">
             <textarea name="let_TechnicalConditions" placeholder="请输入内容" class="layui-textarea">@tc</textarea>
         </div>
-        <input value="@langlryExpTableId" type="hidden" name="let_Id"/>
+        @if (type.Equals("L"))
+        {
+            <input value="@id" type="hidden" name="let_Id" />
+        }
+       @if(type.Equals("D"))
+        {
+            <input value="@id" type="hidden" name="dop_id" />
+        }
         <div class="layui-form-item layui-hide">
             <button class="layui-btn" lay-submit lay-filter="technicalconditions_submit" id="technicalconditions_submit">提交</button>
         </div>
