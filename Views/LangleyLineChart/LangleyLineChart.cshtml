@@ -15,6 +15,7 @@
 
     var incredibleLevelName = (string)ViewData["incredibleLevelName"];
     var incredibleIntervalType = (string)ViewData["incredibleIntervalType"];
+    string type = (string)ViewData["type"];
 }
 <html>
 <head>
@@ -27,9 +28,10 @@
     <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
     <div id="main" style="width:100%;height:500%;"></div>
     <div class="l-button" style="float:left">
-        <a href="../LangleyLineChart/DownloadDocument">
+        <a href="../LangleyLineChart/DownloadDocument?type=@type">
             <span> 导出数据 </span>
         </a>
+       
     </div>
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例

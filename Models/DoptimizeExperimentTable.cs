@@ -23,16 +23,16 @@ namespace WsSensitivity.Models
         [DisplayName("标准差预估值")]
         public double det_StandardDeviationEstimate { get; set; }
         [DisplayName("幂")]
-        public string let_Power { get; set; }
+        public string det_Power { get; set; }
         [DisplayName("分布状态")]
-        public int let_DistributionState { get; set; }
+        public int det_DistributionState { get; set; }
         [DisplayName("标准状态")]
-        public int let_StandardState { get; set; }
+        public int det_StandardState { get; set; }
         [DisplayName("翻转响应")]
-        public int let_FlipTheResponse { get; set; }
+        public int det_FlipTheResponse { get; set; }
         [DisplayName("技术条件")]
-        public string let_TechnicalConditions { get; set; }
+        public string det_TechnicalConditions { get; set; }
         [DisplayName("日期")]
-        public DateTime let_ExperimentalDate { get; set; }
+        public DateTime det_ExperimentalDate { get; set; }
     }
 }

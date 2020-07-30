@@ -29,13 +29,13 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">产品名称</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="D_ProductName" id="D_ProductName" lay-verify="required" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
+                                                                <input type="text" name="det_ProductName" id="det_ProductName" lay-verify="required" placeholder="新产品" autocomplete="off" class="layui-input" value="新产品">
                                                             </div>
                                                         </div>
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">仪器分辨率</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="D_PrecisionInstruments" id="D_PrecisionInstruments" lay-verify="required|number" placeholder="0.001" value="0.001" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="det_PrecisionInstruments" id="det_PrecisionInstruments" lay-verify="required|number" placeholder="0.001" value="0.001" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -44,13 +44,13 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">刺激量下限</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="D_StimulusQuantityFloor" id="D_StimulusQuantityFloor" lay-verify="required|number" placeholder="50" value="50" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="det_StimulusQuantityFloor" id="det_StimulusQuantityFloor" lay-verify="required|number" placeholder="50" value="50" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label">刺激量上限</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="D_StimulusQuantityCeiling" id="D_StimulusQuantityCeiling" lay-verify="required|number" placeholder="100" value="100" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="det_StimulusQuantityCeiling" id="det_StimulusQuantityCeiling" lay-verify="required|number" placeholder="100" value="100" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -58,7 +58,7 @@
                                                         <div class="layui-col-md6">
                                                             <label class="layui-form-label" style="width:auto">标准差预估值</label>
                                                             <div class="layui-input-block">
-                                                                <input type="text" name="D_standardForecasts" id="D_standardForecasts" lay-verify="required|number" placeholder="10" value="10" style="width:97.5%" autocomplete="off" class="layui-input">
+                                                                <input type="text" name="det_StandardDeviationEstimate" id="det_StandardDeviationEstimate" lay-verify="required|number" placeholder="10" value="10" style="width:97.5%" autocomplete="off" class="layui-input">
                                                             </div>
                                                         </div>
 
@@ -77,12 +77,12 @@
                                                                 <div class="layui-card">
                                                                     <div class="layui-col-md12 layui-col-space10">
                                                                         <div class="layui-col-md12 layui-col-space5">
-                                                                            <input type="radio" name="D_DistributionState" value="0" title="正态分布" checked>
-                                                                            <input type="radio" name="D_DistributionState" value="1" title="逻辑斯谛分布">
+                                                                            <input type="radio" name="det_DistributionState" value="0" title="正态分布" checked>
+                                                                            <input type="radio" name="det_DistributionState" value="1" title="逻辑斯谛分布">
                                                                         </div>
                                                                     </div>
                                                                     <div class="layui-col-md12 layui-col-space3 layui-inline ">
-                                                                        <input type="checkbox" name="D_FlipTheResponse" title="翻转响应" value="1">
+                                                                        <input type="checkbox" name="det_FlipTheResponse" title="翻转响应" value="1">
                                                                     </div>
 
                                                                 </div>
@@ -104,13 +104,13 @@
                                                                 <div class="layui-card">
                                                                     <div class="layui-col-md12 layui-col-space15">
                                                                         <div class="layui-col-md12 layui-col-space15">
-                                                                            <input type="radio" name="D_StandardState" lay-filter="D_StandardState" value="0" title="标准" checked>
-                                                                            <input type="radio" name="D_StandardState" lay-filter="D_StandardState" value="1" title="对数ln">
-                                                                            <input type="radio" name="D_StandardState" lay-filter="D_StandardState" value="2" title="对数log">
+                                                                            <input type="radio" name="det_StandardState" lay-filter="D_StandardState" value="0" title="标准" checked>
+                                                                            <input type="radio" name="det_StandardState" lay-filter="D_StandardState" value="1" title="对数ln">
+                                                                            <input type="radio" name="det_StandardState" lay-filter="D_StandardState" value="2" title="对数log">
                                                                         </div>
                                                                         <div class="layui-col-md12 layui-col-space15">
-                                                                            <input type="radio" name="D_StandardState" lay-filter="D_StandardState" value="3" title="幂">
-                                                                            = <input type="text" name="D_Power" placeholder="1" id="getPow" lay-verify="required|number" class="layui-input-inline" value="1" disabled style="width:70px" >
+                                                                            <input type="radio" name="det_StandardState" lay-filter="D_StandardState" value="3" title="幂">
+                                                                            = <input type="text" name="det_Power" placeholder="1" id="getPow" lay-verify="required|number" class="layui-input-inline" value="1" disabled style="width:70px" >
                                                                         </div>
                                                                        
                                                                     </div>
@@ -129,7 +129,7 @@
                                                 <div class="layui-form-item layui-form-text">
                                                     <label class="layui-form-label">技术条件</label>
                                                     <div class="layui-input-block">
-                                                        <textarea placeholder="请输入......" class="layui-textarea" name="D_TechnicalConditions"></textarea>
+                                                        <textarea placeholder="请输入......" class="layui-textarea" name="det_TechnicalConditions"></textarea>
                                                     </div>
                                                 </div>
                                             </fieldset>
