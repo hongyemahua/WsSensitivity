@@ -613,7 +613,10 @@
                 pointcalculate: function () {
                     $.ajax({
                         type: "post",
-                        url:'../DoptimizeExperiment/PointCalculate?dop_id='+@dop_id,
+                        data: {
+                            "dop_id":@dop_id
+                        },
+                        url:'../DoptimizeExperiment/PointCalculate',
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
