@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WsSensitivity.Models;
+using WsSensitivity.Models.IDbDrives;
 
 namespace WsSensitivity.Controllers
 {
     public class DoptimizeExperimentController : Controller
     {
+        IDbDrive dbDrive = new LingImp();
         // GET: DoptimizeExperiment
         //D优化法实验
         public ActionResult DoptimizeExperiment(int dop_id)
         {
-            
-            ViewData["DoptimizeNameSeting"] = "D优化法";
-            ViewData["DoptimizeStringName"] = "D优化法实验名称";
-            ViewData["dop_id"] = dop_id;
-            return View();
+            DoptimizeExperimentModel doptimizeExperimentModel = new DoptimizeExperimentModel();
+            DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
+            doptimizeExperimentModel.det = det;
+            doptimizeExperimentModel.doptimizeNameSeting = DoptimizePublic.DistributionState(det);
+            return View(doptimizeExperimentModel);
         }
         //批量区间计算成果图
         public ActionResult DoptimizeChart(int dop_id)

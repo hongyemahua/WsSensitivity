@@ -70,5 +70,14 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract bool Delete(LangleyDataTable ldt);
 
         #endregion
+
+        #region D优化法实验表操作
+        public abstract bool Insert(DoptimizeExperimentTable det);
+        public abstract DoptimizeExperimentTable GetDoptimizeExperimentTable(int id);
+        #endregion
+
+        #region D优化数据表操作
+        public abstract bool Insert(DoptimizeDataTable ddt);
+        #endregion
     }
 }

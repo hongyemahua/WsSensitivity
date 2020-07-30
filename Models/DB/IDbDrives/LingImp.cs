@@ -328,16 +328,45 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
-
-
-
-
-
-
-
-
-
         #endregion
 
+        #region D优化法实验表操作
+        public override bool Insert(DoptimizeExperimentTable det)
+        {
+            try
+            {
+                db.DoptimizeExperimentTable.Add(det);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+        public override DoptimizeExperimentTable GetDoptimizeExperimentTable(int id)
+        {
+            DoptimizeExperimentTable det = db.DoptimizeExperimentTable.Where(m => m.det_Id == id).First();
+            return det;
+        }
+        #endregion
+
+        #region D优化法数据表操作
+        public override bool Insert(DoptimizeDataTable ddt)
+        {
+            try
+            {
+                db.DoptimizeDataTable.Add(ddt);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
+        #endregion
     }
 }

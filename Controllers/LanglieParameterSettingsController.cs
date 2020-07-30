@@ -34,7 +34,6 @@ namespace WsSensitivity.Controllers
             bool isTure = dbDrive.Insert(LangleyPublic.LangleyDataTables(let.let_Id, dbDrive, sq));
             string name = let.let_ProductName;
             string[] value = { isTure.ToString(), let.let_Id.ToString(),name};
-        
             return Json(value);
         }
     }

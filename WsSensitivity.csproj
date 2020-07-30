@@ -131,6 +131,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DoptimizeExperimentController.cs" />
     <Compile Include="Controllers\DoptimizeParStingController.cs" />
+    <Compile Include="Controllers\DoptimizePublic.cs" />
     <Compile Include="Controllers\DoptimizeQueryController.cs" />
     <Compile Include="Controllers\DoptimizeTechnicalController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
@@ -159,6 +160,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
     <Compile Include="Models\DoptimizeExperimentTable.cs" />
+    <Compile Include="Models\LangleyAndDOptimize\DoptimizationAlgorithm.cs" />
+    <Compile Include="Models\LangleyAndDOptimize\DoptimizationDistributionSelection.cs" />
     <Compile Include="Models\Langlie.cs" />
     <Compile Include="Models\LangleyAndDOptimize\AlgorithmReconstruct.cs" />
     <Compile Include="Models\Class_区间估计.cs" />

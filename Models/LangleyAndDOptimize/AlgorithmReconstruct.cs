@@ -16,6 +16,7 @@ namespace WsSensitivity.Models
             public double varmu;
             public double varsigma;
             public double covmusigma;
+            public double sigmaguess;
         }
 
         public struct SideReturnData
@@ -35,24 +36,24 @@ namespace WsSensitivity.Models
             }
 
             public LangleyDistributionSelection DistributionSelection { get; set; }
+
             public LangleyMethodStandardSelection StandardSelection { get; set; }
+
             public OutputParameters GetResult(double[] xArray, int[] vArray)
             {
                 for (int i = 0; i < xArray.Length; i++)
                     xArray[i] = StandardSelection.InverseProcessValue(xArray[i]);
-                OutputParameters outputParameters = DistributionSelection.DotDistribution(xArray, vArray);
+                var outputParameters = DistributionSelection.MLS_getMLS(xArray, vArray);
+                DistributionSelection.Interval_estimation(xArray, vArray,ref outputParameters);
                 outputParameters.μ0_final = StandardSelection.GetAvgValue(outputParameters.μ0_final);
                 return outputParameters;
             }
 
-            public double MaxAndMinValue(double value) => pub_function.resolution_getReso(StandardSelection.ProcessValue(value), 0.000001);
-
             public double[] Precs(double μ0_final, double σ0_final)
             {
                 double[] precs = new double[2];
-                double[] precValues = DistributionSelection.PrecValues(StandardSelection.InverseProcessValue(μ0_final), σ0_final);
-                precs[0] = pub_function.resolution_getReso(StandardSelection.ProcessValue(precValues[0]), 0.000001);
-                precs[1] = pub_function.resolution_getReso(StandardSelection.ProcessValue(precValues[1]), 0.000001);
+                precs[0] = pub_function.resolution_getReso(StandardSelection.InverseProcessValue(StandardSelection.ProcessValue(μ0_final) + DistributionSelection.PrecValues() * σ0_final), 0.000001);
+                precs[1] = pub_function.resolution_getReso(StandardSelection.InverseProcessValue(StandardSelection.ProcessValue(μ0_final) - DistributionSelection.PrecValues() * σ0_final), 0.000001);
                 return precs;
             }
 
@@ -76,7 +77,6 @@ namespace WsSensitivity.Models
                 return rt;
             }
 
-
             public List<IntervalEstimation> ResponsePointIntervalEstimate(double[] x, int[] v, double reponseProbability, double confidenceLevel, double fq, double favg, double fsigma)
             {
                 List<IntervalEstimation> intervalEstimations = new List<IntervalEstimation>();
@@ -93,7 +93,9 @@ namespace WsSensitivity.Models
             public double ResponsePointCalculate(double fq, double favg, double fsigma) => StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(favg) + (DistributionSelection.QnormAndQlogisDistribution(fq) * fsigma));
 
             public double ResponseProbabilityCalculate(double fq, double favg, double fsigma) => DistributionSelection.PointIntervalDistribution(StandardSelection.InverseProcessValue(fq), StandardSelection.InverseProcessValue(favg), fsigma);
+
             public IntervalEstimation SingleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(StandardSelection.InverseProcessArray(xArray), vArray, reponseProbability, 2 * confidenceLevel - 1);
+
             public IntervalEstimation DoubleSideEstimation(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel) => DistributionSelection.IntervalDistribution(StandardSelection.InverseProcessArray(xArray), vArray, reponseProbability, confidenceLevel);
 
             public double CorrectionAlgorithm(double fsigma, int count) => DistributionSelection.CorrectionDistribution(count) * fsigma;
@@ -144,10 +146,7 @@ namespace WsSensitivity.Models
 
             public string GetConversionNumber(int[] vArray) => Langlie.turn_number(vArray, vArray.Length).ToString();
 
-            public string Discription()
-            {
-                return DistributionSelection.DistributionSelection() + StandardSelection.StandardSelection();
-            }
+            public string Discription() => DistributionSelection.DistributionSelection() + StandardSelection.StandardSelection();
         }
     }
 }
