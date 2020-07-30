@@ -127,8 +127,7 @@ namespace WsSensitivity.Controllers
             ldt.ldt_StimulusQuantity = xArray[xArray.Length - 1];
             vArray = IsFlipTheResponse(langlryExpTable,vArray);
             var pointCalculateValue = langleyAlgorithm.GetResult(xArray, vArray);
-            ldt.ldt_Mean = pointCalculateValue.μ0_final;
-            ldt.ldt_Mean = double.Parse(ldt.ldt_Mean.ToString("f13"));
+            ldt.ldt_Mean = double.Parse(pointCalculateValue.μ0_final.ToString("f13"));
             if (langlryExpTable.let_Correction == 0)
                 pointCalculateValue.σ0_final = langleyAlgorithm.CorrectionAlgorithm(pointCalculateValue.σ0_final, xArray.Length);
             ldt.ldt_StandardDeviation = pointCalculateValue.σ0_final;

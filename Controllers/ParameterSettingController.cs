@@ -50,7 +50,7 @@ namespace WsSensitivity.Controllers
                     vArray[j] = xOrVArray.vArray[j];
                 }
                 langleyDataTable = LangleyPublic.UpdateLangleyDataTable(let, lr, xArray, vArray, ldts[i - 1]);
-                isTure = dbDrive.UpDate(langleyDataTable);
+                isTure = dbDrive.Update(langleyDataTable);
                 if (isTure == false)
                     break;
             }

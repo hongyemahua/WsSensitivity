@@ -37,7 +37,7 @@ namespace WsSensitivity.Controllers
                 xOrVArray.vArray[langleyDataTables.Count - 1] = 0;
             var lr = LangleyPublic.SelectState(langlryExpTable);
 
-            dbDrive.UpDate(LangleyPublic.UpdateLangleyDataTable(langlryExpTable, lr, xOrVArray.xArray, xOrVArray.vArray, langleyDataTables[langleyDataTables.Count - 1]));
+            dbDrive.Update(LangleyPublic.UpdateLangleyDataTable(langlryExpTable, lr, xOrVArray.xArray, xOrVArray.vArray, langleyDataTables[langleyDataTables.Count - 1]));
 
             //增加一条新数据
             double StimulusQuantity = lr.CalculateStimulusQuantity(xOrVArray.xArray, xOrVArray.vArray, langlryExpTable.let_StimulusQuantityCeiling, langlryExpTable.let_StimulusQuantityFloor, langlryExpTable.let_PrecisionInstruments);
@@ -69,7 +69,7 @@ namespace WsSensitivity.Controllers
             LangleyDataTable langleyDataTable = LangleyPublic.UpdateLangleyDataTable(langlryExpTable, lr, xOrVArray.xArray, xOrVArray.vArray, ldts[ldts.Count - 1]);
             langleyDataTable.ldt_Mean = double.Parse(langleyDataTable.ldt_Mean.ToString("f13"));
             string[] value = { lr.Precs(langleyDataTable.ldt_Mean, langleyDataTable.ldt_StandardDeviation)[0].ToString("f6"), lr.Precs(langleyDataTable.ldt_Mean, langleyDataTable.ldt_StandardDeviation)[1].ToString("f6"), langleyDataTable.ldt_Mean.ToString("f6"), langleyDataTable.ldt_StandardDeviation.ToString("f6"), lr.GetConversionNumber(xOrVArray.vArray), (xOrVArray.xArray.Length).ToString(), lr.GetNM(xOrVArray.xArray, xOrVArray.vArray) };
-            dbDrive.UpDate(langleyDataTable);
+            dbDrive.Update(langleyDataTable);
             return Json(value);
         }
         [HttpPost]

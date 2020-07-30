@@ -17,8 +17,10 @@ namespace WsSensitivity.Controllers
         {
             DoptimizeExperimentModel doptimizeExperimentModel = new DoptimizeExperimentModel();
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
-            doptimizeExperimentModel.det = det;
+            List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
             doptimizeExperimentModel.doptimizeNameSeting = DoptimizePublic.DistributionState(det);
+            doptimizeExperimentModel.sq = ddt_list[ddt_list.Count - 1].ddt_StimulusQuantity;
+            doptimizeExperimentModel.det = det;
             return View(doptimizeExperimentModel);
         }
         //点计算
@@ -63,8 +65,19 @@ namespace WsSensitivity.Controllers
         [HttpPost]
         public JsonResult InsertData(int dop_id,string response,string sq)
         {
-            string[] res = {"1","1","1","1"};
-            return Json(res);
+            DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
+            List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
+            ddt_list[ddt_list.Count - 1].ddt_StimulusQuantity = sq != "" ? double.Parse(sq) : ddt_list[ddt_list.Count - 1].ddt_StimulusQuantity;
+            ddt_list[ddt_list.Count - 1].ddt_Response = int.Parse(response);
+            var der_list = DoptimizePublic.DoptimizeExperimentRecoedsList(ddt_list,det);
+            var xAndV = DoptimizePublic.ReturnXarrayAndVarray(der_list);
+            var outputParameter = DoptimizePublic.SelectState(det).GetResult(xAndV.xArray, xAndV.vArray, det.det_StimulusQuantityFloor, det.det_StimulusQuantityCeiling, det.det_PrecisionInstruments, out double z, ddt_list[ddt_list.Count - 1].ddt_SigmaGuess);
+            DoptimizeDataTable ddt = ddt_list[ddt_list.Count - 1];
+            DoptimizePublic.UpdateDoptimizeDataTable(ref ddt,outputParameter,response,sq);
+            dbDrive.Update(ddt);
+            bool isTurn = dbDrive.Insert(DoptimizePublic.DoptimizeDataTable(det.det_Id, dbDrive, double.Parse(z.ToString("f6")), outputParameter));
+            string[] value = { isTurn.ToString(), ddt_list.Count.ToString(), z.ToString("f6")};
+            return Json(value);
         }
         //撤销操作
         [HttpPost]

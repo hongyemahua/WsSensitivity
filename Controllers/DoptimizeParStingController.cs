@@ -30,7 +30,7 @@ namespace WsSensitivity.Controllers
             var stream = str.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
             DoptimizeExperimentTable det = js.Deserialize<DoptimizeExperimentTable>(stream);
-            det.let_ExperimentalDate = DateTime.Now;
+            det.det_ExperimentalDate = DateTime.Now;
             dbDrive.Insert(det);
             var outputParameter = DoptimizePublic.SelectState(det).GetResult(xArray,vArray,det.det_StimulusQuantityFloor,det.det_StimulusQuantityCeiling,det.det_PrecisionInstruments,out double z,det.det_StandardDeviationEstimate);
             bool isTure = dbDrive.Insert(DoptimizePublic.DoptimizeDataTable(det.det_Id, dbDrive, z,outputParameter));

@@ -65,7 +65,7 @@ namespace WsSensitivity.Models.IDbDrives
 
         public abstract List<LangleyDataTable> GetAllLangleyDataTable(int id);
 
-        public abstract bool UpDate(LangleyDataTable ldt);
+        public abstract bool Update(LangleyDataTable ldt);
 
         public abstract bool Delete(LangleyDataTable ldt);
 
@@ -78,6 +78,8 @@ namespace WsSensitivity.Models.IDbDrives
 
         #region D优化数据表操作
         public abstract bool Insert(DoptimizeDataTable ddt);
+        public abstract List<DoptimizeDataTable> GetDoptimizeDataTables(int id);
+        public abstract bool Update(DoptimizeDataTable ddt);
         #endregion
     }
 }

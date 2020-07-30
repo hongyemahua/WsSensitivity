@@ -289,7 +289,7 @@ namespace WsSensitivity.Models.IDbDrives
             return ldts;
         }
 
-        public override bool UpDate(LangleyDataTable ldt)
+        public override bool Update(LangleyDataTable ldt)
         {
             try
             {
@@ -365,8 +365,34 @@ namespace WsSensitivity.Models.IDbDrives
             }
             return true;
         }
+        public override List<DoptimizeDataTable> GetDoptimizeDataTables(int id)
+        {
+            List<DoptimizeDataTable> ldts = new List<DoptimizeDataTable>();
+            ldts = db.DoptimizeDataTable.Where(m => m.ddt_ExperimentTableId == id).ToList();
+            return ldts;
+        }
 
-        
+        public override bool Update(DoptimizeDataTable ddt)
+        {
+            try
+            {
+                var entry = db.Set<DoptimizeDataTable>().Find(ddt.ddt_Id);
+                if (entry != null)
+                {
+                    db.Entry<DoptimizeDataTable>(entry).State = EntityState.Detached; //这个是在同一个上下文能修改的关键
+                }
+                db.DoptimizeDataTable.Attach(ddt);
+                db.Entry(ddt).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
         #endregion
     }
 }
