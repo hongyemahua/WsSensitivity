@@ -1,4 +1,4 @@
-﻿
+﻿@model WsSensitivity.Controllers.DoptimizeExperimentModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,11 +11,11 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
-    @{
+    @*@{
         var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
         int dop_id = (int)ViewData["dop_id"];
         var DoptimizeStringName = ViewData["DoptimizeStringName"];
-    }
+    }*@
     <div class="layui-fluid">
         <div class="layui-col-sm12">
             <div clas="layui-card layui-col-ssm12">
@@ -24,16 +24,16 @@
                 <script type="text/html" id="Tool_title">
                     <div class="layui-col-md12">
                         <div class="layui-col-md3 layui-col-space10">
-                            <label class="layui-form-label" id="langLeyName" style="width:auto;height:25px;text-anchor:inherit">@DoptimizeNameSeting</label>
+                            <label class="layui-form-label" id="langLeyName" style="width:auto;height:25px;text-anchor:inherit">@Model.doptimizeNameSeting</label>
                         </div>
                         <div class="layui-col-md3 layui-col-space10">
-                            <label class="layui-form-label" style="width:40%">当前刺激量：</label>
+                            <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
                             <div class="layui-input-inline">
-                                <input class="layui-input" id="sq" name="sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                                <input class="layui-input" id="sq" name="sq" value="@Model.sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                             </div>
                         </div>
                         <div class="layui-col-md5 layui-col-space10">
-                            <label class="layui-form-label" style="width:30%;height:25px;text-anchor:inherit">当前响应状态：</label>
+                            <label class="layui-form-label" style="width:30%;height:25px;text-anchor:inherit">下一组响应状态：</label>
                             <div class="layui-input-inline">
                                 <select name="modules" lay-verify="required" lay-filter="select_response">
                                     <option value="0">0</option>
@@ -68,8 +68,7 @@
                 </div>
                 <div class="layui-col-md5 layui-col-space5">
                     <div class="layui-col-md12">
-                        <label class="layui-form-label" style="width:auto">D优化法：@DoptimizeStringName/@DoptimizeNameSeting</label>
-                       
+                        <label class="layui-form-label" style="width:auto">D优化法：@Model.doptimizeNameSeting</label>
                     </div>
                 </div>
             </div>
@@ -439,7 +438,7 @@
                 //D优化法表格
                 table.render({
                     elem: '#doptimize_list'
-                    , url: '../DoptimizeExperiment/GetAllDoptimizes?dop_id=' + @dop_id,//模拟接口
+                    , url: '../DoptimizeExperiment/GetAllDoptimizes?dop_id=' + @Model.det.det_Id,//模拟接口
                      height: 'full-130'//高度最大化减去差值
                     //, toolbar: 'default'
                     , toolbar: '#Tool_title'
@@ -475,7 +474,7 @@
                         url: "../DoptimizeExperiment/InsertData",
                         type: "post",
                         data: {
-                            "dop_id":@dop_id,
+                            "dop_id":@Model.det.det_Id,
                             "response": data,
                             "sq": document.getElementById("sq").value
                         },
@@ -516,7 +515,7 @@
                                 url: "../DoptimizeExperiment/RevocationData",
                                 type: "post",
                                 data: {
-                                    "dop_id":@dop_id,
+                                    "dop_id":@Model.det.det_Id,
                                     "id": data.ldt_Id
                                 },
                                 dataType: "json",
@@ -569,7 +568,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: ['../TechnicalConditions/TechnicalConditions?langlryExpTableId='+@dop_id+'&name='+"D"]
+                        , content: ['../TechnicalConditions/TechnicalConditions?langlryExpTableId='+@Model.det.det_Id+'&name='+"D"]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -614,7 +613,7 @@
                     $.ajax({
                         type: "post",
                         data: {
-                            "dop_id":@dop_id
+                            "dop_id":@Model.det.det_Id
                         },
                         url:'../DoptimizeExperiment/PointCalculate',
                         datatype: "json",
@@ -667,7 +666,7 @@
                                 $.ajax({
                                     type: "post",
                                     data: {
-                                        "dop_id":@dop_id,
+                                        "dop_id":@Model.det.det_Id,
                                         "fq": responseValue,
                                         "favg": document.getElementById("avg").value,
                                         "fsigma": document.getElementById("sigma").value
@@ -698,7 +697,7 @@
                      $.ajax({
                          type: "post",
                          data: {
-                             "dop_id":@dop_id,
+                             "dop_id":@Model.det.det_Id,
                              "fq": stimulusQuantity,
                              "favg": document.getElementById("avg").value,
                              "fsigma": document.getElementById("sigma").value
@@ -759,7 +758,7 @@
                       $.ajax({
                          type: "post",
                           data: {
-                             "dop_id":@dop_id,
+                             "dop_id":@Model.det.det_Id,
                              "reponseProbability2": reponseProbability2,
                              "confidenceLevel": confidenceLevel1
                          },
@@ -844,7 +843,7 @@
                          $.ajax({
                              type: "post",
                              data: {
-                                 "dop_id":@dop_id,
+                                 "dop_id":@Model.det.det_Id,
                                  "reponseProbability2": reponseProbability2,
                                  "confidenceLevel2": confidenceLevel2 ,
                                  "cjl": stimulusQuantity2,
@@ -942,14 +941,14 @@
                         $.ajax({
                             type: "post"
                             , data: {
-                                "BatchConfidenceLevel": 1/*BatchConfidenceLevel*/
-                                , "yMin": /*yMin*/1
-                                , "yMax": /*yMax*/1
-                                , "Y_Axis": /*Y_Axis*/1
-                                , "intervalTypeSelection": /*intervalTypeSelection*/1
-                                , "favg": /*avg*/1
-                                , "dop_id":@dop_id,
-                                 "fsigma": /*sigma*/1
+                                "BatchConfidenceLevel": BatchConfidenceLevel
+                                , "yMin": yMin
+                                , "yMax": yMax
+                                , "Y_Axis": Y_Axis
+                                , "intervalTypeSelection": intervalTypeSelection
+                                , "favg": avg
+                                , "dop_id":@Model.det.det_Id,
+                                 "fsigma": sigma
                             }
                             , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
                             , datatype: "json"
