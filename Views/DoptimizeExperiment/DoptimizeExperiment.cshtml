@@ -45,7 +45,7 @@
                 </script>
 
                 <script type="text/html" id="response_state">
-                    {{# if(d.ddt_Number == d.number){}}
+                    {{# if(d.ddt_Number == d.number -1){}}
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                     {{# } }}
                 </script>
@@ -469,7 +469,6 @@
                 //下拉框监听事件
                 form.on('select(select_response)', function (obj) {
                     var data = obj.value;
-                    alert(obj.value);
                     $.ajax({
                         url: "../DoptimizeExperiment/InsertData",
                         type: "post",
@@ -489,9 +488,7 @@
 
                          table.reload('doptimize_list'); //数据刷新
                                 $("#testNumber").text(data[1]);
-                                $("#NM").text(data[2]);
-
-                                document.getElementById("sq").value = data[3];
+                                document.getElementById("sq").value = data[2];
 
                             } else {
                                 layer.msg('增加失败', {
@@ -525,9 +522,9 @@
                                             icon: 1,
                                             time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                         });
-                                        table.reload('dparam_list'); //数据刷新
-                                        document.getElementById("sq").value = data[1];
-                                        $("#testNumber").text(data[2]);
+                                        table.reload('doptimize_list');  //数据刷新
+                                        $("#testNumber").text(data[1]);
+                                        document.getElementById("sq").value = data[2];
                                     } else {
                                         layer.msg('删除失败', {
                                             icon: 2,
@@ -620,10 +617,10 @@
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            document.getElementById("avg").value = data[2];
-                            document.getElementById("sigma").value = data[3];
-                            document.getElementById("prec99").value = data[0];
-                            document.getElementById("prec01").value = data[1];
+                            document.getElementById("avg").value = data[0];
+                            document.getElementById("sigma").value = data[1];
+                            document.getElementById("prec99").value = data[2];
+                            document.getElementById("prec01").value = data[2];
                             //document.getElementById("conversionNumber").value = data[4];
                             $("#label3").text(data[4]);
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
