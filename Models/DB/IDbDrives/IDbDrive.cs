@@ -80,6 +80,7 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract bool Insert(DoptimizeDataTable ddt);
         public abstract List<DoptimizeDataTable> GetDoptimizeDataTables(int id);
         public abstract bool Update(DoptimizeDataTable ddt);
+        public abstract DoptimizeDataTable GetDoptimizeDataTable(int id);
         #endregion
     }
 }

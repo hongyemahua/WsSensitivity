@@ -392,6 +392,13 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
+        public override DoptimizeDataTable GetDoptimizeDataTable(int id)
+        {
+            DoptimizeDataTable ddt = new DoptimizeDataTable();
+            ddt = db.DoptimizeDataTable.Where(m => m.ddt_Id == id).ToList()[0];
+            return ddt;
+        }
+
 
         #endregion
     }
