@@ -27,6 +27,20 @@ namespace WsSensitivity.Controllers
         public double[] xArray;
         public int[] vArray;
     }
+    public struct Doptimization
+    {
+        public int ddt_Id;
+        public int ddt_Number;
+        public double ddt_StimulusQuantity;
+        public int ddt_Response;
+        public double ddt_Mean;
+        public double ddt_StandardDeviation;
+        public double ddt_MeanVariance;
+        public double ddt_StandardDeviationVariance;
+        public double ddt_Covmusigma;
+        public double ddt_SigmaGuess;
+        public double number;
+    }
     public class DoptimizePublic
     {
         public static DoptimizationAlgorithm SelectState(DoptimizeExperimentTable det)
@@ -106,6 +120,32 @@ namespace WsSensitivity.Controllers
             ddt.ddt_StandardDeviationVariance = double.IsNaN(outputParameters.varsigma) ? 0 : outputParameters.varsigma;
             ddt.ddt_Covmusigma = double.IsNaN(outputParameters.covmusigma) ? 0 : outputParameters.covmusigma;
             ddt.ddt_SigmaGuess = double.Parse(outputParameters.sigmaguess.ToString("f6"));
+        }
+        public static List<Doptimization> GetDoptimizes(List<DoptimizeDataTable> ddt_list,int count)
+        {
+            List<Doptimization> doptimizes = new List<Doptimization>();
+            for (int i = ddt_list.Count - 1; i >= 0; i--)
+            {
+                Doptimization doptimize = new Doptimization();
+                doptimize.ddt_Id = ddt_list[i].ddt_Id;
+                doptimize.ddt_Number = ddt_list[i].ddt_Number;
+                doptimize.ddt_StimulusQuantity = ddt_list[i].ddt_StimulusQuantity;
+                doptimize.ddt_Response = ddt_list[i].ddt_Response;
+                doptimize.ddt_Mean = ddt_list[i].ddt_Mean;
+                doptimize.ddt_MeanVariance = ddt_list[i].ddt_MeanVariance;
+                doptimize.ddt_StandardDeviation = ddt_list[i].ddt_StandardDeviation;
+                doptimize.ddt_StandardDeviationVariance = ddt_list[i].ddt_StandardDeviationVariance;
+                doptimize.ddt_Covmusigma = ddt_list[i].ddt_Covmusigma;
+                doptimize.ddt_SigmaGuess = ddt_list[i].ddt_SigmaGuess;
+                doptimize.number = count;
+                doptimizes.Add(doptimize);
+            }
+            return doptimizes;
+        }
+        public static string[] GetIntervalEstimateValue(List<IntervalEstimation> ies)
+        {
+            string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
+            return value;
         }
     }
 }

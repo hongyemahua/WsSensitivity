@@ -37,7 +37,7 @@ namespace WsSensitivity.Controllers
             public double ldt_StandardDeviationVariance;
             public double ldt_Covmusigma;
             public double number;
-            public string LangleyName;
+            //public string LangleyName;
         }
         public struct XAndVArray
         {
@@ -162,7 +162,7 @@ namespace WsSensitivity.Controllers
                 langley.ldt_StandardDeviationVariance = ldts[i].ldt_StandardDeviationVariance;
                 langley.ldt_Covmusigma = ldts[i].ldt_Covmusigma;
                 langley.number = count;
-                langley.LangleyName = DistributionState(langlryExpTable) + "/" + Correction(langlryExpTable.let_Correction);
+                //langley.LangleyName = DistributionState(langlryExpTable) + "/" + Correction(langlryExpTable.let_Correction);
                 langleys.Add(langley);
             }
             return langleys;
