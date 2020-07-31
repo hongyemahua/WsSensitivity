@@ -44,7 +44,7 @@ namespace WsSensitivity.Controllers
             doptimize.ddt_StandardDeviation = 1;
             doptimize.ddt_StandardDeviationVariance = 1;
             doptimize.ddt_StimulusQuantity = 1;
-            doptimize.number = 1;
+            doptimize.number = 2;
             doptimizes.Add(doptimize);
             Doptimize doptimize1 = new Doptimize();
             doptimize1.ddt_Covmusigma = 1;
@@ -59,6 +59,7 @@ namespace WsSensitivity.Controllers
             doptimize1.ddt_StimulusQuantity = 1;
             doptimize1.number = 2;
             doptimizes.Add(doptimize1);
+            doptimizes.Reverse();
             return Json(new { code = 0, msg = "", count = doptimizes.Count, data = doptimizes }, JsonRequestBehavior.AllowGet);
         }
         //响应操作

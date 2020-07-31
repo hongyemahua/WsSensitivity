@@ -792,7 +792,9 @@
                             , icon: 5
                         });
                     }
+                    var load;
                     if (isResponse) {
+                        load = layer.load();
                       $.ajax({
                          type: "post",
                          data: {
@@ -804,7 +806,8 @@
                          datatype: "json",
                          contenttype: "application/json; charset=utf-8",
                          async: false,
-                         success: function (data) {
+                          success: function (data) {
+                             layer.close(load);
                              document.getElementById("danConfidenceInterval1").value = data[0];
                              document.getElementById("danConfidenceInterval2").value = data[1];
                              document.getElementById("danConfidenceInterval3").value = data[2];
@@ -877,7 +880,9 @@
                             ,icon:2
                         });
                     }
+                    var load;
                     if (isresponseEstimaate) {
+                        load = layer.load();
                          $.ajax({
                              type: "post",
                              data: {
@@ -893,6 +898,7 @@
                              contenttype: "application/json; charset=utf-8",
                              async: false,
                              success: function (data) {
+                                 layer.close(load);
                                  document.getElementById("danConfidenceInterval1").value = data[0];
                                  document.getElementById("danConfidenceInterval2").value = data[1];
                                  document.getElementById("danConfidenceInterval3").value = data[2];
@@ -973,9 +979,10 @@
                             , time: 3000
                         });
                     }
-
+                        var load;
                         if (isConfi) {
                             document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
+                            load = layer.load();
                         $.ajax({
                             type: "post"
                             , data: {
@@ -994,6 +1001,7 @@
                             , async: false
                             , success: function (data) {
                                 document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                                layer.close(load);
                                 var index = layer.open({
                                     type: 2
                                     , area: ['70%', '80%']
