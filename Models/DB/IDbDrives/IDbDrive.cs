@@ -74,6 +74,11 @@ namespace WsSensitivity.Models.IDbDrives
         #region D优化法实验表操作
         public abstract bool Insert(DoptimizeExperimentTable det);
         public abstract DoptimizeExperimentTable GetDoptimizeExperimentTable(int id);
+        public abstract bool Update(DoptimizeExperimentTable det);
+        public abstract List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables();
+        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime);
+        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName);
+        public abstract bool Delete(DoptimizeExperimentTable det);
         #endregion
 
         #region D优化数据表操作
@@ -81,6 +86,7 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract List<DoptimizeDataTable> GetDoptimizeDataTables(int id);
         public abstract bool Update(DoptimizeDataTable ddt);
         public abstract DoptimizeDataTable GetDoptimizeDataTable(int id);
+        public abstract bool Delete(DoptimizeDataTable ddt);
         #endregion
     }
 }

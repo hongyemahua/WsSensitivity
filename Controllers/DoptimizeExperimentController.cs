@@ -78,7 +78,7 @@ namespace WsSensitivity.Controllers
         public JsonResult RevocationData(int dop_id)
         {
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
-            var isTurn = dbDrive.Update(ddt_list[ddt_list.Count - 1]);
+            var isTurn = dbDrive.Delete(ddt_list[ddt_list.Count - 1]);
             int updateShowNumber = ddt_list.Count - 2;
             double nextStimulusQuantity = ddt_list[ddt_list.Count - 2].ddt_StimulusQuantity;
             string[] valve = { isTurn.ToString(), updateShowNumber.ToString(), nextStimulusQuantity.ToString()};

@@ -328,6 +328,64 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
+        public override bool Update(DoptimizeExperimentTable det)
+        {
+            try
+            {
+                var entry = db.Set<DoptimizeExperimentTable>().Find(det.det_Id);
+                if (entry != null)
+                {
+                    db.Entry<DoptimizeExperimentTable>(entry).State = EntityState.Detached; //这个是在同一个上下文能修改的关键
+                }
+                db.DoptimizeExperimentTable.Attach(det);
+                db.Entry(det).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables()
+        {
+            List<DoptimizeExperimentTable> det = db.DoptimizeExperimentTable.ToList();
+            return det;
+        }
+
+        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        {
+            List<DoptimizeExperimentTable> det_list = new List<DoptimizeExperimentTable>();
+            det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName) && DateTime.Compare(startTime, m.det_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.det_ExperimentalDate) >= 0).ToList();
+            return det_list;
+        }
+        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName)
+        {
+            List<DoptimizeExperimentTable> det_list = new List<DoptimizeExperimentTable>();
+            det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName)).ToList();
+            return det_list;
+        }
+        public override bool Delete(DoptimizeExperimentTable det)
+        {
+            DoptimizeExperimentTable modle = db.DoptimizeExperimentTable.FirstOrDefault(m => m.det_Id == det.det_Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.DoptimizeExperimentTable.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
         #endregion
 
         #region D优化法实验表操作
@@ -398,6 +456,34 @@ namespace WsSensitivity.Models.IDbDrives
             ddt = db.DoptimizeDataTable.Where(m => m.ddt_Id == id).ToList()[0];
             return ddt;
         }
+
+        
+        public override bool Delete(DoptimizeDataTable ddt)
+        {
+            DoptimizeDataTable modle = db.DoptimizeDataTable.FirstOrDefault(m => m.ddt_Id == ddt.ddt_Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.DoptimizeDataTable.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+
+
+
+
+
+
 
 
         #endregion
