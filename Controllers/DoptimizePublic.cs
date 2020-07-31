@@ -10,7 +10,7 @@ using static WsSensitivity.Models.AlgorithmReconstruct;
 
 namespace WsSensitivity.Controllers
 {
-    class DoptimizeExperimentModel
+    public class DoptimizeExperimentModel
     { 
         public DoptimizeExperimentTable det { get; set; }
         public string doptimizeNameSeting { get; set; }
