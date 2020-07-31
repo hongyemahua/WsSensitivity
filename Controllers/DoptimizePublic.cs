@@ -16,6 +16,10 @@ namespace WsSensitivity.Controllers
         public string doptimizeNameSeting { get; set; }
         public double sq { get; set; }
     }
+    public class DoptimizeQueryModel
+    { 
+        public List<string> productName { get; set; }
+    }
     public class DoptimizeExperimentRecoed
     { 
         public double stimulusQuantity { get; set; }
@@ -40,6 +44,22 @@ namespace WsSensitivity.Controllers
         public double ddt_Covmusigma;
         public double ddt_SigmaGuess;
         public double number;
+    }
+
+    public struct Doptimization_list
+    {
+        public int number;
+        public int Id;
+        public double PrecisionInstruments;
+        public double StimulusQuantityCeiling;
+        public double StimulusQuantityFloor;
+        public string Power;
+        public string DistributionState;
+        public int FlipTheResponse;
+        public string ExperimentalDate;
+        public int count;
+        public double StandardDeviationEstimate;
+        public string projectname;
     }
     public class DoptimizePublic
     {
@@ -146,6 +166,47 @@ namespace WsSensitivity.Controllers
         {
             string[] value = { "(" + ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") + ")" };
             return value;
+        }
+        public static List<Doptimization_list> Doptimization_list(IDbDrive dbDrive, List<DoptimizeExperimentTable> det_list)
+        {
+            List<Doptimization_list> doptimization_Lists = new List<Doptimization_list>();
+            for (int i = 0; i < det_list.Count; i++)
+            {
+                var doptimization_List = GetDoptimization(det_list[i]);
+                doptimization_List.number = i + 1;
+                doptimization_List.count = dbDrive.GetAllLangleyDataTable(det_list[i].det_Id).Count - 1;
+                doptimization_Lists.Add(doptimization_List);
+            }
+            doptimization_Lists.Reverse();
+            return doptimization_Lists;
+        }
+        public static List<Doptimization_list> Doptimization_list(IDbDrive dbDrive, List<DoptimizeExperimentTable> det_list, int first)
+        {
+            List<Doptimization_list> doptimization_Lists = new List<Doptimization_list>();
+            for (int i = det_list.Count - 1; i >= 0; i--)
+            {
+                var doptimization_List = GetDoptimization(det_list[i]);
+                doptimization_List.number = i + 1 + first;
+                doptimization_List.count = dbDrive.GetAllLangleyDataTable(det_list[i].det_Id).Count - 1;
+                doptimization_Lists.Add(doptimization_List);
+            }
+            return doptimization_Lists;
+        }
+
+        private static Doptimization_list GetDoptimization( DoptimizeExperimentTable det)
+        {
+            Doptimization_list doptimization_List = new Doptimization_list();
+            doptimization_List.Id = det.det_Id;
+            doptimization_List.PrecisionInstruments = det.det_PrecisionInstruments;
+            doptimization_List.StimulusQuantityFloor = det.det_StimulusQuantityFloor;
+            doptimization_List.StimulusQuantityCeiling = det.det_StimulusQuantityCeiling;
+            doptimization_List.Power = det.det_Power;
+            doptimization_List.DistributionState = DistributionState(det);
+            doptimization_List.FlipTheResponse = det.det_FlipTheResponse;
+            doptimization_List.ExperimentalDate = det.det_ExperimentalDate.ToString();
+            doptimization_List.StandardDeviationEstimate = det.det_StandardDeviationEstimate;
+            doptimization_List.projectname = det.det_ProductName;
+            return doptimization_List;
         }
     }
 }
