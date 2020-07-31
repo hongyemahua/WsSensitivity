@@ -1,11 +1,12 @@
-﻿@if (Session["Admin"] == null)
+﻿@model WsSensitivity.Controllers.DoptimizeQueryModel
+@if (Session["Admin"] == null)
 {
     <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
 }
 
-@{
+@*@{
     List<string> pn = (List<string>)ViewData["pn"];
-}
+}*@
 
 <!DOCTYPE html>
 <html>
@@ -30,9 +31,9 @@
                             @*<input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">*@
                             <div class="layui-input-inline">
                                 <select name="modules" lay-verify="required" lay-search="">
-                                    @foreach (var p in pn)
+                                    @foreach (var p  in Model.productName)
                                     {
-                                        <option value="@p">@p</option>
+                                        <option value="@p.">@p</option>
                                     }
                                 </select>
                             </div>

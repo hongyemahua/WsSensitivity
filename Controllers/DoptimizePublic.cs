@@ -157,6 +157,7 @@ namespace WsSensitivity.Controllers
                 doptimize.ddt_StandardDeviationVariance = ddt_list[i].ddt_StandardDeviationVariance;
                 doptimize.ddt_Covmusigma = ddt_list[i].ddt_Covmusigma;
                 doptimize.ddt_SigmaGuess = ddt_list[i].ddt_SigmaGuess;
+                //doptimize.DoptimizeName = 
                 doptimize.number = count;
                 doptimizes.Add(doptimize);
             }
@@ -174,7 +175,7 @@ namespace WsSensitivity.Controllers
             {
                 var doptimization_List = GetDoptimization(det_list[i]);
                 doptimization_List.number = i + 1;
-                doptimization_List.count = dbDrive.GetAllLangleyDataTable(det_list[i].det_Id).Count - 1;
+                doptimization_List.count = dbDrive.GetDoptimizeDataTables(det_list[i].det_Id).Count - 1;
                 doptimization_Lists.Add(doptimization_List);
             }
             doptimization_Lists.Reverse();
@@ -187,7 +188,7 @@ namespace WsSensitivity.Controllers
             {
                 var doptimization_List = GetDoptimization(det_list[i]);
                 doptimization_List.number = i + 1 + first;
-                doptimization_List.count = dbDrive.GetAllLangleyDataTable(det_list[i].det_Id).Count - 1;
+                doptimization_List.count = dbDrive.GetDoptimizeDataTables(det_list[i].det_Id).Count - 1;
                 doptimization_Lists.Add(doptimization_List);
             }
             return doptimization_Lists;
