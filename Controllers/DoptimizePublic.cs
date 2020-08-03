@@ -172,7 +172,7 @@ namespace WsSensitivity.Controllers
             {
                 var doptimization_List = GetDoptimization(det_list[i]);
                 doptimization_List.number = i + 1;
-                doptimization_List.count = dbDrive.GetAllLangleyDataTable(det_list[i].det_Id).Count - 1;
+                doptimization_List.count = dbDrive.GetDoptimizeDataTables(det_list[i].det_Id).Count - 1;
                 doptimization_Lists.Add(doptimization_List);
             }
             doptimization_Lists.Reverse();

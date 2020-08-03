@@ -67,7 +67,7 @@ layui.define(['table', 'form'], function (exports) {
                 });
             });
         } else if (obj.event === 'edit') {     //编辑
-            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id=' + data.Id, '编辑' + data.number+ '号D优化法实验');
+            top.layui.index.openTabsPage('/DoptimizeExperiment/DoptimizeExperiment?dop_id=' + data.Id, '编辑' + data.projectname+ 'D优化法实验');
         }
     });
     exports('doptimizequery_table', {})
