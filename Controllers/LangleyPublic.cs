@@ -17,7 +17,6 @@ namespace WsSensitivity.Controllers
             public double PrecisionInstruments;
             public double StimulusQuantityCeiling;
             public double StimulusQuantityFloor;
-            public string Power;
             public string DistributionState;
             public int Correction;
             public int FlipTheResponse;
@@ -73,9 +72,6 @@ namespace WsSensitivity.Controllers
             return new LangleyAlgorithm(distributionSelection, langleyMethod); ;
 
         }
-        //public static string GetLangleyName(int id) {
-        //    LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(id);
-        //}
 
         public static LangleyDataTable LangleyDataTables(int langlryExpTableId, IDbDrive dbDrive, double sq = 0, int resp = 0, double mean = 0, double sd = 0, double mv = 0, double sdv = 0, double covmusigma = 0, string note = null)
         {
@@ -162,7 +158,6 @@ namespace WsSensitivity.Controllers
                 langley.ldt_StandardDeviationVariance = ldts[i].ldt_StandardDeviationVariance;
                 langley.ldt_Covmusigma = ldts[i].ldt_Covmusigma;
                 langley.number = count;
-                //langley.LangleyName = DistributionState(langlryExpTable) + "/" + Correction(langlryExpTable.let_Correction);
                 langleys.Add(langley);
             }
             return langleys;
@@ -172,19 +167,9 @@ namespace WsSensitivity.Controllers
             List<Langley_list> langletlists = new List<Langley_list>();
             for (int i = 0; i < lets.Count; i++)
             {
-                Langley_list langley_List = new Langley_list();
+                var langley_List = GetLangley_lists(lets[i]);
                 langley_List.number = i + 1;
-                langley_List.Id = lets[i].let_Id;
-                langley_List.PrecisionInstruments = lets[i].let_PrecisionInstruments;
-                langley_List.StimulusQuantityFloor = lets[i].let_StimulusQuantityFloor;
-                langley_List.StimulusQuantityCeiling = lets[i].let_StimulusQuantityCeiling;
-                langley_List.Power = lets[i].let_Power;
-                langley_List.DistributionState = DistributionState(lets[i]);
-                langley_List.Correction = lets[i].let_Correction;
                 langley_List.count = dbDrive.GetAllLangleyDataTable(lets[i].let_Id).Count - 1;
-                langley_List.FlipTheResponse = lets[i].let_FlipTheResponse;
-                langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
-                langley_List.projectname = lets[i].let_ProductName;
                 langletlists.Add(langley_List);
             }
             langletlists.Reverse();
@@ -195,22 +180,27 @@ namespace WsSensitivity.Controllers
             List<Langley_list> langletlists = new List<Langley_list>();
             for (int i = lets.Count - 1; i >= 0; i--)
             {
-                Langley_list langley_List = new Langley_list();
+                var langley_List = GetLangley_lists(lets[i]);
                 langley_List.number = i + 1 + first;
-                langley_List.Id = lets[i].let_Id;
-                langley_List.PrecisionInstruments = lets[i].let_PrecisionInstruments;
-                langley_List.StimulusQuantityFloor = lets[i].let_StimulusQuantityFloor;
-                langley_List.StimulusQuantityCeiling = lets[i].let_StimulusQuantityCeiling;
-                langley_List.Power = lets[i].let_Power;
-                langley_List.DistributionState = DistributionState(lets[i]);
-                langley_List.Correction = lets[i].let_Correction;
                 langley_List.count = dbDrive.GetAllLangleyDataTable(lets[i].let_Id).Count - 1;
-                langley_List.FlipTheResponse = lets[i].let_FlipTheResponse;
-                langley_List.ExperimentalDate = lets[i].let_ExperimentalDate.ToString();
-                langley_List.projectname = lets[i].let_ProductName;
                 langletlists.Add(langley_List);
             }
             return langletlists;
+        }
+
+        private static Langley_list GetLangley_lists(LangleyExperimentTable let)
+        {
+            Langley_list langley_List = new Langley_list();
+            langley_List.Id = let.let_Id;
+            langley_List.PrecisionInstruments = let.let_PrecisionInstruments;
+            langley_List.StimulusQuantityFloor = let.let_StimulusQuantityFloor;
+            langley_List.StimulusQuantityCeiling = let.let_StimulusQuantityCeiling;
+            langley_List.DistributionState = DistributionState(let);
+            langley_List.Correction = let.let_Correction;
+            langley_List.FlipTheResponse = let.let_FlipTheResponse;
+            langley_List.ExperimentalDate = let.let_ExperimentalDate.ToString();
+            langley_List.projectname = let.let_ProductName;
+            return langley_List;
         }
 
         public static int[] IsFlipTheResponse(LangleyExperimentTable let,int[] vArray)

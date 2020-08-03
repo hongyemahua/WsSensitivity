@@ -70,7 +70,7 @@ namespace WsSensitivity.Controllers
             DoptimizePublic.UpdateDoptimizeDataTable(ref ddt,outputParameter,response,sq);
             dbDrive.Update(ddt);
             bool isTurn = dbDrive.Insert(DoptimizePublic.DoptimizeDataTable(det.det_Id, dbDrive, double.Parse(z.ToString("f6")), outputParameter));
-            string[] value = { isTurn.ToString(), ddt_list.Count.ToString(), z.ToString("f6")};
+            string[] value = { isTurn.ToString(), ddt_list.Count.ToString(), z.ToString()};
             return Json(value);
         }
         //撤销操作

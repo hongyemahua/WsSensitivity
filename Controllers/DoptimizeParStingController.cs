@@ -11,7 +11,6 @@ using static WsSensitivity.Models.AlgorithmReconstruct;
 
 namespace WsSensitivity.Controllers
 {
-
     public class DoptimizeParStingController : Controller
     {
         IDbDrive dbDrive = new LingImp();

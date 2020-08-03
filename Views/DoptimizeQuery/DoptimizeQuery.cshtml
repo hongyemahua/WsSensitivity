@@ -1,12 +1,9 @@
-﻿@if (Session["Admin"] == null)
+﻿@model WsSensitivity.Controllers.DoptimizeQueryModel
+@if (Session["Admin"] == null)
 {
     <meta http-equiv="refresh" content="0.0;url=../AdminHome/Login" />
 }
-
-@{
-    List<string> pn = (List<string>)ViewData["pn"];
-}
-
+@{ var pn = Model.productName;}
 <!DOCTYPE html>
 <html>
 <head>

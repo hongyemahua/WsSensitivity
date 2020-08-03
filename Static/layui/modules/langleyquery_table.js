@@ -23,7 +23,6 @@ layui.define(['table', 'form'], function(exports){
           , groups: 3 //只显示 1 个连续页码
           , first: '首页' //不显示首页
           , last: '尾页' //不显示尾页
-          , theme: '#c71585'
 
       }
       , limit: 20
@@ -32,7 +31,6 @@ layui.define(['table', 'form'], function(exports){
         , { field: 'PrecisionInstruments',title: '仪器精度', minWidth: 100}
         , { field: 'StimulusQuantityFloor',title: '刺激量下限'}
         , { field: 'StimulusQuantityCeiling',title: '刺激量上限'}
-        , { field: 'Power', title: '幂' }
         , { field: 'DistributionState', title: '分布状态' }
         , { field: 'Correction', title: '标准差修正',templet: '#correct_state', minWidth: 80, align: 'center'}
         ,{ field: 'count', title: '次数' }

@@ -461,7 +461,6 @@
             , groups: 3 //只显示 1 个连续页码
             , first: '首页' //不显示首页
             , last: '尾页' //不显示尾页
-            , theme: '#c71585'
         }
         ,limits:[10,20,50,100,200,500,800]
         , limit: 20
@@ -607,7 +606,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: ['/TechnicalConditions/TechnicalConditions?langlryExpTableId='+@langlryExpTableId+'&name='+"L"]
+                        , content: ['/TechnicalConditions/TechnicalConditions?id='+@langlryExpTableId+'&name='+"L"]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -1006,7 +1005,7 @@
                                     type: 2
                                     , area: ['70%', '80%']
                                     , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , content: ['../LangleyLineChart/LangleyLineChart?type='+"L", 'no']
+                                    , content: ['../LineChart/LineChart', 'no']
                                     , btnAlign: 'c'
                                     , anim: 1
                                     , closeBtn: 1

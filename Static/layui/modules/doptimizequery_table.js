@@ -16,7 +16,6 @@ layui.define(['table', 'form'], function (exports) {
             , groups: 3 //只显示 1 个连续页码
             , first: '首页' //不显示首页
             , last: '尾页'//不显示尾页
-            , theme: '#c71585'
 
         }
         , limit: 20
@@ -26,7 +25,6 @@ layui.define(['table', 'form'], function (exports) {
             , { field: 'StimulusQuantityFloor', title: '刺激量下限' }
             , { field: 'StimulusQuantityCeiling', title: '刺激量上限' }
             , { field: 'StandardDeviationEstimate', title: '标准差预估值' }
-            , { field: 'Power', title: '幂' }
             , { field: 'DistributionState', title: '分布状态' }
             , { field: 'count', title: '次数' }
             , { field: 'FlipTheResponse', title: '反转响应', templet: '#reverse_state', minWidth: 80, align: 'center' }
