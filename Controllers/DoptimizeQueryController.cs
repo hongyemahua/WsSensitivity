@@ -15,12 +15,12 @@ namespace WsSensitivity.Controllers
         //D优化法查询界面
         public ActionResult DoptimizeQuery()
         {
-            var lets = dbDrive.GetAllLangleyExperimentTables();
+            var dets = dbDrive.GetAllDoptimizeExperimentTables();
             List<string> productName = new List<string>();
-            foreach (var let in lets)
+            foreach (var det in dets)
             {
-                if (!productName.Contains(let.let_ProductName))
-                    productName.Add(let.let_ProductName);
+                if (!productName.Contains(det.det_ProductName))
+                    productName.Add(det.det_ProductName);
             }
             DoptimizeQueryModel doptimizeQueryModel = new DoptimizeQueryModel();
             doptimizeQueryModel.productName = productName;

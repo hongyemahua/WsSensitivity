@@ -52,8 +52,8 @@ namespace WsSensitivity.Models
             public double[] Precs(double μ0_final, double σ0_final)
             {
                 double[] precs = new double[2];
-                precs[0] = pub_function.resolution_getReso(StandardSelection.InverseProcessValue(StandardSelection.ProcessValue(μ0_final) + DistributionSelection.PrecValues() * σ0_final), 0.000001);
-                precs[1] = pub_function.resolution_getReso(StandardSelection.InverseProcessValue(StandardSelection.ProcessValue(μ0_final) - DistributionSelection.PrecValues() * σ0_final), 0.000001);
+                precs[0] = pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) + DistributionSelection.PrecValues() * σ0_final), 0.000001);
+                precs[1] = pub_function.resolution_getReso(StandardSelection.ProcessValue(StandardSelection.InverseProcessValue(μ0_final) - DistributionSelection.PrecValues() * σ0_final), 0.000001);
                 return precs;
             }
 
@@ -81,7 +81,6 @@ namespace WsSensitivity.Models
                 List<IntervalEstimation> intervalEstimations = new List<IntervalEstimation>();
                 if (fq != 0)
                     reponseProbability = DistributionSelection.PointIntervalDistribution(StandardSelection.InverseProcessValue(fq), StandardSelection.InverseProcessValue(favg), fsigma);
-                x = StandardSelection.InverseProcessArray(x);
                 var Single = SingleSideEstimation(x, v, reponseProbability, confidenceLevel);
                 intervalEstimations.Add(GetIntervalEstimationValue(Single));
                 var Double = DoubleSideEstimation(x, v, reponseProbability, confidenceLevel);
