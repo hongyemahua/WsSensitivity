@@ -53,7 +53,6 @@ namespace WsSensitivity.Controllers
         public double PrecisionInstruments;
         public double StimulusQuantityCeiling;
         public double StimulusQuantityFloor;
-        public string Power;
         public string DistributionState;
         public int FlipTheResponse;
         public string ExperimentalDate;
@@ -139,7 +138,6 @@ namespace WsSensitivity.Controllers
             ddt.ddt_MeanVariance = double.IsNaN(outputParameters.varmu) ? 0 : outputParameters.varmu;
             ddt.ddt_StandardDeviationVariance = double.IsNaN(outputParameters.varsigma) ? 0 : outputParameters.varsigma;
             ddt.ddt_Covmusigma = double.IsNaN(outputParameters.covmusigma) ? 0 : outputParameters.covmusigma;
-            ddt.ddt_SigmaGuess = double.Parse(outputParameters.sigmaguess.ToString("f6"));
         }
         public static List<Doptimization> GetDoptimizes(List<DoptimizeDataTable> ddt_list,int count)
         {
@@ -156,8 +154,7 @@ namespace WsSensitivity.Controllers
                 doptimize.ddt_StandardDeviation = ddt_list[i].ddt_StandardDeviation;
                 doptimize.ddt_StandardDeviationVariance = ddt_list[i].ddt_StandardDeviationVariance;
                 doptimize.ddt_Covmusigma = ddt_list[i].ddt_Covmusigma;
-                doptimize.ddt_SigmaGuess = ddt_list[i].ddt_SigmaGuess;
-                //doptimize.DoptimizeName = 
+                doptimize.ddt_SigmaGuess = double.Parse(ddt_list[i].ddt_SigmaGuess.ToString("f4"));
                 doptimize.number = count;
                 doptimizes.Add(doptimize);
             }
@@ -201,7 +198,6 @@ namespace WsSensitivity.Controllers
             doptimization_List.PrecisionInstruments = det.det_PrecisionInstruments;
             doptimization_List.StimulusQuantityFloor = det.det_StimulusQuantityFloor;
             doptimization_List.StimulusQuantityCeiling = det.det_StimulusQuantityCeiling;
-            doptimization_List.Power = det.det_Power;
             doptimization_List.DistributionState = DistributionState(det);
             doptimization_List.FlipTheResponse = det.det_FlipTheResponse;
             doptimization_List.ExperimentalDate = det.det_ExperimentalDate.ToString();

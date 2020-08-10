@@ -16,15 +16,19 @@
 <body>
 
     <div class="layui-form" lay-filter="form-technicalconditions" id="form-technicalconditions" style="padding: 20px 10px 10px 10px;">
-        <div class="layui-form-item layui-form-text">
-            <textarea name="let_TechnicalConditions" placeholder="请输入内容" class="layui-textarea">@tc</textarea>
-        </div>
+
         @if (type.Equals("L"))
         {
+            <div class="layui-form-item layui-form-text">
+                <textarea name="let_TechnicalConditions" placeholder="请输入内容" class="layui-textarea">@tc</textarea>
+            </div>
             <input value="@id" type="hidden" name="let_Id" />
         }
-       @if(type.Equals("D"))
+        @if (type.Equals("D"))
         {
+            <div class="layui-form-item layui-form-text">
+                <textarea name="det_TechnicalConditions" placeholder="请输入内容" class="layui-textarea">@tc</textarea>
+            </div>
             <input value="@id" type="hidden" name="det_Id" />
         }
         <div class="layui-form-item layui-hide">

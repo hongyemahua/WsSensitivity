@@ -16,7 +16,7 @@ namespace WsSensitivity.Models.LangleyAndDOptimize
 
         public IDoptimizationDistributionSelection DopDistributionSelection { get; set; }
 
-        private void GetDistribution(double[] xArray, int[] vArray, double mumin, double mumax, double reso, OutputParameters outputParameters, out double z, double sigmaguess)
+        private void GetDistribution(double[] xArray, int[] vArray, double mumin, double mumax, double reso,ref OutputParameters outputParameters, out double z, double sigmaguess)
         {
             mumin = StandardSelection.InverseProcessValue(mumin);
             mumax = StandardSelection.InverseProcessValue(mumax);
@@ -77,6 +77,7 @@ namespace WsSensitivity.Models.LangleyAndDOptimize
                         else
                         {
                             outputParameters = DistributionSelection.MLS_getMLS(xArray_change, vArray_change);
+                            outputParameters.sigmaguess = sigmaguess;
                             pub_function.resolution_getReso(DopDistributionSelection.Fisher_getZ_new(xArray_change, vArray_change, outputParameters.μ0_final, outputParameters.σ0_final), reso, out z);
                         }
                     }
@@ -89,7 +90,7 @@ namespace WsSensitivity.Models.LangleyAndDOptimize
         {
             OutputParameters outputParameters = new OutputParameters();
             outputParameters.sigmaguess = sigmaguess;
-            GetDistribution(xArray, vArray, mumin, mumax, 0.000000000000001, outputParameters, out z, sigmaguess);
+            GetDistribution(xArray, vArray, mumin, mumax, 0.000000000000001,ref outputParameters, out z, sigmaguess);
             pub_function.resolution_getReso(StandardSelection.InverseProcessValue(z), reso, out z);
             outputParameters.μ0_final = StandardSelection.GetAvgValue(outputParameters.μ0_final);
             return outputParameters;

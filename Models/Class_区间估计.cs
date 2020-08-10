@@ -8,7 +8,7 @@ namespace WsSensitivity.Models
 {
     class Class_区间估计
     {
-        public static OutputParameters NormalInterval_estimation_渐进法_方差(int xArrayLength, double[] xArray, int[] vArray, OutputParameters outputParameters)
+        public static void NormalInterval_estimation_渐进法_方差(int xArrayLength, double[] xArray, int[] vArray, ref OutputParameters outputParameters)
         {
             if ((outputParameters.σ0_final < 0.00000000000000000000000001) && (outputParameters.σ0_final > -0.00000000000000000000000001))
             {
@@ -38,11 +38,10 @@ namespace WsSensitivity.Models
                 outputParameters.varsigma = I00 / (I00 * I11 - I01 * I01);
                 outputParameters.covmusigma = -I01 / (I00 * I11 - I01 * I01);
             }
-            return outputParameters;
         }
 
 
-        public static OutputParameters LogisticInterval_estimation_渐进法_方差(int xArrayLength, double[] xArray, int[] vArray, OutputParameters outputParameters)
+        public static void LogisticInterval_estimation_渐进法_方差(int xArrayLength, double[] xArray, int[] vArray, ref OutputParameters outputParameters)
         {
             if ((outputParameters.σ0_final < 0.00000000000000000000000001) && (outputParameters.σ0_final > -0.00000000000000000000000001))
             {
@@ -73,7 +72,6 @@ namespace WsSensitivity.Models
                 outputParameters.varsigma = (I00 / (I00 * I11 - I01 * I01)) * Math.Pow(Math.PI, 2) / 3;
                 outputParameters.covmusigma = (-I01 / (I00 * I11 - I01 * I01)) * Math.PI / Math.Pow(3, 0.5);
             }
-            return outputParameters;
         }
 
 

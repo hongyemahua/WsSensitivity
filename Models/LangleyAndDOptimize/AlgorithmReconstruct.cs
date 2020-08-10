@@ -60,7 +60,6 @@ namespace WsSensitivity.Models
             public List<IntervalEstimation> ResponseProbabilityIntervalEstimate(double[] x, int[] v, double reponseProbability, double confidenceLevel)
             {
                 List<IntervalEstimation> intervalEstimations = new List<IntervalEstimation>();
-                x = StandardSelection.InverseProcessArray(x);
                 var Single = SingleSideEstimation(x, v, reponseProbability, confidenceLevel);
                 intervalEstimations.Add(GetIntervalEstimationValue(Single));
                 var Double = DoubleSideEstimation(x, v, reponseProbability, confidenceLevel);

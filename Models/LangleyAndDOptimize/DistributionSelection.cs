@@ -27,7 +27,7 @@ namespace WsSensitivity.Models
         public IntervalEstimation IntervalDistribution(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel)
         {
             var outputParameters = MLS_getMLS(xArray,vArray);
-            MLR_polar.Likelihood_Ratio_Polar(xArray, vArray, "normal", outputParameters.varmu, outputParameters.varsigma, reponseProbability, confidenceLevel, out var final_result);
+            MLR_polar.Likelihood_Ratio_Polar(xArray, vArray, "normal", outputParameters.μ0_final, outputParameters.σ0_final, reponseProbability, confidenceLevel, out var final_result);
             return IntervalEstimation.Parse(final_result);
         }
 
@@ -44,7 +44,7 @@ namespace WsSensitivity.Models
             return outputParameters;
         }
 
-        public void Interval_estimation(double[] xArray, int[] vArray, ref OutputParameters outputParameters) => Class_区间估计.NormalInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
+        public void Interval_estimation(double[] xArray, int[] vArray, ref OutputParameters outputParameters) => Class_区间估计.NormalInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray,ref outputParameters);
     }
 
     public class Logistic : LangleyDistributionSelection
@@ -73,6 +73,6 @@ namespace WsSensitivity.Models
             return outputParameters;
         }
 
-        public void Interval_estimation(double[] xArray, int[] vArray, ref OutputParameters outputParameters) => Class_区间估计.LogisticInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray, outputParameters);
+        public void Interval_estimation(double[] xArray, int[] vArray, ref OutputParameters outputParameters) => Class_区间估计.LogisticInterval_estimation_渐进法_方差(xArray.Length, xArray, vArray,ref outputParameters);
     }
 }

@@ -14,20 +14,21 @@ namespace WsSensitivity.Controllers
     {
         IDbDrive dbDrive = new LingImp();
         // GET: TechnicalConditions
-        public ActionResult TechnicalConditions(int langlryExpTableId,string name)
+        public ActionResult TechnicalConditions(int id,string name)
         {
             if (name.Equals("D"))
             {
-                ViewData["tc"] = "技术条件" + langlryExpTableId;
-                ViewData["id"] = langlryExpTableId;
+                var det = dbDrive.GetDoptimizeExperimentTable(id);
+                ViewData["tc"] = det.det_TechnicalConditions;
+                ViewData["id"] = id;
                 ViewData["type"] = "D";
             }
             if (name.Equals("L"))
             {
-            var let = dbDrive.GetLangleyExperimentTable(langlryExpTableId);
-            ViewData["tc"] = let.let_TechnicalConditions;
-            ViewData["id"] = langlryExpTableId;
-            ViewData["type"] = "L";
+                var let = dbDrive.GetLangleyExperimentTable(id);
+                ViewData["tc"] = let.let_TechnicalConditions;
+                ViewData["id"] = id;
+                ViewData["type"] = "L";
             }
             return View();
         }
@@ -43,6 +44,7 @@ namespace WsSensitivity.Controllers
             let.let_TechnicalConditions = js.Deserialize<LangleyExperimentTable>(stream).let_TechnicalConditions;
             return Json(dbDrive.Update(let));
         }
+
         [HttpPost]
         public JsonResult TechnicalConditionsD_Update()
         {

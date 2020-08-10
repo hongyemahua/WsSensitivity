@@ -133,11 +133,10 @@
     <Compile Include="Controllers\DoptimizeParStingController.cs" />
     <Compile Include="Controllers\DoptimizePublic.cs" />
     <Compile Include="Controllers\DoptimizeQueryController.cs" />
-    <Compile Include="Controllers\DoptimizeTechnicalController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\LangleyPublic.cs" />
     <Compile Include="Controllers\LangleyExperimentController.cs" />
-    <Compile Include="Controllers\LangleyLineChartController.cs" />
+    <Compile Include="Controllers\LineChartController.cs" />
     <Compile Include="Controllers\LangleyQueryController.cs" />
     <Compile Include="Controllers\LanglieParameterSettingsController.cs" />
     <Compile Include="Controllers\MySettingController.cs" />
@@ -431,7 +430,7 @@
     <Content Include="Static\layui\layui\font\iconfont.woff2" />
     <Content Include="Views\LangleyExperiment\LangleyExperiment.cshtml" />
     <Content Include="Views\LanglieParameterSettings\LanglieParameterSettings.cshtml" />
-    <Content Include="Views\LangleyLineChart\LangleyLineChart.cshtml" />
+    <Content Include="Views\LineChart\LineChart.cshtml" />
     <Content Include="Views\ParameterSetting\ParameterSetting.cshtml" />
     <Content Include="Views\TechnicalConditions\TechnicalConditions.cshtml" />
     <Content Include="Views\LangleyQuery\LangleyQuery.cshtml" />
