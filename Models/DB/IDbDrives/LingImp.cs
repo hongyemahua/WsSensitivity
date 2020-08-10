@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
+using WsSensitivity.Models.UpDown;
 
 namespace WsSensitivity.Models.IDbDrives
 {
@@ -476,16 +477,91 @@ namespace WsSensitivity.Models.IDbDrives
             }
             return true;
         }
-
-
-
-
-
-
-
-
-
-
         #endregion
+
+        //#region 升降法数据操作
+        //public override bool Inster(UpDownExperiment experiment)
+        //{
+        //    try {
+        //        db.UpDownExperiment.Add(experiment);
+        //        db.SaveChanges();
+        //    }
+        //    catch (Exception) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        //public override bool Inster(UpDown.UpDownGroup testDate)
+        //{
+        //    try {
+        //        db.TestDate.Add(testDate);
+        //        db.SaveChanges();
+        //    }
+        //    catch (Exception) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        //public override bool Delete(UpDownExperiment experiment)
+        //{
+        //    UpDownExperiment upDown = db.UpDownExperiment.FirstOrDefault(m=>m.id == experiment.id);
+        //    if (upDown == null)
+        //    {
+        //        return false;
+        //    }
+        //    else {
+        //        try {
+        //            db.UpDownExperiment.Remove(upDown);
+        //            db.SaveChanges();
+        //        } catch (Exception) {
+        //            return false;
+        //        }
+        //        return true;
+        //    }
+        //}
+
+        //public override bool Update(UpDownExperiment experiment)
+        //{
+        //    try {
+        //        var entry = db.Set<UpDownExperiment>().Find(experiment.id);
+        //        if (entry != null) {
+        //            db.Entry<UpDownExperiment>(entry).State = EntityState.Detached;
+        //        }
+        //        db.UpDownExperiment.Attach(entry);
+        //        db.Entry(experiment).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //    }
+        //    catch (Exception) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        //public override List<UpDownExperiment> GetAllUpDownExperiments()
+        //{
+        //    List<UpDownExperiment> upDowns = new List<UpDownExperiment>();
+        //    upDowns = db.UpDownExperiment.ToList();
+        //    return upDowns;
+        //}
+
+        //public override UpDownExperiment FindUpDownExperiment(int id)
+        //{
+        //    UpDownExperiment experiment = db.UpDownExperiment.Find(id);
+        //    return experiment;
+        //}
+
+        //public override List<UpDownExperiment> QueryUpDownExperiments(string udt_ProdectName, DateTime stardate, DateTime stopdate)
+        //{
+        //    List<UpDownExperiment> experiments = udt_ProdectName.Equals("") ? GetAllUpDownExperiments() : db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(udt_ProdectName)).ToList();
+        //    var resultList = from item in experiments
+        //                     where item.udt_Creationtime >= stardate && item.udt_Creationtime <= stopdate
+        //                     select item;
+        //    experiments = resultList.ToList();
+        //    return experiments;
+        //}
+
+        //#endregion
     }
 }
