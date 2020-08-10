@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -164,10 +166,29 @@ namespace WsSensitivity.Controllers
         }
         //文件接收方法
         [HttpPost]
-        public ActionResult InputIntervalCalculation()
+        public ActionResult InputIntervalCalculation(string SheetName, HttpPostedFileBase excel)
         {
-            
-            return Json("1");
+            string filename = Request.MapPath("~/Excel/") + Path.GetFileName(excel.FileName);
+            excel.SaveAs(filename); //这两句是把要上传的excel先保存到本地路径 然后获取
+            //string filename = "导出信息";  //文件的命名   
+            //string constr = "server=.;database=aaa;user=sa;pwd=sa"; //连接数据库
+
+            //using (SqlConnection conn = new SqlConnection(constr))
+            //{
+            //    conn.Open();
+
+            //    string sql = "select * from table1"; //这里是你要导出的数据信息 sql 语句
+            //    SqlCommand comm = new SqlCommand(sql, conn);
+            //    System.Data.DataTable dt = new System.Data.DataTable();
+            //    SqlDataAdapter ada = new SqlDataAdapter(comm);
+            //    ada.Fill(dt);
+            //    ExcelHelper.ExcelHelper eh = new ExcelHelper.ExcelHelper(filename.ToString());
+            //    var result = eh.DataTableToExcelX(dt, "导出信息", true);
+
+            //    return File(result, "application/vnd.ms-excel", " " + filename + ".xlsx");
+            //}
+
+            return View();
         }
     }
 }

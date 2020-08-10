@@ -43,5 +43,15 @@ namespace WsSensitivity.Controllers
             let.let_TechnicalConditions = js.Deserialize<LangleyExperimentTable>(stream).let_TechnicalConditions;
             return Json(dbDrive.Update(let));
         }
+        [HttpPost]
+        public JsonResult TechnicalConditionsD_Update()
+        {
+            var str = new StreamReader(Request.InputStream);
+            var stream = str.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var det = dbDrive.GetDoptimizeExperimentTable(js.Deserialize<DoptimizeExperimentTable>(stream).det_Id);
+            det.det_TechnicalConditions = js.Deserialize<DoptimizeExperimentTable>(stream).det_TechnicalConditions;
+            return Json(dbDrive.Update(det));
+        }
     }
 }

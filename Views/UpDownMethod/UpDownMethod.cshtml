@@ -1,0 +1,1252 @@
+﻿@model WsSensitivity.Models.UpDown.UpDownPageShows
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>升降法</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/static/layui/style/admin.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-col-sm12" style="background:#ffffff;">
+            <div class="layui-tab layui-tab-brief" lay-filter="updown_tab">
+                <div class="layui-col-md3 ">
+                    <label class="layui-form-label" id="UpDownName" name="UpDownName" style="width:auto;text-anchor:inherit">升降法：@Model.Distribution@Model.Standardstate/@Model.Methodstate/@Model.Groupingstate</label>
+                </div>
+                <ul class="layui-tab-title">
+                    @if (Model.Groupingstate.Equals("不分组"))
+                    {
+
+                        <li class="onclick layui-this" data-type="updown" lay-id="11">实验数据</li>
+                        <li class="onclick" data-type="singleunit" lay-id="22">单组实验结果</li>
+                    }
+                    else
+                    {
+                        <li class="onclick layui-this" data-type="updown" lay-id="11">实验数据</li>
+                        <li class="onclick" data-type="singleunit" lay-id="22">单组实验结果</li>
+                        <li class="onclick" data-type="comprehensive" lay-id="33">综合结果</li>
+                    }
+
+                </ul>
+
+                <div class="layui-tab-content">
+                    <!--实验数据-->
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-card-body">
+                            <div class="layui-col-sm12">
+                                <table id="updown_list" lay-filter="updown_list"></table>
+
+                                <!--表头工具-->
+                                <script type="text/html" id="toolbarDemo">
+                                    <div class="layui-btn-group layui-col-md6">
+                                        <button type="button" class="layui-btn" lay-event="delete">
+                                            <i class="layui-icon layui-icon-delete"></i>删除
+                                        </button>
+                                        <button type="button" class="layui-btn" lay-event="tabChange">
+                                            <i class="layui-icon layui-icon-chart"></i>计算当前组数据
+                                        </button>
+                                        <button type="button" class="layui-btn" lay-event="altersetting">
+                                            <i class="layui-icon layui-icon-set-sm"></i>修改分析参数
+                                        </button>
+                                        @if (Model.Groupingstate.Equals("多组试验"))
+                                        {
+                                            if (Model.id == 1)
+                                            {
+                                                <button type="button" class="layui-btn layui-btn-disabled" disabled lay-event="fromergroup">
+                                                    <i class="layui-icon layui-icon-prev"></i>前组
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="layui-btn" lay-event="fromergroup">
+                                                    <i class="layui-icon layui-icon-prev"></i>前组
+                                                </button>
+                                            }
+                                        }
+                                        <button type="button" class="layui-btn">
+                                            当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.id</span>
+                                        </button>
+                                        @if (Model.Groupingstate.Equals("多组试验"))
+                                        {
+                                            <button type="button" class="layui-btn " id="afterGroupBtn" name="afterGroupBtn" lay-event="aftergroup">
+                                                后组<i class="layui-icon layui-icon-next"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                    <div class="layui-col-md3">
+                                        <label class="layui-form-label" style="width:auto; text-anchor:inherit">响应状态：</label>
+                                        <div class="layui-input-inline" style="width:100px">
+                                            <select name="modules" lay-verify="required" lay-filter="select_response">
+                                                <option value="">请选择</option>
+                                                <option value="1">1-响应</option>
+                                                <option value="0">0-不响应</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </script>
+                                <script type="text/html" id="reverse_state">
+                                    {{#  if(d.dtup_response == "0"){ }}
+                                    <button class="layui-btn layui-btn-primary layui-btn-xs">不响应</button>
+                                    {{#  } else { }}
+                                    <button class="layui-btn layui-btn-xs">响应</button>
+                                    {{#  } }}
+                                </script>
+
+                                <script type="text/html" id="state">
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
+                                </script>
+                            </div>
+                            <div class="layui-col-sm12">
+                                <div class="layui-col-md12 layui-col-space10">
+                                    <div class="layui-col-md2 layui-col-space5">
+                                        <div class="layui-col-md12">
+                                            <label class="layui-form-label" style="width:auto">当前试验次数：</label>
+                                            <div class="layui-input-block">
+                                                <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber">4</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md2 layui-col-space5">
+                                        <div class="layui-col-md12">
+                                            <label class="layui-form-label" style="width:auto">当前刺激量：</label>
+                                            <div class="layui-input-block">
+                                                <label class="layui-form-label" style="width:5%" id="NM" name="NM">11</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md2 layui-col-space5">
+                                        <div class="layui-col-md12">
+                                            <label class="layui-form-label" style="width:40%">台阶数：</label>
+                                            <div class="layui-input-block">
+                                                <label class="layui-form-label" style="width:5%" id="label3">22</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="layui-btn" data-type="ModificationTechnicalConditions">
+                                        <i class="layui-icon  layui-icon-set-sm"></i>修改技术条件
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--单组实验结果-->
+                    <div class="layui-tab-item">
+                        <div class="layui-card-body">
+                            <div class="layui-col-sm12">
+                                <table id="singleunit_list" lay-filter="singleunit_list"></table>
+
+                                <!--表头工具-->
+                                <script type="text/html" id="singleunit_tool">
+                                    <div class="layui-btn-group layui-col-md7">
+                                        <button type="button" class="layui-btn" lay-event="altersetting">
+                                            <i class="layui-icon layui-icon-set-sm"></i>修改数据分析参数
+                                        </button>
+                                        <button type="button" class="layui-btn" id="lntervalestimationBtn" name="lntervalestimationBtn" lay-event="lntervalestimation">
+                                            <i class="layui-icon layui-icon-senior"></i>单组数据区间估计
+                                        </button>
+                                        @if (Model.Groupingstate.Equals("多组试验"))
+                                        {
+                                            if (Model.id == 1)
+                                            {
+                                                <button type="button" class="layui-btn layui-btn-disabled" disabled lay-event="fromergroup_single">
+                                                    <i class="layui-icon layui-icon-prev"></i>前组
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="layui-btn" lay-event="fromergroup_single">
+                                                    <i class="layui-icon layui-icon-prev"></i>前组
+                                                </button>
+                                            }
+                                            <button type="button" class="layui-btn" id="aftergroup_singleBtn" name="aftergroup_singleBtn" lay-event="aftergroup_single">
+                                                后组<i class="layui-icon layui-icon-next"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </script>
+                            </div>
+
+                            <div class="layui-form layui-form-pane">
+                                <div class="layui-row layui-col-space10">
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">平均值</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">均值标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">A</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">B</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">标准差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">标准差标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">M</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">b</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">0.1%</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">0.1%标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">ρ</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">试探次数</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">99.9%</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">99.9%标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">G</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">H</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应概率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ProbabilityResponse" id="ProbabilityResponse" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md2">
+                                            <button type="button" class="layui-btn layui-btn-disabled" disabled data-type="responsePoint" id="responsePointButton" style="width:100%;">计算响应点</button>
+                                        </div>
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应点</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ResponsePoint" id="ResponsePoint" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">刺激量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="StimulusQuantity" id="StimulusQuantity" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md2">
+                                            <button type="button" class="layui-btn layui-btn-disabled" disabled id="responseProbabilityButton" data-type="responseProbability" style="width:100%;">计算响应概率</button>
+                                        </div>
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应概率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ProbabilityResponseValue" id="ProbabilityResponseValue" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--综合结果-->
+                    <div class="layui-tab-item">
+                        <div class="layui-card-body">
+                            <div class="layui-col-sm12">
+                                <table id="comprehensive_list" lay-filter="comprehensive_list"></table>
+
+                                <!--表头工具-->
+                                <script type="text/html" id="comprehensive_tool">
+                                    <div class="layui-btn-group layui-col-md7">
+                                        <button type="button" class="layui-btn" lay-event="MultipleExperimentsCalculated" id="MultipleCalculated">
+                                            <i class="layui-icon layui-icon-chart"></i>计算多组实验结果
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-disabled" disabled name="lntervalestimationD"id="lntervalestimationD" lay-event="lntervalestimation">
+                                            <i class="layui-icon layui-icon-senior"></i>多组数据区间估计
+                                        </button>
+                                    </div>
+                                </script>
+                            </div>
+
+                            <div class="layui-form layui-form-pane">
+                                <div class="layui-row layui-col-space10">
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">平均值</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">均值标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">标准差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">sigma_标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">0.1%</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">0.1%标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">99.9%</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">99.9%标准误差</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应概率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ProbabilityResponseD" id="ProbabilityResponseD" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md2">
+                                            <button type="button" class="layui-btn layui-btn-disabled" disabled data-type="responsePointD" id="responsePointButtonD" style="width:100%;">计算响应点</button>
+                                        </div>
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应点</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ResponsePointD" id="ResponsePointD" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">刺激量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="StimulusQuantityD" id="StimulusQuantityD" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md2">
+                                            <button type="button" class="layui-btn layui-btn-disabled" disabled id="responseProbabilityButtonD" data-type="responseProbabilityD" style="width:100%;">计算响应概率</button>
+                                        </div>
+                                        <div class="layui-col-md5">
+                                            <label class="layui-form-label">响应概率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="ProbabilityResponseValueD" id="ProbabilityResponseValueD" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/static/layui/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+            }).use(['index', 'table', 'form', 'element'], function () {
+            var $ = layui.$
+                , form = layui.form
+                , table = layui.table
+                , element = layui.element;
+
+                var flage = false;
+            //事件
+            var active = {
+                //兰利法分析参数设置
+                updown: function () {
+                    table.reload('updown_list');
+                },
+
+                //技术条件
+                singleunit: function () {
+                    table.reload('singleunit_list');
+                },
+
+                //技术条件
+                comprehensive: function () {
+                    table.reload('comprehensive_list');
+                }
+
+            }
+            $('.onclick').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+                });
+                function tishi() {
+                    layer.open({
+                        title: '操作错误'
+                        , content: '请先计算当前组数据后再点击'
+                        , icon: 2
+                        , time: 2000
+                        , anim: 6
+                    });
+                };
+            //实验表格
+    table.render({
+        elem: '#updown_list'
+        , url: '../UpDownMethod/GetAllUpDownMethods' //模拟接口
+        , height: 700
+        , toolbar: '#toolbarDemo'
+        , cols: [[
+            { type: 'checkbox', fixed: 'left' }
+            , { field: 'Id', title: '编号', sort: true }
+            , { field: 'dtup_Initialstimulus', title: '刺激量' }
+            , { field: 'dtup_response', title: '响应', templet:'#reverse_state', minWidth:80, align:'center' }
+            , { field: 'dtup_Standardstimulus', title: '刺激量(标准)' }
+            , { title: '操作', align: 'center', fixed: 'right', toolbar: '#state' }
+             ]]
+        , page: true
+        , limit: 10
+        , text: '对不起，加载出现异常！'
+         });
+
+
+    //实验监听头工具栏事件
+    table.on('toolbar(updown_list)', function (obj) {
+        var checkStatus = table.checkStatus(obj.config.id)
+            , data = checkStatus.data; //获取选中的数据
+        switch (obj.event) {
+            case 'delete':
+                if (data.length === 0) {
+                    layer.msg('请选择一行');
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: '../UpDownMethod/Experiment_delete?id='+data[0].id,
+                        datatype: "json",
+                        contenttype: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (data) {
+                            if (data) {
+                                layer.msg('删除成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+
+                            } else {
+                                layer.msg('删除失败', {
+                                    icon: 2,
+                                    shift: -1,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                            table.reload('updown_list');
+                        }
+                    });
+                }
+                break;
+
+            case 'altersetting':
+                layer.open({
+                    type: 2
+                    , title: '升降法分析参数设置'
+                    , content: '../UpDownMethod/AlterParameterSetting?id='+@Model.id,
+                    area: ['600px', '230px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                            , submitID = 'altersetting_submit'
+                            , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                        //监听提交
+                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                            var field = data.field; //获取提交的字段
+                            var admin = JSON.stringify(field);
+                            //提交 Ajax 成功后，静态更新表格中的数据
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/UpdateUPparSeting',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: admin,
+                                async: false,
+                                success: function (data) {
+                                    if (data[0]) {
+                                        layer.msg('修改成功', {
+                                            icon: 1,
+                                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                        });
+                                    } else {
+                                        layer.msg('修改失败', {
+                                            icon: 2,
+                                            shift: -1,  //震动效果
+                                            time: 1000  //1秒关闭
+                                        });
+                                    }
+                                    document.getElementById("UpDownName").innerText = data[1];
+                                }
+                            });
+                            @*location.href = '../UpDownMethod/UpDownMethod?upd_id='+@Model.id;*@
+                            layer.close(index); //关闭弹层
+                        });
+                        submit.trigger('click');
+                    }
+                });
+                break;
+            case 'tabChange'://计算当前组数据
+                $.ajax({
+                    type: "post",
+                    url: '../UpDownMethod/CalculateCurrentData?upd_id='+@Model.id,
+                    datatype: "json",
+                    contenttype: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (data) {
+                        if (data) {
+                            flage = true;
+                            document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                            $("#responsePointButton").removeAttr("disabled", "disabled");
+                            document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityButton").removeAttr("disabled", "disabled");
+                        }
+                        element.tabChange('updown_tab', '22');
+                        table.reload('singleunit_list');
+                        table.reload('comprehensive_list');
+                    }
+                });
+                break;
+            case 'fromergroup'://前一组实验
+                $.ajax({
+                    type: "post",
+                    url: '../UpDownMethod/FromerGroup?upd_id='+@Model.id,
+                    datatype: "json",
+                    contenttype: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (data) {
+                        if (data[0]) {
+                            //document.getElementById("dangqianzuci").value = data[1];
+                            layer.msg('修改成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+                        } else {
+                            layer.msg('修改失败', {
+                                icon: 2,
+                                shift: -1,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                       //table.reload('updown_list');
+                    }
+                });
+                break;
+            case 'aftergroup'://后一组实验
+                if (!flage) {
+                    tishi();
+                } else {
+                    $.ajax({
+                       type: "post",
+                        url: '../UpDownMethod/AfterGroup?upd_id='+@Model.id,
+                       datatype: "json",
+                       contenttype: "application/json; charset=utf-8",
+                       async: false,
+                        success: function (data) {
+                            if (data[1] == "0") {//新增试验
+                                layer.open({
+                                    type: 2
+                                    , title: '多组实验'
+                                    , content: '../UpDownMethod/Manyexperiments?id='+@Model.id,
+                                     area: ['600px', '500px']
+                                    , btn: ['确定', '取消']
+                                    , yes: function (index, layero) {
+                                        var iframeWindow = window['layui-layer-iframe' + index]
+                                            , submitID = 'testdata_submit'
+                                            , submit = layero.find('iframe').contents().find('#' + submitID);
+                   
+                                        //监听提交
+                                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                            var field = data.field; //获取提交的字段
+                                            var admin = JSON.stringify(field);
+                                            //提交 Ajax 成功后，静态更新表格中的数据
+                                            $.ajax({
+                                                type: "post",
+                                                url: '../UpDownMethod/ManyexperimentsSetings',
+                                                datatype: "json",
+                                                contenttype: "application/json; charset=utf-8",
+                                                data: admin,
+                                                async: false,
+                                                success: function (data) {
+                                                    if (data) {
+                                                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data;
+                                                        //table.reload('updown_list');
+                                                    }
+                                                }
+                                            });
+                                            layer.close(index); //关闭弹层
+                                        });
+                                        submit.trigger('click');
+                                    }
+                                });
+                            } else {
+                                location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                                //table.reload('updown_list');
+                            }
+                       }
+                   });
+                }
+                break;
+        };
+    });
+                 //监听工具条事件
+       table.on('tool(updown_list)', function (obj) {
+           var data = obj.data;
+           if (obj.event === 'remove') {
+               $.ajax({
+                   url: '../UpDownMethod/RevocationData',
+                   type: "post",
+                   data: {
+                       "upd_id": data.dtup_DataTableId,
+                       "id": data.Id
+                   },
+                   contenttype: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            layer.msg('撤销成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+
+                        } else {
+                            layer.msg('撤销失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                        table.reload('updown_list');  //数据刷新
+                    }
+                });
+           }
+       });
+         //下拉框监听事件
+            form.on('select(select_response)', function (obj) {
+                var data = obj.value;
+                if (data == "") {
+                    return;
+                } else {
+                    $.ajax({
+                        url: "../UpDownMethod/InsertData",
+                        type: "post",
+                        data: {
+                            "response": data,
+                            "sq": 1,
+                            "upd_id": @Model.id,
+                        }
+                        ,dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                layer.msg('增加成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+
+                            } else {
+                                layer.msg('增加失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                            table.reload('updown_list'); //数据刷新
+                        }
+                    });
+                }
+            });
+    //单组表格
+    table.render({
+        elem: '#singleunit_list'
+        , url: '../UpDownMethod/GetAllsingleunitList' //模拟接口
+        , height: 'full-435' //高度最大化减去差值
+        , cellMinWidth: 206
+        , toolbar: '#singleunit_tool'
+        , cols: [[
+            { field: 'i', title: 'i' }
+            , { field: 'i2', title: 'i2' }
+            , { field: 'vi', title: 'vi' }
+            , { field: 'mi', title: 'mi' }
+            , { field: 'ivi', title: 'ivi' }
+            , { field: 'i2vi', title: 'i2vi' }
+            , { field: 'imi1', title: 'imi1' }
+            , { field: 'i2mi1', title: 'i2mi1' ,minWidth: 150 }
+        ]]
+        , page: true
+        , limit: 10
+        , text: '对不起，加载出现异常！'
+    });
+
+    //单组监听头工具栏事件
+    table.on('toolbar(singleunit_list)', function (obj) {
+        var checkStatus = table.checkStatus(obj.config.id)
+            , data = checkStatus.data; //获取选中的数据
+        switch (obj.event) {
+            case 'altersetting':
+                layer.open({
+                    type: 2
+                    , title: '升降法分析参数设置'
+                    , content: '../UpDownMethod/AlterParameterSetting?id='+@Model.id,
+                     area: ['600px', '230px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                            , submitID = 'altersetting_submit'
+                            , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                        //监听提交
+                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                            var field = data.field; //获取提交的字段
+                            var admin = JSON.stringify(field);
+                            //提交 Ajax 成功后，静态更新表格中的数据
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/UpdateUPparSeting',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: admin,
+                                async: false,
+                                success: function (data) {
+                                    if (data[0]) {
+                                        layer.msg('添加成功', {
+                                            icon: 1,
+                                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                        });
+
+                                    } else {
+                                        layer.msg('添加失败', {
+                                            icon: 2,
+                                            shift: -1,  //震动效果
+                                            time: 1000  //1秒关闭
+                                        });
+                                    }
+                                    layer.close(index); //关闭弹层
+                                    document.getElementById("UpDownName").innerText = data[1];
+                                    table.reload('singleunit_list');
+                                }
+                            });
+                        });
+                        submit.trigger('click');
+                    }
+                });
+                break;
+            case 'lntervalestimation':
+                if (flage) {
+                    layer.open({
+                        type: 2
+                        , title: '单组数据区间估计'
+                        , content: '../UpDownMethod/LntervalEstimation?id=' +@Model.id+"&res="+"S",
+                        area: ['80%', '90%']
+                    });
+                } else {
+                    tishi();
+                }
+                break;
+            case 'fromergroup_single'://前一组实验
+                $.ajax({
+                    type: "post",
+                    url: '../UpDownMethod/FromerGroupSingle?upd_id='+@Model.id,
+                    datatype: "json",
+                    contenttype: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (data) {
+                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                        document.getElementById("UpDownName").innerText = data[2];
+                        //table.reload('singleunit_list');
+                        //table.reload('updown_list'); //数据刷新
+
+                    }
+                });
+                break;
+            case 'aftergroup_single'://后一组实验
+                if (!flage) {
+                    tishi();
+                } else {
+                    $.ajax({
+                       type: "post",
+                        url: '../UpDownMethod/AfterGroupSingle?upd_id='+@Model.id,
+                       datatype: "json",
+                       contenttype: "application/json; charset=utf-8",
+                       async: false,
+                        success: function (data) {
+                            if (data[1] == "0") {//新增试验
+                                layer.open({
+                                    type: 2
+                                    , title: '多组实验'
+                                    , content: '../UpDownMethod/Manyexperiments?id='+@Model.id,
+                                     area: ['600px', '500px']
+                                    , btn: ['确定', '取消']
+                                    , yes: function (index, layero) {
+                                        var iframeWindow = window['layui-layer-iframe' + index]
+                                            , submitID = 'testdata_submit'
+                                            , submit = layero.find('iframe').contents().find('#' + submitID);
+                  
+                                        //监听提交
+                                        iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                            var field = data.field; //获取提交的字段
+                                            var admin = JSON.stringify(field);
+                                            //提交 Ajax 成功后，静态更新表格中的数据
+                                            $.ajax({
+                                                type: "post",
+                                                url: '../UpDownMethod/ManyexperimentsSetings',
+                                                datatype: "json",
+                                                contenttype: "application/json; charset=utf-8",
+                                                data: admin,
+                                                async: false,
+                                                success: function (data) {
+                                                    if (data) {
+                                                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data;
+                                                        //table.reload('singleunit_list');
+                                                    }
+                                                }
+                                            });
+                                            layer.close(index); //关闭弹层
+                                        });
+                                        submit.trigger('click');
+                                    }
+                                });
+                            } else {
+                                location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                                //table.reload('singleunit_list');
+                            }
+                       }
+                   });
+                }
+                break;
+        };
+    });
+
+    //综合表格
+    table.render({
+        elem: '#comprehensive_list'
+        , url: '../UpDownMethod/ComprehensiveList' //模拟接口
+        , height: 'full-340' //高度最大化减去差值
+        , cellMinWidth: 150
+        , toolbar: '#comprehensive_tool'
+        , cols: [[
+            { field: 'Groupid', title: '组次', minWidth:80 }
+            , { field: 'Udt_Initialstimulus', title: '刺激量',minWidth:100 }
+            , { field: 'Udt_Stepd', title: '步长' }
+            , { field: 'Datacount', title: '样本量' }
+            , { field: 'Avg', title: '平均值' }
+            , { field: 'Standarddeviation', title: '标准差' }
+            , { field: 'Standarderrormean', title: '均值标准误差', minWidth: 150 }
+            , { field: 'Standarddeviationerror', title: '标准差标准误差', minWidth: 150 }
+            , { field: 'Analyzewithheuristics', title: '分析用试探数', minWidth: 150 }
+            , { field: 'G', title: 'G' }
+            , { field: 'H', title: 'H' }
+            , { field: 'A', title: 'A' }
+            , { field: 'B', title: 'B' }
+            , { field: 'M', title: 'M' }
+            , { field: 'b', title: 'b' }
+            , { field: 'p', title: 'p' }
+            , { field: 'Zeroone', title: '0.1%' }
+            , { field: 'Zeronine', title: '99.9%' }
+        ]]
+        , page: true
+        , limit: 10
+        , text: '对不起，加载出现异常！'
+    });
+    //综合监听头工具栏事件
+    table.on('toolbar(comprehensive_list)', function (obj) {
+        var checkStatus = table.checkStatus(obj.config.id)
+            , data = checkStatus.data; //获取选中的数据
+        switch (obj.event) {
+            //计算多组试验结果
+            case 'MultipleExperimentsCalculated':
+                if (flage) {
+                    $.ajax({
+                        type: "post",
+                        url: '../UpDownMethod/MultipleExperimentsCalculated?id=' +@Model.id,
+                        datatype: "json",
+                        contenttype: "application/json; charset=utf-8",
+                        data: obj.data,
+                        async: false,
+                        success: function (data) {
+                            document.getElementById("responsePointButtonD").classList.remove('layui-btn-disabled');
+                            $("#responsePointButtonD").removeAttr("disabled", "disabled");
+                            document.getElementById("responseProbabilityButtonD").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityButtonD").removeAttr("disabled", "disabled");
+                            document.getElementById("lntervalestimationD").classList.remove('layui-btn-disabled');
+                            $("#lntervalestimationD").removeAttr("disabled", "disabled");
+                        }
+                    });
+                } else {
+                    tishi();
+                }
+
+                break;
+            case 'lntervalestimation':
+                    layer.open({
+                        type: 2
+                        , title: '多组数据区间估计'
+                        , content: '../UpDownMethod/LntervalEstimation?id=' +@Model.id+"&res=D"
+                        , area: ['80%', '90%']
+                    });
+                break;
+        };
+    });
+                //responsePoint
+                var active = {
+                    //单组响应点
+                    responsePoint: function () {
+                        var is = true;
+                        var ProbabilityResponse = parseFloat(document.getElementById("ProbabilityResponse").value);
+                        if (ProbabilityResponse.toString() == "NaN") {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['响应概率不能为空', '#ProbabilityResponse']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if ((0 >= ProbabilityResponse) || (ProbabilityResponse > 1.0)) {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['响应概率取值范围(0,1]', '#ProbabilityResponse']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (is) {
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/ResponsePoint',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: {
+                                    "upd_id":@Model.id,
+                                    "ResponsePointValue": ProbabilityResponse,
+                                },
+                                async: false,
+                                success: function (data) {
+                                    document.getElementById("ResponsePoint").value = data;
+                                }
+                            });
+                        }
+
+                    },
+                    //单组响应概率
+                    responseProbability: function () {
+                        var is = true;
+                        var StimulusQuantity = parseFloat(document.getElementById("StimulusQuantity").value);
+                        if (StimulusQuantity.toString() == "NaN") {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['刺激量不能为空', '#StimulusQuantity']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (0 >= StimulusQuantity) {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['刺激量必须大于0', '#StimulusQuantity']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (is) {
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/StimulusQuantity',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: {
+                                    "upd_id":@Model.id,
+                                    "StimulusQuantityValue": StimulusQuantity,
+                                },
+                                async: false,
+                                success: function (data) {
+                                    document.getElementById("ProbabilityResponseValue").value = data;
+                                }
+                            });
+                        }
+                    },
+                     //综合响应点
+                    responsePointD: function () {
+                        var is = true;
+                        var ProbabilityResponse = parseFloat(document.getElementById("ProbabilityResponseD").value);
+                        if (ProbabilityResponse.toString() == "NaN") {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['响应概率不能为空', '#ProbabilityResponseD']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if ((0 >= ProbabilityResponse) || (ProbabilityResponse > 1.0)) {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['响应概率取值范围(0,1]', '#ProbabilityResponseD']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (is) {
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/ResponsePointD',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: {
+                                    "upd_id":@Model.id,
+                                    "ResponsePointValue": ProbabilityResponse,
+                                },
+                                async: false,
+                                success: function (data) {
+                                    document.getElementById("ResponsePointD").value = data;
+                                }
+                            });
+                        }
+
+                    },
+                    //综合响应概率
+                    responseProbabilityD: function () {
+                        var is = true;
+                        var StimulusQuantity = parseFloat(document.getElementById("StimulusQuantityD").value);
+                        if (StimulusQuantity.toString() == "NaN") {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['刺激量不能为空', '#StimulusQuantityD']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (0 >= StimulusQuantity) {
+                            is = false;
+                            layer.open({
+                                type: 4
+                                , title: '输入有误'
+                                , content: ['刺激量必须大于0', '#StimulusQuantityD']
+                                , tips: [1, '#ff2121']
+                                , time: 3000
+                            });
+                        }
+                        if (is) {
+                            $.ajax({
+                                type: "post",
+                                url: '../UpDownMethod/StimulusQuantityD',
+                                datatype: "json",
+                                contenttype: "application/json; charset=utf-8",
+                                data: {
+                                    "upd_id":@Model.id,
+                                    "StimulusQuantityValue": StimulusQuantity,
+                                },
+                                async: false,
+                                success: function (data) {
+                                    document.getElementById("ProbabilityResponseValueD").value = data;
+                                }
+                            });
+                        }
+                    },
+                    ModificationTechnicalConditions: function () {
+                    layer.open({
+                        type: 2
+                        , title: '修改技术条件'
+                        , content: '../UpDownMethod/Add?upd_id='+@Model.id,
+                         area: ['400px', '400px']
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'testdata-submit'
+                                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                if (field.state == 'on') {
+                                    field.state = '启用';
+                                } else {
+                                    field.state = '禁用';
+                                }
+                                var admin = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '../UpDownMethod/UpDownParameter_add',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: admin,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            layer.msg('添加成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                        } else {
+                                            layer.msg('添加失败', {
+                                                icon: 2,
+                                                shift: -1,  //震动效果
+                                                time: 1000  //1秒关闭
+                                            });
+                                        }
+                                    }
+                                });
+                                table.reload('updown_list');//数据刷新
+                                layer.close(index); //关闭弹层
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                    }
+
+                }
+
+                $('.layui-btn').on('click', function () {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+});
+    </script>
+</body>
+</html>

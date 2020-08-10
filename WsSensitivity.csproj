@@ -146,6 +146,16 @@
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\TechnicalConditionsController.cs" />
     <Compile Include="Controllers\Tool\JsonNetResult.cs" />
+    <Compile Include="Controllers\UpDownMethodController.cs" />
+    <Compile Include="Controllers\UpDowunMethod\Functions\Function.cs" />
+    <Compile Include="Controllers\UpDowunMethod\Functions\对数ln.cs" />
+    <Compile Include="Controllers\UpDowunMethod\Functions\对数log.cs" />
+    <Compile Include="Controllers\UpDowunMethod\Functions\幂.cs" />
+    <Compile Include="Controllers\UpDowunMethod\Functions\标准.cs" />
+    <Compile Include="Controllers\UpDowunMethod\MLR_polar.cs" />
+    <Compile Include="Controllers\UpDowunMethod\pub_function.cs" />
+    <Compile Include="Controllers\UpDowunMethod\UpDownIn.cs" />
+    <Compile Include="Controllers\UpDowunMethod\updownMethod.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -160,6 +170,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
     <Compile Include="Models\DoptimizeExperimentTable.cs" />
+    <Compile Include="Models\Excel\UpExcel.cs" />
     <Compile Include="Models\LangleyAndDOptimize\DoptimizationAlgorithm.cs" />
     <Compile Include="Models\LangleyAndDOptimize\DoptimizationDistributionSelection.cs" />
     <Compile Include="Models\Langlie.cs" />
@@ -179,6 +190,11 @@
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\SysParam.cs" />
     <Compile Include="Models\updownMethod.cs" />
+    <Compile Include="Models\UpDown\NewGroupUpDownTable.cs" />
+    <Compile Include="Models\UpDown\UpDownDataTable.cs" />
+    <Compile Include="Models\UpDown\UpDownExperiment.cs" />
+    <Compile Include="Models\UpDown\UpDownGroup.cs" />
+    <Compile Include="Models\UpDown\UpDownPageShows.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +376,8 @@
     <Content Include="Static\layui\modules\login_validation.js" />
     <Content Include="Static\layui\modules\admin_table.js" />
     <Content Include="Static\layui\modules\admin_validation.js" />
+    <Content Include="Static\layui\modules\updownquery_table.js" />
+    <Content Include="Static\layui\modules\updown_table.js" />
     <Content Include="Static\layui\modules\workorder.js" />
     <Content Include="Static\layui\style\admin.css" />
     <Content Include="Static\layui\style\login.css" />
@@ -420,6 +438,13 @@
     <Content Include="Views\DoptimizeExperiment\DoptimizeExperiment.cshtml" />
     <Content Include="Views\DoptimizeParSting\DoptimizeParameterSettings.cshtml" />
     <Content Include="Views\DoptimizeQuery\DoptimizeQuery.cshtml" />
+    <Content Include="Views\UpDownMethod\add.cshtml" />
+    <Content Include="Views\UpDownMethod\AlterParameterSetting.cshtml" />
+    <Content Include="Views\UpDownMethod\LntervalEstimation.cshtml" />
+    <Content Include="Views\UpDownMethod\ParameterSetting.cshtml" />
+    <Content Include="Views\UpDownMethod\Query.cshtml" />
+    <Content Include="Views\UpDownMethod\UpDownMethod.cshtml" />
+    <Content Include="Views\UpDownMethod\Manyexperiments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">

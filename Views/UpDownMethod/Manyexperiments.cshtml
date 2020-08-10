@@ -1,0 +1,80 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>多组实验</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/static/layui/style/admin.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-card" style="margin:0px;">
+
+        <div class="layui-row">
+            <div class="layui-card-body">
+                <div class="layui-form layui-form-pane" lay-filter="testdata-form" id="testdata-form">
+                    <input value="1" type="hidden" name="dudt_ExperimentId" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上一组步长：</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" placeholder="11" class="layui-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">当前组次：</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" placeholder="22" class="layui-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">产品名称：</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" placeholder="33" class="layui-input" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">初始刺激量：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dtup_Initialstimulus" id="dtup_Initialstimulus" autocomplete="off" value="44" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">步长：</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dudt_Stepd" id="dudt_Stepd" autocomplete="off" value="55" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">分布方式：</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" placeholder="66" class="layui-input" readonly>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-hide">
+                        <input type="button" lay-submit lay-filter="testdata_submit" id="testdata_submit" value="确认">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form'], function () {
+            var $ = layui.$
+                , form = layui.form;
+
+        });
+    </script>
+</body>
+</html>

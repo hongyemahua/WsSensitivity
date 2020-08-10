@@ -139,10 +139,10 @@
 
                                 <dl class="layui-nav-child">
                                     <dd>
-                                        <a lay-href="#">升降法实验</a>
+                                        <a href="javascript:;" class="click" data-type="UpDowmMethodParameterSetting">升降法实验</a>
                                     </dd>
                                     <dd>
-                                        <a lay-href="#">升降法查询</a>
+                                        <a lay-href="@Url.Action("Query","UpDownMethod")">升降法查询</a>
                                     </dd>
                                 </dl>
                             </li>
@@ -344,6 +344,54 @@
                                     }
                                 });
 
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+                }
+                  //升降法参数设置
+                ,UpDowmMethodParameterSetting: function () {
+                    var index=layer.open({
+                        type: 2
+                        , title: "升降法参数设置" //不显示标题栏
+                        , area: ['60%','490px']
+                        , content: "@Url.Action("ParameterSetting", "UpDownMethod")"
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'UpDownMethodParameterSetting-submit'
+                                , submit = layero.find('iframe').contents().find("#" + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                if (field.fzxy == '启用') {
+                                    field.fzxy = '启用';
+                                } else {
+                                    field.fzxy = '禁用';
+                                }
+                                var experiment = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '@Url.Action("ParameterSettingData", "UpDownMethod")',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: experiment,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data[0]) {
+                                            layer.msg('设置成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                             //关闭弹层
+                                            layer.close(index);
+
+                                            setTimeout(function () { top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?upd_id=' + data[1], '升降法:'+data[2]); }, 1000);
+                                        }
+                                    }
+                                });
                             });
                             submit.trigger('click');
                         }

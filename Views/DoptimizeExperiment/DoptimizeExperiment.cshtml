@@ -371,7 +371,7 @@
                                                             </div>
                                                             <div class="layui-col-md12 layui-col-space5">
                                                                 @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation"id="InputIntervalCalculation"  style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel"id="excel"  style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -448,7 +448,6 @@
                         , groups: 3 //只显示 1 个连续页码
                         , first: '首页' //不显示首页
                         , last: '尾页'//不显示尾页
-                        , theme: '#c71585'
                     }
                     , limits: [10, 20, 50, 100, 200, 500, 800]
                     , limit: 20
@@ -504,44 +503,39 @@
                 table.on('tool(doptimizelist)', function (obj) {
                     var data = obj.data;
                     if (obj.event === 'remove') {
-                        var massage = '确认撤销编号为' + data.ddt_Number + '么？'
-                        layer.confirm(massage, {
-                            btn: ['确认', '取消'] //按钮
-                        }, function () {
-                            $.ajax({
-                                url: "../DoptimizeExperiment/RevocationData",
-                                type: "post",
-                                data: {
-                                    "dop_id":@Model.det.det_Id,
-                                    "id": data.ldt_Id
-                                },
-                                dataType: "json",
-                                success: function (data) {
-                                    if (data[0]) {
-                                        layer.msg('删除成功', {
-                                            icon: 1,
-                                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                        });
-                                        table.reload('doptimize_list');  //数据刷新
-                                        $("#testNumber").text(data[1]);
-                                        document.getElementById("sq").value = data[2];
-                                    } else {
-                                        layer.msg('删除失败', {
-                                            icon: 2,
-                                            shift: 6,  //震动效果
-                                            time: 1000  //1秒关闭
-                                        });
-                                    }
-                                }
-                            });
-                        });
+                       $.ajax({
+                           url: "../DoptimizeExperiment/RevocationData",
+                           type: "post",
+                           data: {
+                               "dop_id":@Model.det.det_Id,
+                               "id": data.ldt_Id
+                           },
+                           dataType: "json",
+                           success: function (data) {
+                               if (data[0]) {
+                                   layer.msg('删除成功', {
+                                       icon: 1,
+                                       time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                   });
+                                   table.reload('doptimize_list');  //数据刷新
+                                   $("#testNumber").text(data[1]);
+                                   document.getElementById("sq").value = data[2];
+                               } else {
+                                   layer.msg('删除失败', {
+                                       icon: 2,
+                                       shift: 6,  //震动效果
+                                       time: 1000  //1秒关闭
+                                   });
+                               }
+                           }
+                       });
                     }
 
                 });
             //文件上传
             var layerindex;
             var uploadInst = upload.render({
-                elem: '#InputIntervalCalculation'
+                elem: '#excel'
                 , url: '../DoptimizeExperiment/InputIntervalCalculation'
                 , accept: 'file'
                 , acceptMime: 'file/xls,file/xlsx'
@@ -579,7 +573,7 @@
                                 //提交 Ajax 成功后，静态更新表格中的数据
                                 $.ajax({
                                     type: "post",
-                                    url: '@Url.Action("TechnicalConditions_Update", "DoptimizeTechnical")',
+                                    url: '@Url.Action("TechnicalConditionsD_Update", "TechnicalConditions")',
                                     datatype: "json",
                                     contenttype: "application/json; charset=utf-8",
                                     data: role,
@@ -628,7 +622,7 @@
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
-                            document.getElementById("InputIntervalCalculation").classList.remove('layui-btn-disabled');
+                            document.getElementById("excel").classList.remove('layui-btn-disabled');
                         }
                     });
                     table.reload('doptimize_list');
@@ -968,10 +962,6 @@
                         });
                     }
               },
-                //文件上传
-              //InputBatchIntervalCalculation: function () {
-              //    alert("InputBatchIntervalCalculation");
-              //}
           }
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');

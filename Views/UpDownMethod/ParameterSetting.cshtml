@@ -1,0 +1,129 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>升降法参数设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-card" style="margin:0px;">
+
+        <div class="layui-row">
+            <div class="layui-card-body">
+                <div class="layui-form layui-form-pane" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin">
+                    <div class="layui-fluid">
+
+                        <div class="layui-col-md12 layui-col-space10">
+
+                            <div class="layui-col-md12 layui-col-space5">
+                                <div class="layui-col-md6">
+                                    <label class="layui-form-label">产品名称</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="udt_ProdectName" id="udt_ProdectName" value="新产品" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <label class="layui-form-label">初始刺激量</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="udt_Initialstimulus" id="udt_Initialstimulus" value="9.4" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md12 layui-col-space5">
+                                <div class="layui-col-md6">
+                                    <label class="layui-form-label">步长d</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="udt_Stepd" id="udt_Stepd" value="1.4" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md6">
+                                    <label class="layui-form-label">仪器分辨率</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="udt_Instrumentresolution" id="udt_Instrumentresolution" value="0.001" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-col-md12">
+                                <div class="layui-col-md5">
+                                    <label class="layui-form-label">正态分布:</label>
+                                    <div class="layui-input-block">
+                                        <input type="radio" name="udt_Distribution" id="udt_Distribution" value="1" title="传统法" checked>
+                                        <input type="radio" name="udt_Distribution" id="udt_Distribution" value="2" title="修正法">
+                                        <input type="radio" name="udt_Distribution" id="udt_Distribution" value="3" title="结合法">
+                                    </div>
+                                </div>
+                                <div class="layui-col-md2">
+                                    <input type="radio" name="udt_Distribution" id="ljsdfb" value="4" title="逻辑斯谛分布">
+                                </div>
+                                <div class="layui-col-md5">
+                                    <fieldset class="layui-elem-field" style="width:auto">
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="udt_Groupingstate" value="1" title="不分组" checked>
+                                            <input type="radio" name="udt_Groupingstate" value="2" title="多组实验">
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                                <div class="layui-col-md12">
+                                    <hr>
+                                    <div class="layui-col-md2">
+                                        <input type="radio" name="udt_Standardstate" id="bz" value="1" title="标准" checked>
+                                    </div>
+                                    <div class="layui-col-md2">
+                                        <input type="radio" name="udt_Standardstate" id="dsln" value="2" title="对数ln">
+                                    </div>
+                                    <div class="layui-col-md2">
+                                        <input type="radio" name="udt_Standardstate" id="dslog" value="3" title="对数log">
+                                    </div>
+                                    <div class="layui-col-md2">
+                                        <input type="radio" name="udt_Standardstate" id="m" value="4" title="幂&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp=">
+                                    </div>
+                                    <div class="layui-col-md2">
+                                        <input type="text" name="udt_Power" id="ms" value="10" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-col-md2">
+                                        <input type="checkbox" name="udt_Flipresponse" id="fzxy" value="1" title="翻转响应">
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-md12">
+                                    <div class="layui-form-item layui-form-text">
+                                        <label class="layui-form-label">技术条件</label>
+                                        <div class="layui-input-block">
+                                            <textarea name="udt_Technicalconditions" id="jstj" placeholder="请输入内容" class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="layui-form-item layui-hide">
+                            <input type="button" lay-submit lay-filter="UpDownMethodParameterSetting-submit" id="UpDownMethodParameterSetting-submit" value="确认">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script src="~/Static/layui/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../static/layui/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'role_validation'], function () {
+            var $ = layui.$
+                , form = layui.form;
+
+        });
+    </script>
+</body>
+</html>
