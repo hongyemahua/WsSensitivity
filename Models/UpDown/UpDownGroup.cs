@@ -11,7 +11,6 @@ namespace WsSensitivity.Models.UpDown
         public int Id { get; set; }
         [DisplayName("实验id")]
         public int dudt_ExperimentId { get; set; }
-
         [DisplayName("步长")]
         public double dudt_Stepd { get;set; }
     }

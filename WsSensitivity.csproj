@@ -157,6 +157,10 @@
     <Compile Include="Migrations\201912250259269_InitialCreate1.Designer.cs">
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008110355487_v1.cs" />
+    <Compile Include="Migrations\202008110355487_v1.Designer.cs">
+      <DependentUpon>202008110355487_v1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
     <Compile Include="Models\DoptimizeExperimentTable.cs" />
@@ -185,6 +189,7 @@
     <Compile Include="Models\UpDown\UpDownExperiment.cs" />
     <Compile Include="Models\UpDown\UpDownGroup.cs" />
     <Compile Include="Models\UpDown\UpDownPageShows.cs" />
+    <Compile Include="Models\UpDown\UpDownView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +447,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912250259269_InitialCreate1.resx">
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008110355487_v1.resx">
+      <DependentUpon>202008110355487_v1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

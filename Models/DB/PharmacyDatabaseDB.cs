@@ -18,9 +18,10 @@ namespace WsSensitivity.Models.DB
         public DbSet<DoptimizeDataTable> DoptimizeDataTable { get; set; }
         public DbSet<DoptimizeExperimentTable> DoptimizeExperimentTable { get; set; }
 
-        //public DbSet<UpDownExperiment> UpDownExperiment { get; set; }
-        //public DbSet<UpDownGroup> UpDownGroup { get; set; }
-        //public DbSet<UpDownDataTable> UpDownDataTable { get; set; }
+        public DbSet<UpDownExperiment> UpDownExperiment { get; set; }
+        public DbSet<UpDownGroup> UpDownGroup { get; set; }
+        public DbSet<UpDownDataTable> UpDownDataTable { get; set; }
+        public DbSet<UpDownView> UpDownView { get; set; }
 
     }
 }
