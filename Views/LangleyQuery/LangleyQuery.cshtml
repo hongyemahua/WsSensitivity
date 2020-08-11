@@ -27,9 +27,8 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">产品名称</label>
                         <div class="layui-input-block">
-                            @*<input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">*@
                             <div class="layui-input-inline">
-                                <select name="modules" lay-verify="required" lay-search="">
+                                <select name="modules">
                                     @foreach (var p in pn)
                                     { 
                                     <option value="@p">@p</option>

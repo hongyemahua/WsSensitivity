@@ -77,7 +77,7 @@
                                             </button>
                                         }
                                     </div>
-                                    <div class="layui-col-md3">
+                                    <div class="layui-col-md2">
                                         <label class="layui-form-label" style="width:auto; text-anchor:inherit">响应状态：</label>
                                         <div class="layui-input-inline" style="width:100px">
                                             <select name="modules" lay-verify="required" lay-filter="select_response">
@@ -85,6 +85,14 @@
                                                 <option value="1">1-响应</option>
                                                 <option value="0">0-不响应</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md3 layui-col-space10">
+                                        <div class="layui-col-md3 layui-col-space5">
+                                            <button class="layui-btn" value="1" lay-event="RequestBtn">响应</button>
+                                        </div>
+                                        <div class="layui-col-md3 layui-col-space5">
+                                            <button class="layui-btn layui-btn-normal" value="0" lay-event="NotRequestBtn">不响应</button>
                                         </div>
                                     </div>
                                 </script>
@@ -182,9 +190,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">均值标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">均值标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:97%" readonly>
                                             </div>
                                         </div>
 
@@ -214,9 +222,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">标准差标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">标准差标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
@@ -246,9 +254,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">0.1%标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">0.1%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
@@ -278,9 +286,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">99.9%标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">99.9%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
@@ -371,9 +379,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">均值标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">均值标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
@@ -385,9 +393,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">sigma_标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">sigma_标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:90%" readonly>
                                             </div>
                                         </div>
 
@@ -403,9 +411,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">0.1%标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">0.1%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
@@ -417,9 +425,9 @@
                                         </div>
 
                                         <div class="layui-col-md3">
-                                            <label class="layui-form-label">99.9%标准误差</label>
+                                            <label class="layui-form-label" style="width:auto">99.9%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
@@ -541,15 +549,18 @@
     table.on('toolbar(updown_list)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id)
             , data = checkStatus.data; //获取选中的数据
+        var role = JSON.stringify(data);
         switch (obj.event) {
             case 'delete':
                 if (data.length === 0) {
+                    
                     layer.msg('请选择一行');
                 } else {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/Experiment_delete?id='+data[0].id,
+                        url: '../UpDownMethod/Experiment_delete',
                         datatype: "json",
+                        data: role,
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
@@ -720,6 +731,64 @@
                        }
                    });
                 }
+                break;
+            //不响应
+            case 'NotRequestBtn':
+                $.ajax({
+                        url: "../UpDownMethod/InsertData",
+                        type: "post",
+                        data: {
+                            "response": data,
+                            "sq": 0,
+                            "upd_id": @Model.id,
+                        }
+                        ,dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                layer.msg('增加成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+
+                            } else {
+                                layer.msg('增加失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                            table.reload('updown_list'); //数据刷新
+                        }
+                    });
+                break;
+            //响应
+            case 'RequestBtn':
+                $.ajax({
+                        url: "../UpDownMethod/InsertData",
+                        type: "post",
+                        data: {
+                            "response": data,
+                            "sq": 1,
+                            "upd_id": @Model.id,
+                        }
+                        ,dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                layer.msg('增加成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+
+                            } else {
+                                layer.msg('增加失败', {
+                                    icon: 2,
+                                    shift: 6,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                            table.reload('updown_list'); //数据刷新
+                        }
+                    });
                 break;
         };
     });

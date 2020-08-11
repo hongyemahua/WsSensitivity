@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
-    @{ 
+    @{
         string res = (string)ViewData["res"];
     }
 </head>
@@ -32,13 +32,14 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">置信水平</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Srb_ConfidencelevelP" id="Srb_Confidencelevel" placeholder="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Srb_ConfidencelevelP" id="Srb_ConfidencelevelP" placeholder="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
-                                        @if (res.Equals("S")) {
-                                        <div class="layui-col-md4">
-                                            <button type="button" class="layui-btn" style="width:100%;" data-type="IntervalEstimationResponseProbability">响应概率区间估计</button>
-                                        </div>
+                                        @if (res.Equals("S"))
+                                        {
+                                            <div class="layui-col-md4">
+                                                <button type="button" class="layui-btn" style="width:100%;" data-type="IntervalEstimationResponseProbability">响应概率区间估计</button>
+                                            </div>
                                         }
                                     </div>
 
@@ -55,10 +56,11 @@
                                                 <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" placeholder="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
-                                        @if (res.Equals("S")) {
-                                        <div class="layui-col-md4">
-                                            <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
-                                        </div>
+                                        @if (res.Equals("S"))
+                                        {
+                                            <div class="layui-col-md4">
+                                                <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -133,80 +135,78 @@
                             <div class="layui-form layui-row">
                                 <div class="layui-col-md12 layui-col-space5">
                                     <div class="layui-col-md12 layui-col-space10">
-                                            <div class="layui-col-md4">
-                                                <label class="layui-form-label">响应概率</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="Fchs_ProbabilityResponse" id="Fchs_ProbabilityResponse" placeholder="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                </div>
-                                            </div>
-                                                <div class=" layui-col-md4">
-                                                    <label class="layui-form-label">置信水平</label>
-                                                    <div class="layui-input-block">
-                                                        <select name="xygl_zxsp" lay-verify="required">
-                                                            <option value=""></option>
-                                                            <option value="0.8">0.8</option>
-                                                            <option value="0.85">0.85</option>
-                                                            <option value="0.9">0.8</option>
-                                                            <option value="0.95">0.95</option>
-                                                            <option value="0.99">0.99</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            <div class="layui-col-md4">
-                                                <button type="button" class="layui-btn" style="width:100%;" data-type="Fchs_IntervalEstimationResponseProbability">响应概率区间估计</button>
+                                        <div class="layui-col-md4">
+                                            <label class="layui-form-label">响应概率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="Fchs_ProbabilityResponse" id="Fchs_ProbabilityResponse" placeholder="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
-
-                                        <div class="layui-col-md12 layui-col-space5">
-                                            <div class="layui-col-md4">
-                                                <label class="layui-form-label">刺激量</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" placeholder="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-md4">
-                                                <label class="layui-form-label">置信水平</label>
-                                                <div class="layui-input-block">
-                                                    <select name="cjl_zxsp" lay-verify="required">
-                                                        <option value=""></option>
-                                                        <option value="0.8">0.8</option>
-                                                        <option value="0.85">0.85</option>
-                                                        <option value="0.9">0.8</option>
-                                                        <option value="0.95">0.95</option>
-                                                        <option value="0.99">0.99</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="layui-col-md4">
-                                                <button type="button" class="layui-btn" style="width:100%;" data-type="Fchs_ResponsePointIntervalEstimation">响应点区间估计</button>
+                                        <div class=" layui-col-md4">
+                                            <label class="layui-form-label">置信水平</label>
+                                            <div class="layui-input-block">
+                                                <select name="xygl_zxsp" id="xygl_zxsp" lay-verify="required">
+                                                    <option value="0.95">0.95</option>
+                                                    <option value="0.8">0.8</option>
+                                                    <option value="0.85">0.85</option>
+                                                    <option value="0.9">0.8</option>
+                                                    <option value="0.99">0.99</option>
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="layui-col-md4">
+                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Fchs_IntervalEstimationResponseProbability">响应概率区间估计</button>
+                                        </div>
+                                    </div>
 
-                                        <div class="layui-col-md12 layui-col-space5">
-                                            <div class="layui-col-md3">
-                                                <label class="layui-form-label">响应点双侧置信区间</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="PointsIncredibleInterval" id="PointsIncredibleInterval" lay-tips="响应点双侧置信区间" autocomplete="off" class="layui-input" readonly>
-                                                </div>
+                                    <div class="layui-col-md12 layui-col-space5">
+                                        <div class="layui-col-md4">
+                                            <label class="layui-form-label">刺激量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" placeholder="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
-                                            <div class="layui-col-md3">
-                                                <label class="layui-form-label">均值双侧置信区间</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="AvgPointsInterval" id="AvgPointsInterval" lay-tips="均值双侧置信区间" autocomplete="off" class="layui-input" readonly>
-                                                </div>
+                                        </div>
+                                        <div class="layui-col-md4">
+                                            <label class="layui-form-label">置信水平</label>
+                                            <div class="layui-input-block">
+                                                <select name="cjl_zxsp" id="cjl_zxsp" lay-verify="required">
+                                                    <option value="0.99">0.99</option>
+                                                    <option value="0.8">0.8</option>
+                                                    <option value="0.85">0.85</option>
+                                                    <option value="0.9">0.8</option>
+                                                    <option value="0.95">0.95</option>
+                                                </select>
                                             </div>
-                                            <div class="layui-col-md3">
-                                                <label class="layui-form-label">响应点单侧置信区间</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="PointIncredibleInterval" id="PointIncredibleInterval" lay-tips="响应点单侧置信区间" autocomplete="off" class="layui-input" readonly>
-                                                </div>
+                                        </div>
+                                        <div class="layui-col-md4">
+                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Fchs_ResponsePointIntervalEstimation">响应点区间估计</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-col-md12 layui-col-space5">
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">响应点双侧置信区间</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="PointsIncredibleInterval" id="PointsIncredibleInterval" lay-tips="响应点双侧置信区间" autocomplete="off" class="layui-input" readonly>
                                             </div>
-                                            <div class="layui-col-md3">
-                                                <label class="layui-form-label">标准差双侧置信区间</label>
-                                                <div class="layui-input-block">
-                                                    <input type="text" name="StandarddeviationInterval" id="StandarddeviationInterval" lay-tips="标准差双侧置信区间" autocomplete="off" class="layui-input" readonly>
-                                                </div>
+                                        </div>
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">均值双侧置信区间</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="AvgPointsInterval" id="AvgPointsInterval" lay-tips="均值双侧置信区间" autocomplete="off" class="layui-input" readonly>
                                             </div>
+                                        </div>
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">响应点单侧置信区间</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="PointIncredibleInterval" id="PointIncredibleInterval" lay-tips="响应点单侧置信区间" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-md3">
+                                            <label class="layui-form-label">标准差双侧置信区间</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="StandarddeviationInterval" id="StandarddeviationInterval" lay-tips="标准差双侧置信区间" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -218,14 +218,39 @@
                         <div class="layui-field-box">
                             <div class="layui-row">
                                 <div class="layui-col-md12 layui-col-space5">
-                                    @if (res.Equals("S"))
-                                    {
-                                        <div class="layui-col-md6">
-                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Likelihood">似然比法区间计算绘图</button>
+                                    <div class="layui-col-md4 layui-col-space5">
+                                        <label class="layui-form-label">置信水平</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="BatchConfidenceLevel3" id="BatchConfidenceLevel3" value="0.95" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                         </div>
-                                    }
-                                    <div class="layui-col-md6">
-                                        <button type="button" class="layui-btn" style="width:100%;" data-type="Variancefunction">方差函数法区间计算绘图</button>
+                                        <label class="layui-form-label">Y轴最小值</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="yMin" id="yMin" value="0.000001" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                        </div>
+                                        <label class="layui-form-label">Y轴最大值</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="yMax" id="yMax" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                        </div>
+                                        <label class="layui-form-label" style="width:auto">Y轴分隔份数</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" style="width:99%" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-col-md5 layui-col-space10">
+                                        <div class="layui-col-md12 layui-col-space5">
+                                            @if (res.Equals("S"))
+                                            {
+                                                <button type="button" class="layui-btn" style="width:100%;" data-type="Likelihood">似然比法区间计算绘图</button>
+                                            }
+                                        </div>
+                                        <div class="layui-col-md12 layui-col-space5">
+                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Variancefunction">方差函数法区间计算绘图</button>
+                                        </div>
+                                    </div>
+                                    <div class="layui-col-md3 layui-col-space5">
+                                        <input type="radio" name="intervalTypeSelection3" id="intervalTypeSelection3" value="0" title="单侧置信区域">
+                                        <input type="radio" name="intervalTypeSelection3" id="intervalTypeSelection3" value="1" title="双侧置信区域" checked>
                                     </div>
 
                                 </div>
@@ -236,31 +261,209 @@
             </div>
         </div>
     </div>
-    
+
     <script src="~/static/layui/layui/layui.js"></script>
     <script>
         layui.config({
             base: '../static/layui/' //静态资源所在路径
         }).extend({
             index: 'lib/index' //主入口模块
-        }).use(['index', 'table','form'], function () {
+        }).use(['index', 'table', 'form','element'], function () {
             var $ = layui.$
                 , form = layui.form
+                , element = layui.element
                 , table = layui.table;
             form.render();
             //事件
             var active = {
                 IntervalEstimationResponseProbability: function () {
-                    alert("IntervalEstimationResponseProbability");
+                    var Srb_ProbabilityResponse = parseFloat(document.getElementById("Srb_ProbabilityResponse").value);
+                    var Srb_Confidencelevel = parseFloat(document.getElementById("Srb_ConfidencelevelP").value);
+                    var is = true;
+                    if (Srb_ProbabilityResponse.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率不能为空', '#Srb_ProbabilityResponse']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Srb_ProbabilityResponse > 1.0 || Srb_ProbabilityResponse<=0) {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率取值范围(0,1]', '#Srb_ProbabilityResponse']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Srb_Confidencelevel.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                             type: 4
+                            , content: ['置信水平不能为空', '#Srb_ConfidencelevelP']
+                            , tips: [1, '#ff2121']
+                            , time:3000
+                        });
+                    }
+                    if (Srb_Confidencelevel > 1.0 || Srb_Confidencelevel <= 0) {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['置信水平取值范围(0,1]', '#Srb_ConfidencelevelP']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (is)
+                    {
+                        $.ajax({
+                            type: "post"
+                            , url: '../UpDownMethod/IntervalEstimationResponseProbability'
+                            , data: {
+                                "Srb_ProbabilityResponse": Srb_ProbabilityResponse,
+                                "Srb_Confidencelevel": Srb_Confidencelevel
+                            }
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , success: function (data) {
+                                if (data[0]) {
+                                    layer.msg("成功");
+                                }
+                            }
+                        });
+                    }
                 },
                 ResponsePointIntervalEstimation: function () {
-
+                    var Srb_StimulusQuantity = parseFloat(document.getElementById("Srb_StimulusQuantity").value);
+                    var Srb_ConfidencelevelS = parseFloat(document.getElementById("Srb_ConfidencelevelS").value);
+                    var is = true;
+                    if (Srb_StimulusQuantity.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['刺激量不能为空', '#Srb_StimulusQuantity']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    
+                    if (Srb_ConfidencelevelS.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                             type: 4
+                            , content: ['置信水平不能为空', '#Srb_ConfidencelevelS']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Srb_ConfidencelevelS > 1.0 || Srb_ConfidencelevelS <= 0) {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['置信水平取值范围(0,1]', '#Srb_ConfidencelevelS']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (is) {
+                        $.ajax({
+                            type: "post"
+                            , url: '../UpDownMethod/ResponsePointIntervalEstimation'
+                            , data: {
+                                "Srb_StimulusQuantity": Srb_StimulusQuantity,
+                                "Srb_ConfidencelevelS": Srb_ConfidencelevelS
+                            }
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , success: function (data) {
+                                if (data[0]) {
+                                    layer.msg("成功");
+                                }
+                            }
+                        });
+                    }
                 },
                 Fchs_IntervalEstimationResponseProbability: function () {
-
+                    var Fchs_ProbabilityResponse = parseFloat(document.getElementById("Fchs_ProbabilityResponse").value);
+                    var xygl_zxsp = parseFloat(document.getElementById("xygl_zxsp").value);
+                    var is = true;
+                    if (Fchs_ProbabilityResponse.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率不能为空', '#Fchs_ProbabilityResponse']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Fchs_ProbabilityResponse > 1.0 || Fchs_ProbabilityResponse <= 0) {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率取值范围(0,1]', '#Fchs_ProbabilityResponse']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (is) {
+                        $.ajax({
+                            type: "post"
+                            , url: '../UpDownMethod/Fchs_IntervalEstimationResponseProbability'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , data: {
+                                "Fchs_ProbabilityResponse": Fchs_ProbabilityResponse,
+                                "xygl_zxsp": xygl_zxsp
+                            }
+                            , success: function (data) {
+                                layer.msg("成功");
+                            }
+                        });
+                    }
                 },
                 Fchs_ResponsePointIntervalEstimation: function () {
-
+                    var Fchs_StimulusQuantity = parseFloat(document.getElementById("Fchs_StimulusQuantity").value);
+                    var cjl_zxsp = parseFloat(document.getElementById("cjl_zxsp").value);
+                    var is = true;
+                    if (Fchs_StimulusQuantity.toString() == "NaN") {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率不能为空', '#Fchs_StimulusQuantity']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Fchs_StimulusQuantity > 1.0 || Fchs_StimulusQuantity <= 0) {
+                        is = false;
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率取值范围(0,1]', '#Fchs_StimulusQuantity']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (is) {
+                        $.ajax({
+                            type: "post"
+                            , url: '../UpDownMethod/Fchs_ResponsePointIntervalEstimation'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , data: {
+                                "Fchs_StimulusQuantity": Fchs_StimulusQuantity,
+                                "cjl_zxsp": cjl_zxsp
+                            }
+                            , success: function (data) {
+                                layer.msg("成功");
+                            }
+                        });
+                    }
                 },
                 Likelihood: function () {
 

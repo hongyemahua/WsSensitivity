@@ -273,8 +273,11 @@ namespace WsSensitivity.Controllers
 
         //删除试验数据
         [HttpPost]
-        public ActionResult Experiment_delete(int id)
+        public ActionResult Experiment_delete()
         {
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
             //UpDownExperiment experiment = new UpDownExperiment();
             //experiment.id = id;
             return Json(/*dbDrive.Delete(experiment)*/1);
@@ -399,5 +402,44 @@ namespace WsSensitivity.Controllers
             listDatas.Add(listData);
             return Json(new { code="",msg="",count=listDatas.Count(),data=listDatas},JsonRequestBehavior.AllowGet);
         }
+        #region 区间估计
+        //响应概率区间估计
+        [HttpPost]
+        public ActionResult IntervalEstimationResponseProbability(double Srb_ProbabilityResponse,double Srb_Confidencelevel)
+        {
+            string[] str = {"1","2","3","4" };
+            return Json(str);
+        }
+        //响应点区间估计
+        [HttpPost]
+        public ActionResult ResponsePointIntervalEstimation(double Srb_StimulusQuantity,double Srb_ConfidencelevelS)
+        {
+            return Json(1);
+        }
+        //方差函数响应概率区间估计
+        [HttpPost]
+        public ActionResult Fchs_IntervalEstimationResponseProbability(double Fchs_ProbabilityResponse,double xygl_zxsp)
+        {
+            return Json(1);
+        }
+        //方差函数响应点区间估计
+        [HttpPost]
+        public ActionResult Fchs_ResponsePointIntervalEstimation(double Fchs_StimulusQuantity,double cjl_zxsp)
+        {
+            return Json("1");
+        }
+        //似然比绘图
+        [HttpPost]
+        public ActionResult Likelihood()
+        {
+            return Json(1);
+        }
+        //方差函数绘图
+        [HttpPost]
+        public ActionResult Variancefunction()
+        {
+            return Json(1);
+        }
+        #endregion
     }
 }

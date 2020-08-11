@@ -23,13 +23,13 @@
                                 <div class="layui-col-md6">
                                     <label class="layui-form-label">产品名称</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="udt_ProdectName" id="udt_ProdectName" value="新产品" autocomplete="off" class="layui-input">
+                                        <input type="text" name="udt_ProdectName" id="udt_ProdectName" value="新产品" lay-verify="required" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-col-md6">
                                     <label class="layui-form-label">初始刺激量</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="udt_Initialstimulus" id="udt_Initialstimulus" value="9.4" autocomplete="off" class="layui-input">
+                                        <input type="text" name="udt_Initialstimulus" id="udt_Initialstimulus" lai-verify="required|number" value="9.4" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -38,13 +38,13 @@
                                 <div class="layui-col-md6">
                                     <label class="layui-form-label">步长d</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="udt_Stepd" id="udt_Stepd" value="1.4" autocomplete="off" class="layui-input">
+                                        <input type="text" name="udt_Stepd" id="udt_Stepd" value="1.4" lai-verify="required|number" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                                 <div class="layui-col-md6">
                                     <label class="layui-form-label">仪器分辨率</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="udt_Instrumentresolution" id="udt_Instrumentresolution" value="0.001" autocomplete="off" class="layui-input">
+                                        <input type="text" name="udt_Instrumentresolution" id="udt_Instrumentresolution" lai-verify="required|number" value="0.001" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -64,8 +64,8 @@
                                 <div class="layui-col-md5">
                                     <fieldset class="layui-elem-field" style="width:auto">
                                         <div class="layui-input-block">
-                                            <input type="radio" name="udt_Groupingstate" value="1" title="不分组" checked>
-                                            <input type="radio" name="udt_Groupingstate" value="2" title="多组实验">
+                                            <input type="radio" name="udt_Groupingstate" value="1" title="不分组" >
+                                            <input type="radio" name="udt_Groupingstate" value="2" title="多组实验" checked>
                                         </div>
                                     </fieldset>
                                 </div>
@@ -73,20 +73,19 @@
                                 <div class="layui-col-md12">
                                     <hr>
                                     <div class="layui-col-md2">
-                                        <input type="radio" name="udt_Standardstate" id="bz" value="1" title="标准" checked>
+                                        <input type="radio" name="udt_Standardstate" id="bz" lay-filter="udt_Standardstate" value="1" title="标准" checked>
                                     </div>
                                     <div class="layui-col-md2">
-                                        <input type="radio" name="udt_Standardstate" id="dsln" value="2" title="对数ln">
+                                        <input type="radio" name="udt_Standardstate" id="dsln" lay-filter="udt_Standardstate" value="2" title="对数ln">
                                     </div>
                                     <div class="layui-col-md2">
-                                        <input type="radio" name="udt_Standardstate" id="dslog" value="3" title="对数log">
+                                        <input type="radio" name="udt_Standardstate" id="dslog" lay-filter="udt_Standardstate" value="3" title="对数log">
                                     </div>
-                                    <div class="layui-col-md2">
-                                        <input type="radio" name="udt_Standardstate" id="m" value="4" title="幂&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp=">
+                                    <div class="layui-col-md4">
+                                        <input type="radio" name="udt_Standardstate" id="m" lay-filter="udt_Standardstate" value="4" title="幂">
+                                        =<input type="text" name="udt_Power" id="getPow" class="layui-input-inline layui-hide" style="width:120px;height:30px"  value="10" lay-verify="required|number" autocomplete="off">
                                     </div>
-                                    <div class="layui-col-md2">
-                                        <input type="text" name="udt_Power" id="ms" value="10" autocomplete="off" class="layui-input">
-                                    </div>
+                                   
                                     <div class="layui-col-md2">
                                         <input type="checkbox" name="udt_Flipresponse" id="fzxy" value="1" title="翻转响应">
                                     </div>
@@ -123,6 +122,15 @@
             var $ = layui.$
                 , form = layui.form;
 
+
+            form.on('radio(udt_Standardstate)', function (data) {
+                var data = data.value;
+                if (data == "4") {
+                    document.getElementById("getPow").classList.remove('layui-hide');
+                } else {
+                    document.getElementById("getPow").classList.add('layui-hide');
+                }
+            });
         });
     </script>
 </body>

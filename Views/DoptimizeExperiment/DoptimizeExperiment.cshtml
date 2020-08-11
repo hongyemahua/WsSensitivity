@@ -11,11 +11,6 @@
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
-    @*@{
-        var DoptimizeNameSeting = ViewData["DoptimizeNameSeting"];
-        int dop_id = (int)ViewData["dop_id"];
-        var DoptimizeStringName = ViewData["DoptimizeStringName"];
-    }*@
     <div class="layui-fluid">
         <div class="layui-col-sm12">
             <div clas="layui-card layui-col-ssm12">
@@ -23,22 +18,30 @@
                 <table id="doptimize_list" lay-filter="doptimizelist"></table>
                 <script type="text/html" id="Tool_title">
                     <div class="layui-col-md12">
-                        <div class="layui-col-md3 layui-col-space10">
+                        <div class="layui-col-md2 layui-col-space10">
                             <label class="layui-form-label" id="langLeyName" style="width:auto;height:25px;text-anchor:inherit">@Model.doptimizeNameSeting</label>
                         </div>
-                        <div class="layui-col-md3 layui-col-space10">
-                            <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
+                        <div class="layui-col-md2 layui-col-space10">
+                            <label class="layui-form-label" style="width:55%">下一组刺激量：</label>
                             <div class="layui-input-inline">
-                                <input class="layui-input" id="sq" name="sq" value="@Model.sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                                <input class="layui-input" id="sq" name="sq" style="width:100px" value="@Model.sq" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                             </div>
                         </div>
-                        <div class="layui-col-md5 layui-col-space10">
-                            <label class="layui-form-label" style="width:30%;height:25px;text-anchor:inherit">下一组响应状态：</label>
-                            <div class="layui-input-inline">
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" style="width:60%;text-anchor:inherit">下一组响应状态：</label>
+                            <div class="layui-input-inline" style="width:100px">
                                 <select name="modules" lay-verify="required" lay-filter="select_response">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="layui-col-md3 layui-col-space10">
+                            <div class="layui-col-md3 layui-col-space5">
+                                <button class="layui-btn" value="1" lay-event="RequestBtn">响应</button>
+                            </div>
+                            <div class="layui-col-md3 layui-col-space5">
+                                <button class="layui-btn layui-btn-normal" value="0" lay-event="NotRequestBtn">不响应</button>
                             </div>
                         </div>
                     </div>
@@ -488,6 +491,66 @@
                         }
                     });
                 });
+            //监听工具头
+            table.on('toolbar(doptimizelist)', function (obj) {
+                if (obj.event == 'NotRequestBtn') {
+                    $.ajax({
+                        url: "../DoptimizeExperiment/InsertData",
+                    type: "post",
+                    data: {
+                        "response": 0,
+                        "sq": document.getElementById("sq").value,
+                        "dop_id":@Model.det.det_Id,
+                    }
+                    ,dataType: "json",
+                    success: function (data) {
+                        if (data[0]) {
+                            layer.msg('增加成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+                            table.reload('doptimize_list'); //数据刷新
+                            $("#testNumber").text(data[1]);
+                            document.getElementById("sq").value = data[2];
+                        } else {
+                            layer.msg('增加失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                    }
+                    });
+                } else if (obj.event == 'RequestBtn') {
+                    $.ajax({
+                        url: "../DoptimizeExperiment/InsertData",
+                    type: "post",
+                    data: {
+                        "response": 1,
+                        "sq": document.getElementById("sq").value,
+                        "dop_id":@Model.det.det_Id,
+                    }
+                    ,dataType: "json",
+                    success: function (data) {
+                        if (data[0]) {
+                            layer.msg('增加成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+                            table.reload('doptimize_list'); //数据刷新
+                            $("#testNumber").text(data[1]);
+                            document.getElementById("sq").value = data[2];
+                        } else {
+                            layer.msg('增加失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                    }
+                });
+                }
+            });
                 //监听工具条
                 table.on('tool(doptimizelist)', function (obj) {
                     var data = obj.data;
@@ -619,6 +682,7 @@
                 responsePoint: function () {
                     var is = true;
                     var responseValue = parseFloat(document.getElementById("responseProbability").value);
+                    var sigma = parseFloat(document.getElementById("sigma").value);
                     if (responseValue.toString() == "NaN") {
                         is = false;
                         layer.open({
@@ -627,6 +691,16 @@
                             , content: ['响应概率不能为空', '#responseProbability']
                             , tips: [1, '#ff2121']
                             ,time:3000
+                        });
+                    }
+                    if (sigma == 0) {
+                        is = false;
+                        layer.open({
+                            title: '错误操作'
+                            , content: '当前标准差为0，不能进行响应点计算'
+                            , icon: 2
+                            , time: 2000
+                            , anim: 6
                         });
                     }
                     if ((0 >= responseValue) || (responseValue > 1.0)) {
@@ -812,7 +886,7 @@
                         isresponseEstimaate = false;
                         layer.open({
                             title:'错误提示'
-                            , content: '当前标准方差为0，不能进行响应点区间估计计算'
+                            , content: '当前标准差为0，不能进行响应点区间估计计算'
                             , time: 3000
                             ,icon:2
                         });
@@ -915,7 +989,8 @@
                     }
                     if (isConfi) {
                         document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
-                        document.getElementById("InputIntervalCalculation").classList.add('layui-btn-disabled');
+                        document.getElementById("excel").classList.add('layui-btn-disabled');
+                        
                         $.ajax({
                             type: "post"
                             , data: {
@@ -934,7 +1009,7 @@
                             , async: false
                             , success: function (data) {
                                 document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
-                                document.getElementById("InputIntervalCalculation").classList.remove('layui-btn-disabled');
+                                document.getElementById("excel").classList.remove('layui-btn-disabled');
                                 var index = layer.open({
                                     type: 2
                                     , area: ['70%', '80%']

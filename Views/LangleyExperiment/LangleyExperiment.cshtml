@@ -28,14 +28,14 @@
                         <div class="layui-col-md3 layui-col-space10">
                             <label class="layui-form-label" id="langLeyName" style="width:auto;text-anchor:inherit">@langLeyName</label>
                         </div>
-                        <div class="layui-col-md3 layui-col-space10">
-                            <label class="layui-form-label" style="width:40%">下一组刺激量：</label>
+                        <div class="layui-col-md2 layui-col-space10">
+                            <label class="layui-form-label" style="width:55%">下一组刺激量：</label>
                             <div class="layui-input-inline">
-                                <input class="layui-input" id="sq" name="sq" style="width:100px" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                                <input class="layui-input" id="sq" name="sq" style="width:90px" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
                             </div>
                         </div>
-                        <div class="layui-col-md4 layui-col-space10">
-                            <label class="layui-form-label" style="width:30%;text-anchor:inherit">下一组响应状态：</label>
+                        <div class="layui-col-md3 layui-col-space10">
+                            <label class="layui-form-label" style="width:60%;text-anchor:inherit">下一组响应状态：</label>
                             <div class="layui-input-inline" style="width:100px">
                                 <select name="modules" lay-verify="required" lay-filter="select_response">
                                     <option value="0">0</option>
@@ -43,7 +43,14 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="layui-col-md3 layui-col-space10">
+                            <div class="layui-col-md3 layui-col-space5">
+                                <button class="layui-btn" value="1" lay-event="RequestBtn">响应</button>
+                            </div>
+                            <div class="layui-col-md3 layui-col-space5">
+                                <button class="layui-btn layui-btn-normal" value="0" lay-event="NotRequestBtn">不响应</button>
+                            </div>
+                        </div>
                     </div>
                 </script>
 
@@ -488,7 +495,7 @@
                     data: {
                         "response": data,
                         "sq": document.getElementById("sq").value,
-                        "langlryExpTableId": @langlryExpTableId
+                        "langlryExpTableId": @langlryExpTableId,
                     }
                     ,dataType: "json",
                     success: function (data) {
@@ -514,6 +521,73 @@
                         }
                     }
                 });
+            });
+            //监听工具头
+            table.on('toolbar(langleylist)', function (obj) {
+                var data = obj.data;
+                if (obj.event == 'NotRequestBtn') {
+                    $.ajax({
+                    url: "../LangleyExperiment/InsertData",
+                    type: "post",
+                    data: {
+                        "response": 0,
+                        "sq": document.getElementById("sq").value,
+                        "langlryExpTableId": @langlryExpTableId,
+                    }
+                    ,dataType: "json",
+                    success: function (data) {
+                        if (data[0]) {
+                            layer.msg('增加成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+                            table.reload('langley_list'); //数据刷新
+                            $("#testNumber").text(data[1]);
+                            $("#NM").text(data[2]);
+
+                            document.getElementById("sq").value = data[3];
+
+                        } else {
+                            layer.msg('增加失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                    }
+                    });
+                } else if (obj.event == 'RequestBtn') {
+                    $.ajax({
+                    url: "../LangleyExperiment/InsertData",
+                    type: "post",
+                    data: {
+                        "response": 1,
+                        "sq": document.getElementById("sq").value,
+                        "langlryExpTableId": @langlryExpTableId,
+                    }
+                    ,dataType: "json",
+                    success: function (data) {
+                        if (data[0]) {
+                            layer.msg('增加成功', {
+                                icon: 1,
+                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            });
+                            table.reload('langley_list'); //数据刷新
+                            $("#testNumber").text(data[1]);
+                            $("#NM").text(data[2]);
+
+                            document.getElementById("sq").value = data[3];
+
+                        } else {
+                            layer.msg('增加失败', {
+                                icon: 2,
+                                shift: 6,  //震动效果
+                                time: 1000  //1秒关闭
+                            });
+                        }
+                    }
+                });
+                }
             });
             //监听工具条
             table.on('tool(langleylist)', function (obj) {
@@ -548,13 +622,13 @@
                 }
 
             });
-                var active = {
+            var active = {
                 //兰利法分析参数设置
                 ParameterSetting: function () {
                     layer.open({
                         type: 2
                         , title: '兰利法分析参数设置'
-                        , content: ['/ParameterSetting/ParameterSetting?langlryExpTableId='+@langlryExpTableId]
+                        , content: ['/ParameterSetting/ParameterSetting?langlryExpTableId=' +@langlryExpTableId]
                         , area: ['450px', '260px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -594,7 +668,7 @@
 
 
                                 });
-                                location.href = '../LangleyExperiment/LangleyExperiment?let_id='+@langlryExpTableId;
+                                location.href = '../LangleyExperiment/LangleyExperiment?let_id=' +@langlryExpTableId;
                                 layer.close(index); //关闭弹层
 
                             });
@@ -608,7 +682,7 @@
                     layer.open({
                         type: 2
                         , title: '技术条件'
-                        , content: ['/TechnicalConditions/TechnicalConditions?id='+@langlryExpTableId+'&name='+"L"]
+                        , content: ['/TechnicalConditions/TechnicalConditions?id=' +@langlryExpTableId+'&name=' + "L"]
                         , area: ['400px', '250px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -653,7 +727,7 @@
                     $.ajax({
                         type: "post",
                         url: '@Url.Action("PointCalculate", "LangleyExperiment")',
-                        data:{"langlryExpTableId":@langlryExpTableId},
+                        data: { "langlryExpTableId":@langlryExpTableId},
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
@@ -676,52 +750,63 @@
                     table.reload('langley_list');
                 },
 
-            //响应点
+                //响应点
                 responsePoint: function () {
                     var is = true;
                     var responseValue = parseFloat(document.getElementById("responseProbability").value);
+                    var sigma = parseFloat(document.getElementById("sigma").value);
                     if (responseValue.toString() == "NaN") {
                         is = false;
                         layer.open({
-                            type:4
-                            ,title: '输入有误'
+                            type: 4
+                            , title: '输入有误'
                             , content: ['响应概率不能为空', '#responseProbability']
                             , tips: [1, '#ff2121']
-                            ,time:3000
+                            , time: 3000
+                        });
+                    }
+                    if (sigma == 0) {
+                        is = false;
+                        layer.open({
+                            title: '操作错误'
+                            , content: '当前标准差为0，不能进行响应点计算'
+                            , icon: 2
+                            , time: 2000
+                            , anim: 6
                         });
                     }
                     if ((0 >= responseValue) || (responseValue > 1.0)) {
                         is = false;
-                         layer.open({
-                             type: 4
-                             , title: '输入有误'
-                             , content: ['响应概率取值范围(0,1]', '#responseProbability']
-                             , tips: [1, '#ff2121']
-                             ,time:3000
-                         });
+                        layer.open({
+                            type: 4
+                            , title: '输入有误'
+                            , content: ['响应概率取值范围(0,1]', '#responseProbability']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
                     }
                     if (is) {
-                          //事件
-                                $.ajax({
-                                    type: "post",
-                                    data: {
-                                        "fq": responseValue,
-                                        "favg": document.getElementById("avg").value,
-                                        "fsigma": document.getElementById("sigma").value,
-                                        "langlryExpTableId":@langlryExpTableId
+                        //事件
+                        $.ajax({
+                            type: "post",
+                            data: {
+                                "fq": responseValue,
+                                "favg": document.getElementById("avg").value,
+                                "fsigma": document.getElementById("sigma").value,
+                                "langlryExpTableId":@langlryExpTableId
                                     },
-                                    url: '@Url.Action("ResponsePointCalculate", "LangleyExperiment")',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    async: false,
-                                    success: function (data) {
-                                        document.getElementById("responsePointValue").value = data;
-                                    }
-                                });
+                            url: '@Url.Action("ResponsePointCalculate", "LangleyExperiment")',
+                            datatype: "json",
+                            contenttype: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (data) {
+                                document.getElementById("responsePointValue").value = data;
+                            }
+                        });
                     }
                 },
 
-                 //响应概率
+                //响应概率
                 responseProbability: function () {
                     var stimulusQuantity = parseFloat(document.getElementById("stimulusQuantity").value);
                     if (stimulusQuantity.toString() == "NaN") {
@@ -730,29 +815,29 @@
                             , title: '输入有误'
                             , content: ['刺激量不能为空', '#stimulusQuantity']
                             , tips: [1, '#ff2121']
-                            ,time:3000
+                            , time: 3000
                         });
                     } else {
-                     $.ajax({
-                         type: "post",
-                         data: {
-                             "fq": stimulusQuantity,
-                             "favg": document.getElementById("avg").value,
-                             "fsigma": document.getElementById("sigma").value,
-                             "langlryExpTableId":@langlryExpTableId
+                        $.ajax({
+                            type: "post",
+                            data: {
+                                "fq": stimulusQuantity,
+                                "favg": document.getElementById("avg").value,
+                                "fsigma": document.getElementById("sigma").value,
+                                "langlryExpTableId":@langlryExpTableId
                          },
-                         url: '@Url.Action("ResponseProbabilityCalculate", "LangleyExperiment")',
-                         datatype: "json",
-                         contenttype: "application/json; charset=utf-8",
-                         async: false,
-                         success: function (data) {
-                             document.getElementById("responseProbabilityValue").value = data;
-                         }
-                     });
+                            url: '@Url.Action("ResponseProbabilityCalculate", "LangleyExperiment")',
+                            datatype: "json",
+                            contenttype: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (data) {
+                                document.getElementById("responseProbabilityValue").value = data;
+                            }
+                        });
                     }
                 },
 
-                 //响应概率区间估计
+                //响应概率区间估计
                 responseProbabilityIntervalEstimate: function () {
                     var isResponse = true;
                     var reponseProbability2 = parseFloat(document.getElementById("reponseProbability2").value);
@@ -768,12 +853,12 @@
                     }
                     if ((0 >= reponseProbability2) || (reponseProbability2 > 1.0)) {
                         isResponse = false;
-                            layer.open({
-                                type: 4
-                                , content: ['响应概率取值范围(0,1]', '#reponseProbability2']
-                                , tips: [1, '#ff2121']
-                                , time: 3000
-                            });
+                        layer.open({
+                            type: 4
+                            , content: ['响应概率取值范围(0,1]', '#reponseProbability2']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
                     }
                     if (confidenceLevel1.toString() == "NaN") {
                         isResponse = false;
@@ -796,31 +881,31 @@
                     var load;
                     if (isResponse) {
                         load = layer.load();
-                      $.ajax({
-                         type: "post",
-                         data: {
-                             "reponseProbability2": reponseProbability2,
-                             "confidenceLevel": confidenceLevel1,
-                             "langlryExpTableId":@langlryExpTableId
+                        $.ajax({
+                            type: "post",
+                            data: {
+                                "reponseProbability2": reponseProbability2,
+                                "confidenceLevel": confidenceLevel1,
+                                "langlryExpTableId":@langlryExpTableId
                          },
-                         url: '@Url.Action("ResponseProbabilityIntervalEstimate", "LangleyExperiment")',
-                         datatype: "json",
-                         contenttype: "application/json; charset=utf-8",
-                         async: false,
-                          success: function (data) {
-                             layer.close(load);
-                             document.getElementById("danConfidenceInterval1").value = data[0];
-                             document.getElementById("danConfidenceInterval2").value = data[1];
-                             document.getElementById("danConfidenceInterval3").value = data[2];
-                             document.getElementById("shuangConfidenceInterval1").value = data[3];
-                             document.getElementById("shuangConfidenceInterval2").value = data[4];
-                             document.getElementById("shuangConfidenceInterval3").value = data[5];
-                         }
-                      });
+                            url: '@Url.Action("ResponseProbabilityIntervalEstimate", "LangleyExperiment")',
+                            datatype: "json",
+                            contenttype: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (data) {
+                                layer.close(load);
+                                document.getElementById("danConfidenceInterval1").value = data[0];
+                                document.getElementById("danConfidenceInterval2").value = data[1];
+                                document.getElementById("danConfidenceInterval3").value = data[2];
+                                document.getElementById("shuangConfidenceInterval1").value = data[3];
+                                document.getElementById("shuangConfidenceInterval2").value = data[4];
+                                document.getElementById("shuangConfidenceInterval3").value = data[5];
+                            }
+                        });
                     }
                 },
 
-                  //响应点区间估计
+                //响应点区间估计
                 responsePointIntervalEstimate: function () {
                     var reponseProbability2 = parseFloat(document.getElementById("reponseProbability2").value);
                     var confidenceLevel2 = parseFloat(document.getElementById("confidenceLevel2").value);
@@ -875,50 +960,50 @@
                     if (sigma == 0) {
                         isresponseEstimaate = false;
                         layer.open({
-                            title:'错误提示'
+                            title: '错误提示'
                             , content: '当前标准方差为0，不能进行响应点区间估计计算'
                             , time: 3000
-                            ,icon:2
+                            , icon: 2
                         });
                     }
                     var load;
                     if (isresponseEstimaate) {
                         load = layer.load();
-                         $.ajax({
-                             type: "post",
-                             data: {
-                                 "reponseProbability2": reponseProbability2,
-                                 "confidenceLevel2": confidenceLevel2 ,
-                                 "cjl": stimulusQuantity2,
-                                 "favg": document.getElementById("avg").value,
-                                 "fsigma": document.getElementById("sigma").value,
-                                 "langlryExpTableId":@langlryExpTableId
+                        $.ajax({
+                            type: "post",
+                            data: {
+                                "reponseProbability2": reponseProbability2,
+                                "confidenceLevel2": confidenceLevel2,
+                                "cjl": stimulusQuantity2,
+                                "favg": document.getElementById("avg").value,
+                                "fsigma": document.getElementById("sigma").value,
+                                "langlryExpTableId":@langlryExpTableId
                              },
-                             url: '@Url.Action("ResponsePointIntervalEstimate", "LangleyExperiment")',
-                             datatype: "json",
-                             contenttype: "application/json; charset=utf-8",
-                             async: false,
-                             success: function (data) {
-                                 layer.close(load);
-                                 document.getElementById("danConfidenceInterval1").value = data[0];
-                                 document.getElementById("danConfidenceInterval2").value = data[1];
-                                 document.getElementById("danConfidenceInterval3").value = data[2];
-                                 document.getElementById("shuangConfidenceInterval1").value = data[3];
-                                 document.getElementById("shuangConfidenceInterval2").value = data[4];
-                                 document.getElementById("shuangConfidenceInterval3").value = data[5];
-                             }
-                         });
+                            url: '@Url.Action("ResponsePointIntervalEstimate", "LangleyExperiment")',
+                            datatype: "json",
+                            contenttype: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (data) {
+                                layer.close(load);
+                                document.getElementById("danConfidenceInterval1").value = data[0];
+                                document.getElementById("danConfidenceInterval2").value = data[1];
+                                document.getElementById("danConfidenceInterval3").value = data[2];
+                                document.getElementById("shuangConfidenceInterval1").value = data[3];
+                                document.getElementById("shuangConfidenceInterval2").value = data[4];
+                                document.getElementById("shuangConfidenceInterval3").value = data[5];
+                            }
+                        });
                     }
                 }
                 //批量区间计算
-                    , BatchIntervalCalculation: function () {
+                , BatchIntervalCalculation: function () {
                     var isConfi = true;
                     var intervalTypeSelection = 1;
                     var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
                     var yMin = parseFloat(document.getElementById("yMin").value);
                     var yMax = parseFloat(document.getElementById("yMax").value);
                     var Y_Axis = parseFloat(document.getElementById("Y_Axis").value);
-                    var check =document.getElementsByName("intervalTypeSelection3");
+                    var check = document.getElementsByName("intervalTypeSelection3");
                     var avg = parseFloat(document.getElementById("avg").value);
                     var sigma = parseFloat(document.getElementById("sigma").value);
                     for (var i = 0; i < check.length; i++) {
@@ -935,7 +1020,7 @@
                             , time: 3000
                         });
                     }
-                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel>1) {
+                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel > 1) {
                         isConfi = false;
                         layer.open({
                             title: '错误提示'
@@ -959,7 +1044,7 @@
                             type: 4
                             , content: ['Y轴最小值不能为空', '#yMin']
                             , tips: [1, '#ff2121']
-                            ,time:3000
+                            , time: 3000
                         });
                     }
                     if (yMax.toString() == "NaN") {
@@ -980,10 +1065,10 @@
                             , time: 3000
                         });
                     }
-                        var load;
-                        if (isConfi) {
-                            document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
-                            load = layer.load();
+                    var load;
+                    if (isConfi) {
+                        document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
+                        load = layer.load();
                         $.ajax({
                             type: "post"
                             , data: {
@@ -994,9 +1079,9 @@
                                 , "intervalTypeSelection": intervalTypeSelection
                                 , "favg": avg
                                 , "fsigma": sigma
-                                , "langlryExpTableId":@langlryExpTableId
-                            }
-                            , url: '@Url.Action("BatchIntervalCalculation", "LangleyExperiment")'
+                                , "langlryExpTableId":@langlryExpTableId,
+                            },
+                            url: '@Url.Action("BatchIntervalCalculation", "LangleyExperiment")'
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
@@ -1016,7 +1101,7 @@
                             }
                         });
                     }
-                    }
+                },
             }
 
             $('.layui-btn').on('click', function () {
