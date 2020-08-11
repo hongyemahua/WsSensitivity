@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using WsSensitivity.Controllers.UpDowunMethod;
 using WsSensitivity.Models.IDbDrives;
 using WsSensitivity.Models.UpDown;
 

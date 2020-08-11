@@ -12,9 +12,24 @@ namespace WsSensitivity.Controllers
         // GET: LangleyLineChart
         public ActionResult LineChart()
         {
-            ViewData["aArray"] = LangleyPublic.aArray;
-            ViewData["bArray"] = LangleyPublic.bArray;
-            ViewData["cArray"] = LangleyPublic.cArray;
+            string a = "";
+            string b = "";
+            string c = "";
+            List<string> aList = LangleyPublic.aArray;
+            List<string> bList = LangleyPublic.bArray;
+            List<string> cList = LangleyPublic.cArray;
+            for (int i = 0; i< aList.Count; i++)
+            {
+                a += aList[i] + ",";
+                b += bList[i] + ",";
+                c += cList[i] + ",";
+            }
+            a = a.Remove(a.Length - 1 ,1);
+            b = b.Remove(b.Length - 1, 1);
+            c = c.Remove(c.Length - 1, 1);
+            ViewData["a"] = a;
+            ViewData["b"] = b;
+            ViewData["c"] = c;
             ViewData["incredibleIntervalType"] = LangleyPublic.incredibleIntervalType;
             ViewData["incredibleLevelName"] = LangleyPublic.incredibleLevelName;
             return View();

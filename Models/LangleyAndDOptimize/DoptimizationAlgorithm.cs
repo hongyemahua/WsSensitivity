@@ -91,7 +91,7 @@ namespace WsSensitivity.Models.LangleyAndDOptimize
             OutputParameters outputParameters = new OutputParameters();
             outputParameters.sigmaguess = sigmaguess;
             GetDistribution(xArray, vArray, mumin, mumax, 0.000000000000001,ref outputParameters, out z, sigmaguess);
-            pub_function.resolution_getReso(StandardSelection.InverseProcessValue(z), reso, out z);
+            pub_function.resolution_getReso(StandardSelection.ProcessValue(z), reso, out z);
             outputParameters.μ0_final = StandardSelection.GetAvgValue(outputParameters.μ0_final);
             return outputParameters;
         }

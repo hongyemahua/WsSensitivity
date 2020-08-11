@@ -146,15 +146,6 @@
     <Compile Include="Controllers\TechnicalConditionsController.cs" />
     <Compile Include="Controllers\Tool\JsonNetResult.cs" />
     <Compile Include="Controllers\UpDownMethodController.cs" />
-    <Compile Include="Controllers\UpDowunMethod\Functions\Function.cs" />
-    <Compile Include="Controllers\UpDowunMethod\Functions\对数ln.cs" />
-    <Compile Include="Controllers\UpDowunMethod\Functions\对数log.cs" />
-    <Compile Include="Controllers\UpDowunMethod\Functions\幂.cs" />
-    <Compile Include="Controllers\UpDowunMethod\Functions\标准.cs" />
-    <Compile Include="Controllers\UpDowunMethod\MLR_polar.cs" />
-    <Compile Include="Controllers\UpDowunMethod\pub_function.cs" />
-    <Compile Include="Controllers\UpDowunMethod\UpDownIn.cs" />
-    <Compile Include="Controllers\UpDowunMethod\updownMethod.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

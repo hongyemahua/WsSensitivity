@@ -362,8 +362,8 @@
                                                             </div>
 
                                                             <div class="layui-col-md12 layui-col-space5">
-                                                                @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="InputIntervalCalculation" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel"id="excel"  style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
+                                                                @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="excel" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel" id="excel" style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -990,39 +990,39 @@
                     if (isConfi) {
                         document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
                         document.getElementById("excel").classList.add('layui-btn-disabled');
-                        
-                        $.ajax({
-                            type: "post"
-                            , data: {
-                                "BatchConfidenceLevel": BatchConfidenceLevel
-                                , "yMin": yMin
-                                , "yMax": yMax
-                                , "Y_Axis": Y_Axis
-                                , "intervalTypeSelection": intervalTypeSelection
-                                , "favg": avg
-                                , "dop_id":@Model.det.det_Id,
-                                 "fsigma": sigma
-                            }
-                            , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
-                            , datatype: "json"
-                            , contenttype: "application/json; charset=utf-8"
-                            , async: false
-                            , success: function (data) {
-                                document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
-                                document.getElementById("excel").classList.remove('layui-btn-disabled');
-                                var index = layer.open({
-                                    type: 2
-                                    , area: ['70%', '80%']
-                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
-                                    , content: ['../LineChart/LineChart', 'no']
-                                    , btnAlign: 'c'
-                                    , anim: 1
-                                    , closeBtn: 1
 
-                                });
-                            }
-                        });
-                    }
+                    $.ajax({
+                        type: "post"
+                        , data: {
+                            "BatchConfidenceLevel": BatchConfidenceLevel
+                            , "yMin": yMin
+                            , "yMax": yMax
+                            , "Y_Axis": Y_Axis
+                            , "intervalTypeSelection": intervalTypeSelection
+                            , "favg": avg
+                            , "fsigma": sigma
+                            , "dop_id": @Model.det.det_Id
+                        }
+                        , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
+                        , datatype: "json"
+                        , contenttype: "application/json; charset=utf-8"
+                        , async: false
+                        , success: function (data) {
+                            document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            document.getElementById("excel").classList.remove('layui-btn-disabled');
+                            var index = layer.open({
+                                type: 2
+                                , area: ['70%', '80%']
+                                , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                                , content: ['../LineChart/LineChart', 'no']
+                                , btnAlign: 'c'
+                                , anim: 1
+                                , closeBtn: 1
+
+                            });
+                        }
+                    });
+                }
               },
           }
             $('.layui-btn').on('click', function () {
