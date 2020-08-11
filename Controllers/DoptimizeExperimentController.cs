@@ -130,7 +130,7 @@ namespace WsSensitivity.Controllers
         }
         [HttpPost]
         //批量区间估计
-        public ActionResult BatchIntervalCalculation(double BatchConfidenceLevel, double yMin, double yMax, int Y_Axis, int intervalTypeSelection, double favg, int dop_id, double fsigma)
+        public ActionResult BatchIntervalCalculation(double BatchConfidenceLevel, double yMin, double yMax, int Y_Axis, int intervalTypeSelection, double favg, double fsigma, int dop_id)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);

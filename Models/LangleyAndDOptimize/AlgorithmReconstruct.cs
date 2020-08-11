@@ -119,11 +119,11 @@ namespace WsSensitivity.Models
                     IntervalEstimation ie = new IntervalEstimation();
                     if (intervalChoose == 0)
                     {
-                        ie = SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
+                        ie = GetIntervalEstimationValue(SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel));
                     }
                     else
                     {
-                        ie = DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel);
+                        ie = GetIntervalEstimationValue(DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel));
                     }
                     sideReturnData.Y_LowerLimits[i] = ie.Confidence.Down;
                     sideReturnData.Y_Ceilings[i] = ie.Confidence.Up;
