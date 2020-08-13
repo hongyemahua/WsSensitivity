@@ -144,7 +144,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" data-type="responsePoint" id="responsePointButton">
+                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" data-type="responsePoint" id="responsePointButton" disabled>
                                                                     响应点
                                                                 </button>
                                                             </div>
@@ -161,7 +161,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityButton" data-type="responseProbability">响应概率</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityButton" data-type="responseProbability" disabled>响应概率</button>
                                                             </div>
                                                             <div class="layui-col-md3">
                                                                 <input type="text" name="responseProbabilityValue" id="responseProbabilityValue" autocomplete="off" class="layui-input" readonly style="background-color: darkgray">
@@ -211,7 +211,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate">响应概率区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate" disabled>响应概率区间估计</button>
                                                     </div>
                                                 </div>
 
@@ -229,7 +229,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate">响应点区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate" disabled>响应点区间估计</button>
                                                     </div>
                                                 </div>
                                                 <br />
@@ -358,12 +358,12 @@
                                                             </div>
 
                                                             <div class="layui-col-md12 layui-col-space5">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation" disabled>批量区间计算，并导出数据</button>
                                                             </div>
 
                                                             <div class="layui-col-md12 layui-col-space5">
                                                                 @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="excel" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel" id="excel" style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel" id="excel" style="width:100%;" disabled><i class="layui-icon"></i>导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -656,7 +656,7 @@
                     $.ajax({
                         type: "post",
                         data: {
-                            "dop_id":@Model.det.det_Id
+                            "dop_id":@Model.det.det_Id,
                         },
                         url:'../DoptimizeExperiment/PointCalculate',
                         datatype: "json",
@@ -668,11 +668,17 @@
                             document.getElementById("prec99").value = data[2];
                             document.getElementById("prec01").value = data[3];
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                            $("#responsePointButton").removeAttr("disabled");
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityButton").removeAttr("disabled");
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityInterval").removeAttr("disabled");
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
+                            $("#responsePointInterval").removeAttr("disabled");
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            $("#IntervalCalculation").removeAttr("disabled");
                             document.getElementById("excel").classList.remove('layui-btn-disabled');
+                            $("#excel").removeAttr("disabled");
                         }
                     });
                     table.reload('doptimize_list');
@@ -683,16 +689,6 @@
                     var is = true;
                     var responseValue = parseFloat(document.getElementById("responseProbability").value);
                     var sigma = parseFloat(document.getElementById("sigma").value);
-                    if (responseValue.toString() == "NaN") {
-                        is = false;
-                        layer.open({
-                            type:4
-                            ,title: '输入有误'
-                            , content: ['响应概率不能为空', '#responseProbability']
-                            , tips: [1, '#ff2121']
-                            ,time:3000
-                        });
-                    }
                     if (sigma == 0) {
                         is = false;
                         layer.open({
@@ -703,7 +699,18 @@
                             , anim: 6
                         });
                     }
-                    if ((0 >= responseValue) || (responseValue > 1.0)) {
+                    if (responseValue.toString() == "NaN" &is) {
+                        is = false;
+                        layer.open({
+                            type:4
+                            ,title: '输入有误'
+                            , content: ['响应概率不能为空', '#responseProbability']
+                            , tips: [1, '#ff2121']
+                            ,time:3000
+                        });
+                    }
+
+                    if ((0 >= responseValue) || (responseValue > 1.0) & is) {
                         is = false;
                          layer.open({
                              type: 4
@@ -779,7 +786,7 @@
                             , time: 3000
                         });
                     }
-                    if ((0 >= reponseProbability2) || (reponseProbability2 > 1.0)) {
+                    if ((0 >= reponseProbability2) || (reponseProbability2 > 1.0) & isResponse) {
                         isResponse = false;
                             layer.open({
                                 type: 4
@@ -788,7 +795,7 @@
                                 , time: 3000
                             });
                     }
-                    if (confidenceLevel1.toString() == "NaN") {
+                    if ((confidenceLevel1.toString() == "NaN") & isResponse) {
                         isResponse = false;
                         layer.open({
                             type: 4
@@ -797,13 +804,13 @@
                             , time: 3000
                         });
                     }
-                    if (confidenceLevel1 <= 0 || confidenceLevel1 > 1) {
+                    if ((confidenceLevel1 <= 0) || (confidenceLevel1 > 1) & isResponse) {
                         isResponse = false;
                         layer.open({
-                            title: '错误提示'
-                            , content: '置信水平取值范围 (0,1]'
+                            type:4
+                            , content: ['置信水平取值范围 (0,1]','#confidenceLevel1']
                             , time: 3000
-                            , icon: 5
+                            , tips:[1,'#ff2121']
                         });
                     }
                     if (isResponse) {
@@ -837,7 +844,16 @@
                     var stimulusQuantity2 = parseFloat(document.getElementById("stimulusQuantity2").value);
                     var sigma = parseFloat(document.getElementById("sigma").value);
                     var isresponseEstimaate = true;
-                    if (reponseProbability2.toString() == "NaN") {
+                    if (sigma == 0) {
+                        isresponseEstimaate = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '当前标准差为0，不能进行响应点区间估计计算'
+                            , time: 3000
+                            , icon: 2
+                        });
+                    }
+                    if ((reponseProbability2.toString() == "NaN") & isresponseEstimaate) {
                         isresponseEstimaate = false;
                         layer.open({
                             type: 4
@@ -846,7 +862,7 @@
                             , time: 3000
                         });
                     }
-                    if ((0 >= reponseProbability2) || (reponseProbability2 > 1.0)) {
+                    if ((0 >= reponseProbability2) || (reponseProbability2 > 1.0) & isresponseEstimaate) {
                         isresponseEstimaate = false;
                         layer.open({
                             type: 4
@@ -855,7 +871,7 @@
                             , time: 3000
                         });
                     }
-                    if (confidenceLevel2.toString() == "NaN") {
+                    if ((confidenceLevel2.toString() == "NaN") & isresponseEstimaate) {
                         isresponseEstimaate = false;
                         layer.open({
                             type: 4
@@ -864,16 +880,16 @@
                             , time: 3000
                         });
                     }
-                    if (confidenceLevel2 <= 0 || confidenceLevel2 > 1) {
+                    if ((confidenceLevel2 <= 0) || (confidenceLevel2 > 1) & isresponseEstimaate) {
                         isresponseEstimaate = false;
                         layer.open({
-                            title: '错误提示'
-                            , content: '置信水平取值范围 (0,1]'
+                            type: 4
+                            , content: ['置信水平取值范围 (0,1]', '#confidenceLevel2']
                             , time: 3000
-                            , icon: 5
+                            , tips: [1, '#ff2121']
                         });
                     }
-                    if (stimulusQuantity2.toString() == "NaN") {
+                    if ((stimulusQuantity2.toString() == "NaN") & isresponseEstimaate) {
                         isresponseEstimaate = false;
                         layer.open({
                             type: 4
@@ -882,15 +898,7 @@
                             , time: 3000
                         });
                     }
-                    if (sigma == 0) {
-                        isresponseEstimaate = false;
-                        layer.open({
-                            title:'错误提示'
-                            , content: '当前标准差为0，不能进行响应点区间估计计算'
-                            , time: 3000
-                            ,icon:2
-                        });
-                    }
+                    
                     if (isresponseEstimaate) {
                          $.ajax({
                              type: "post",
@@ -942,16 +950,16 @@
                             , time: 3000
                         });
                     }
-                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel>1) {
+                    if ((BatchConfidenceLevel <= 0) || (BatchConfidenceLevel > 1) & isConfi) {
                         isConfi = false;
                         layer.open({
-                            title: '错误提示'
-                            , content: '置信水平取值范围 (0,1]'
+                            type: 4
+                            , content: ['置信水平取值范围 (0,1]', '#BatchConfidenceLevel3']
                             , time: 3000
-                            , icon: 5
+                            , tips: [1, '#ff2121']
                         });
                     }
-                    if (yMin > yMax) {
+                    if (yMin > yMax & isConfi) {
                         isConfi = false;
                         layer.open({
                             title: '错误提示'
@@ -960,7 +968,7 @@
                             , icon: 5
                         });
                     }
-                    if (yMin.toString() == "NaN") {
+                    if ((yMin.toString() == "NaN") & isConfi) {
                         isConfi = false;
                         layer.open({
                             type: 4
@@ -969,7 +977,7 @@
                             ,time:3000
                         });
                     }
-                    if (yMax.toString() == "NaN") {
+                    if ((yMax.toString() == "NaN") & isConfi) {
                         isConfi = false;
                         layer.open({
                             type: 4
@@ -978,7 +986,7 @@
                             , time: 3000
                         });
                     }
-                    if (Y_Axis.toString() == "NaN") {
+                    if ((Y_Axis.toString() == "NaN") & isConfi) {
                         isConfi = false;
                         layer.open({
                             type: 4
@@ -989,8 +997,9 @@
                     }
                     if (isConfi) {
                         document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
+                        $("#IntervalCalculation").attr('disabled','disabled');
                         document.getElementById("excel").classList.add('layui-btn-disabled');
-
+                        $("#excel").attr('disabled','disabled');
                     $.ajax({
                         type: "post"
                         , data: {
@@ -1001,7 +1010,7 @@
                             , "intervalTypeSelection": intervalTypeSelection
                             , "favg": avg
                             , "fsigma": sigma
-                            , "dop_id": @Model.det.det_Id
+                            , "dop_id": @Model.det.det_Id,
                         }
                         , url: '@Url.Action("BatchIntervalCalculation", "DoptimizeExperiment")'
                         , datatype: "json"
@@ -1009,7 +1018,9 @@
                         , async: false
                         , success: function (data) {
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            $("#IntervalCalculation").removeAttr("disabled");
                             document.getElementById("excel").classList.remove('layui-btn-disabled');
+                            $("#execl").removeAttr("disabled");
                             var index = layer.open({
                                 type: 2
                                 , area: ['70%', '80%']
