@@ -26,13 +26,13 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">响应概率</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Srb_ProbabilityResponse" id="Srb_ProbabilityResponse" placeholder="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Srb_ProbabilityResponse" id="Srb_ProbabilityResponse" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">置信水平</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Srb_ConfidencelevelP" id="Srb_ConfidencelevelP" placeholder="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Srb_ConfidencelevelP" id="Srb_ConfidencelevelP" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         @if (res.Equals("S"))
@@ -47,13 +47,13 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">刺激量</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Srb_StimulusQuantity" id="Srb_StimulusQuantity" placeholder="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Srb_StimulusQuantity" id="Srb_StimulusQuantity" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">置信水平</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" placeholder="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         @if (res.Equals("S"))
@@ -138,7 +138,7 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">响应概率</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Fchs_ProbabilityResponse" id="Fchs_ProbabilityResponse" placeholder="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Fchs_ProbabilityResponse" id="Fchs_ProbabilityResponse" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         <div class=" layui-col-md4">
@@ -162,7 +162,7 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">刺激量</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" placeholder="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" value ="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         <div class="layui-col-md4">
@@ -289,7 +289,7 @@
                             , time: 3000
                         });
                     }
-                    if (Srb_ProbabilityResponse > 1.0 || Srb_ProbabilityResponse<=0) {
+                    if ((Srb_ProbabilityResponse > 1.0) || (Srb_ProbabilityResponse <= 0) & is) {
                         is = false;
                         layer.open({
                             type: 4
@@ -298,7 +298,7 @@
                             , time: 3000
                         });
                     }
-                    if (Srb_Confidencelevel.toString() == "NaN") {
+                    if ((Srb_Confidencelevel.toString() == "NaN") & is) {
                         is = false;
                         layer.open({
                              type: 4
@@ -307,7 +307,7 @@
                             , time:3000
                         });
                     }
-                    if (Srb_Confidencelevel > 1.0 || Srb_Confidencelevel <= 0) {
+                    if ((Srb_Confidencelevel > 1.0) || (Srb_Confidencelevel <= 0) & is) {
                         is = false;
                         layer.open({
                             type: 4
@@ -340,7 +340,7 @@
                     var Srb_StimulusQuantity = parseFloat(document.getElementById("Srb_StimulusQuantity").value);
                     var Srb_ConfidencelevelS = parseFloat(document.getElementById("Srb_ConfidencelevelS").value);
                     var is = true;
-                    if (Srb_StimulusQuantity.toString() == "NaN") {
+                    if ((Srb_StimulusQuantity.toString() == "NaN") & is) {
                         is = false;
                         layer.open({
                             type: 4
@@ -349,8 +349,8 @@
                             , time: 3000
                         });
                     }
-                    
-                    if (Srb_ConfidencelevelS.toString() == "NaN") {
+
+                    if ((Srb_ConfidencelevelS.toString() == "NaN") & is) {
                         is = false;
                         layer.open({
                              type: 4
@@ -359,7 +359,7 @@
                             , time: 3000
                         });
                     }
-                    if (Srb_ConfidencelevelS > 1.0 || Srb_ConfidencelevelS <= 0) {
+                    if ((Srb_ConfidencelevelS > 1.0) || (Srb_ConfidencelevelS <= 0) & is) {
                         is = false;
                         layer.open({
                             type: 4
@@ -466,10 +466,10 @@
                     }
                 },
                 Likelihood: function () {
-
+                    alert("似然比法区间计算绘图");
                 },
                 Variancefunction: function () {
-
+                    alert("方差函数");
                 },
             }
             $('.layui-btn').on('click', function () {

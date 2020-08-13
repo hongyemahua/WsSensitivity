@@ -271,15 +271,13 @@ namespace WsSensitivity.Controllers
         }
 
         //删除试验数据
-        [HttpPost]
-        public ActionResult Experiment_delete()
+        public ActionResult Experiment_delete(int id)
         {
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
+
             //UpDownExperiment experiment = new UpDownExperiment();
             //experiment.id = id;
-            return Json(/*dbDrive.Delete(experiment)*/1);
+            string[] str = { "0"};
+            return Json(/*dbDrive.Delete(experiment)*/str);
         }
 
         ////查询
@@ -328,7 +326,7 @@ namespace WsSensitivity.Controllers
         }
 
         //单组试验结果数据
-        public ActionResult GetAllsingleunitList()
+        public ActionResult GetAllsingleunitList(int page,int limit ,int a,int b)
         {
             //当前数据的组Id为upd_Id
             int id = upd_Id;

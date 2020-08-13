@@ -11,7 +11,7 @@
     <link href="~/static/layui/style/admin.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="layui-fluid">
+    <div class="layui-fluid" >
         <div class="layui-col-sm12" style="background:#ffffff;">
             <div class="layui-tab layui-tab-brief" lay-filter="updown_tab">
                 <div class="layui-col-md3 ">
@@ -42,15 +42,18 @@
 
                                 <!--表头工具-->
                                 <script type="text/html" id="toolbarDemo">
-                                    <div class="layui-btn-group layui-col-md6">
+                                    <div class="layui-btn-group layui-col-md7">
                                         <button type="button" class="layui-btn" lay-event="delete">
-                                            <i class="layui-icon layui-icon-delete"></i>删除
+                                            <i class="layui-icon layui-icon-delete"></i>删除(组)
                                         </button>
                                         <button type="button" class="layui-btn" lay-event="tabChange">
                                             <i class="layui-icon layui-icon-chart"></i>计算当前组数据
                                         </button>
                                         <button type="button" class="layui-btn" lay-event="altersetting">
                                             <i class="layui-icon layui-icon-set-sm"></i>修改分析参数
+                                        </button>
+                                        <button type="button" class="layui-btn" lay-event="ModificationTechnicalConditions">
+                                            <i class="layui-icon  layui-icon-set-sm"></i>修改技术条件
                                         </button>
                                         @if (Model.Groupingstate.Equals("多组试验"))
                                         {
@@ -79,7 +82,7 @@
                                     </div>
                                     <div class="layui-col-md2">
                                         <label class="layui-form-label" style="width:auto; text-anchor:inherit">响应状态：</label>
-                                        <div class="layui-input-inline" style="width:100px">
+                                        <div class="layui-input-inline" style="width:50%">
                                             <select name="modules" lay-verify="required" lay-filter="select_response">
                                                 <option value="">请选择</option>
                                                 <option value="1">1-响应</option>
@@ -134,9 +137,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="layui-btn" data-type="ModificationTechnicalConditions">
-                                        <i class="layui-icon  layui-icon-set-sm"></i>修改技术条件
-                                    </button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -170,6 +171,9 @@
                                                     <i class="layui-icon layui-icon-prev"></i>前组
                                                 </button>
                                             }
+                                            <button type="button" class="layui-btn">
+                                                当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.id</span>
+                                            </button>
                                             <button type="button" class="layui-btn" id="aftergroup_singleBtn" name="aftergroup_singleBtn" lay-event="aftergroup_single">
                                                 后组<i class="layui-icon layui-icon-next"></i>
                                             </button>
@@ -532,11 +536,10 @@
         , height: 700
         , toolbar: '#toolbarDemo'
         , cols: [[
-            { type: 'checkbox', fixed: 'left' }
-            , { field: 'Id', title: '编号', sort: true }
-            , { field: 'dtup_Initialstimulus', title: '刺激量' }
+            { field: 'Id', title: '编号', align: 'center', sort: true }
+            , { field: 'dtup_Initialstimulus', align: 'center', title: '刺激量' }
             , { field: 'dtup_response', title: '响应', templet:'#reverse_state', minWidth:80, align:'center' }
-            , { field: 'dtup_Standardstimulus', title: '刺激量(标准)' }
+            , { field: 'dtup_Standardstimulus', align: 'center', title: '刺激量(@Model.Standardstate)' }
             , { title: '操作', align: 'center', fixed: 'right', toolbar: '#state' }
              ]]
         , page: true
@@ -544,7 +547,7 @@
         , text: '对不起，加载出现异常！'
          });
 
-
+                var TabsPage = parent.layer.getFrameIndex(Window.iframeWindow);
     //实验监听头工具栏事件
     table.on('toolbar(updown_list)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id)
@@ -552,35 +555,80 @@
         var role = JSON.stringify(data);
         switch (obj.event) {
             case 'delete':
-                if (data.length === 0) {
-                    
-                    layer.msg('请选择一行');
-                } else {
-                    $.ajax({
-                        type: "post",
-                        url: '../UpDownMethod/Experiment_delete',
-                        datatype: "json",
-                        data: role,
-                        contenttype: "application/json; charset=utf-8",
-                        async: false,
-                        success: function (data) {
-                            if (data) {
-                                layer.msg('删除成功', {
-                                    icon: 1,
-                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                });
+                var is = false;
+                layer.open({
+                    title: '提示信息'
+                    , content: '确认删除该组试验数据？'
+                    , btn: ['确定', '取消']
+                    , icon:7
+                    , yes: function (index, layero) {
+                        layer.close(index);
+                       $.ajax({
+                            type: "post",
+                            url: '../UpDownMethod/Experiment_delete',
+                            datatype: "json",
+                            data: {
+                                "id":@Model.id,
+                            },
+                            contenttype: "application/json; charset=utf-8",
+                            async: false,
+                           success: function (data) {
+                               if (data[0] == '0') {
+                                   var index1 = layer.open({
+                                       type: 2
+                                       , title: "升降法参数设置" //不显示标题栏
+                                       , area: ['65%', '490px']
+                                       , content: "@Url.Action("ParameterSetting", "UpDownMethod")"
+                                       , btn: ['确定', '取消']
+                                       , yes: function (index, layero) {
+                                           var iframeWindow = window['layui-layer-iframe' + index]
+                                               , submitID = 'UpDownMethodParameterSetting-submit'
+                                               , submit = layero.find('iframe').contents().find("#" + submitID);
 
-                            } else {
-                                layer.msg('删除失败', {
-                                    icon: 2,
-                                    shift: -1,  //震动效果
-                                    time: 1000  //1秒关闭
-                                });
+                                           //监听提交
+                                           iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                               var field = data.field; //获取提交的字段
+                                               var experiment = JSON.stringify(field);
+                                               //提交 Ajax 成功后，静态更新表格中的数据
+                                               $.ajax({
+                                                   type: "post",
+                                                   url: '@Url.Action("ParameterSettingData", "UpDownMethod")',
+                                                   datatype: "json",
+                                                   contenttype: "application/json; charset=utf-8",
+                                                   data: experiment,
+                                                   async: false,
+                                                   success: function (data) {
+                                                       if (data[0]) {
+                                                           layer.msg('设置成功', {
+                                                               icon: 1,
+                                                               time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                                           });
+                                                           // location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                                                           parent.top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?upd_id=' + data[1], '升降法实验1');
+
+                                                       }
+                                                   }
+                                               });
+                                               layer.close(index1);
+                                           });
+                                           submit.trigger('click');
+                                       },
+                                       btn2: function (index, layero) {
+                                           parent.location.reload();
+                                           parent.layui.admin.events.closeThisTabs();
+                                       },
+                                       cancel: function (index, layero) {
+                                           parent.location.reload();
+                                           parent.layui.admin.events.closeThisTabs();
+                                       }
+                                   });
+                               } else {
+                                   location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                               }
                             }
-                            table.reload('updown_list');
-                        }
-                    });
-                }
+                     });
+                    },
+                });
                 break;
 
             case 'altersetting':
@@ -652,30 +700,34 @@
                 });
                 break;
             case 'fromergroup'://前一组实验
-                $.ajax({
-                    type: "post",
-                    url: '../UpDownMethod/FromerGroup?upd_id='+@Model.id,
-                    datatype: "json",
-                    contenttype: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (data) {
-                        if (data[0]) {
-                            //document.getElementById("dangqianzuci").value = data[1];
-                            layer.msg('修改成功', {
-                                icon: 1,
-                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            });
-                        } else {
-                            layer.msg('修改失败', {
-                                icon: 2,
-                                shift: -1,  //震动效果
-                                time: 1000  //1秒关闭
-                            });
+                if (!flage) {
+                    tishi();
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: '../UpDownMethod/FromerGroup?upd_id='+@Model.id,
+                        datatype: "json",
+                        contenttype: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (data) {
+                            if (data[0]) {
+                                //document.getElementById("dangqianzuci").value = data[1];
+                                layer.msg('修改成功', {
+                                    icon: 1,
+                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                });
+                            } else {
+                                layer.msg('修改失败', {
+                                    icon: 2,
+                                    shift: -1,  //震动效果
+                                    time: 1000  //1秒关闭
+                                });
+                            }
+                            location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                           //table.reload('updown_list');
                         }
-                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
-                       //table.reload('updown_list');
-                    }
-                });
+                    });
+                }
                 break;
             case 'aftergroup'://后一组实验
                 if (!flage) {
@@ -699,7 +751,7 @@
                                         var iframeWindow = window['layui-layer-iframe' + index]
                                             , submitID = 'testdata_submit'
                                             , submit = layero.find('iframe').contents().find('#' + submitID);
-                   
+
                                         //监听提交
                                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                                             var field = data.field; //获取提交的字段
@@ -790,6 +842,58 @@
                         }
                     });
                 break;
+            case 'ModificationTechnicalConditions':
+                 layer.open({
+                        type: 2
+                        , title: '修改技术条件'
+                        , content: '../UpDownMethod/Add?upd_id='+@Model.id,
+                         area: ['400px', '400px']
+                        , btn: ['确定', '取消']
+                        , yes: function (index, layero) {
+                            var iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'testdata-submit'
+                                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                var field = data.field; //获取提交的字段
+                                if (field.state == 'on') {
+                                    field.state = '启用';
+                                } else {
+                                    field.state = '禁用';
+                                }
+                                var admin = JSON.stringify(field);
+                                //提交 Ajax 成功后，静态更新表格中的数据
+                                $.ajax({
+                                    type: "post",
+                                    url: '../UpDownMethod/UpDownParameter_add',
+                                    datatype: "json",
+                                    contenttype: "application/json; charset=utf-8",
+                                    data: admin,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            layer.msg('添加成功', {
+                                                icon: 1,
+                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                                            });
+                                        } else {
+                                            layer.msg('添加失败', {
+                                                icon: 2,
+                                                shift: -1,  //震动效果
+                                                time: 1000  //1秒关闭
+                                            });
+                                        }
+                                    }
+                                });
+                                table.reload('updown_list');//数据刷新
+                                layer.close(index); //关闭弹层
+                            });
+                            submit.trigger('click');
+                        }
+                    });
+
+                break;
         };
     });
                  //监听工具条事件
@@ -861,8 +965,12 @@
     //单组表格
     table.render({
         elem: '#singleunit_list'
-        , url: '../UpDownMethod/GetAllsingleunitList' //模拟接口
-        , height: 'full-435' //高度最大化减去差值
+        , url: '../UpDownMethod/GetAllsingleunitList?page='+1+'&limit='+10+'&a=' + 2+'&b='+3,//模拟接口
+        ////data: {
+        ////    "a":a,
+        ////    "b":b,
+        ////},
+         height: 'full-435' //高度最大化减去差值
         , cellMinWidth: 206
         , toolbar: '#singleunit_tool'
         , cols: [[
@@ -946,20 +1054,24 @@
                 }
                 break;
             case 'fromergroup_single'://前一组实验
-                $.ajax({
-                    type: "post",
-                    url: '../UpDownMethod/FromerGroupSingle?upd_id='+@Model.id,
-                    datatype: "json",
-                    contenttype: "application/json; charset=utf-8",
-                    async: false,
-                    success: function (data) {
-                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
-                        document.getElementById("UpDownName").innerText = data[2];
-                        //table.reload('singleunit_list');
-                        //table.reload('updown_list'); //数据刷新
+                if (!flage) {
+                    tishi();
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: '../UpDownMethod/FromerGroupSingle?upd_id='+@Model.id,
+                        datatype: "json",
+                        contenttype: "application/json; charset=utf-8",
+                        async: false,
+                        success: function (data) {
+                            location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                            document.getElementById("UpDownName").innerText = data[2];
+                            //table.reload('singleunit_list');
+                            //table.reload('updown_list'); //数据刷新
 
-                    }
-                });
+                        }
+                    });
+                }
                 break;
             case 'aftergroup_single'://后一组实验
                 if (!flage) {
@@ -983,7 +1095,7 @@
                                         var iframeWindow = window['layui-layer-iframe' + index]
                                             , submitID = 'testdata_submit'
                                             , submit = layero.find('iframe').contents().find('#' + submitID);
-                  
+
                                         //监听提交
                                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                                             var field = data.field; //获取提交的字段
@@ -1257,57 +1369,6 @@
                             });
                         }
                     },
-                    ModificationTechnicalConditions: function () {
-                    layer.open({
-                        type: 2
-                        , title: '修改技术条件'
-                        , content: '../UpDownMethod/Add?upd_id='+@Model.id,
-                         area: ['400px', '400px']
-                        , btn: ['确定', '取消']
-                        , yes: function (index, layero) {
-                            var iframeWindow = window['layui-layer-iframe' + index]
-                                , submitID = 'testdata-submit'
-                                , submit = layero.find('iframe').contents().find('#' + submitID);
-
-                            //监听提交
-                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
-                                var field = data.field; //获取提交的字段
-                                if (field.state == 'on') {
-                                    field.state = '启用';
-                                } else {
-                                    field.state = '禁用';
-                                }
-                                var admin = JSON.stringify(field);
-                                //提交 Ajax 成功后，静态更新表格中的数据
-                                $.ajax({
-                                    type: "post",
-                                    url: '../UpDownMethod/UpDownParameter_add',
-                                    datatype: "json",
-                                    contenttype: "application/json; charset=utf-8",
-                                    data: admin,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data) {
-                                            layer.msg('添加成功', {
-                                                icon: 1,
-                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                            });
-                                        } else {
-                                            layer.msg('添加失败', {
-                                                icon: 2,
-                                                shift: -1,  //震动效果
-                                                time: 1000  //1秒关闭
-                                            });
-                                        }
-                                    }
-                                });
-                                table.reload('updown_list');//数据刷新
-                                layer.close(index); //关闭弹层
-                            });
-                            submit.trigger('click');
-                        }
-                    });
-                    }
 
                 }
 

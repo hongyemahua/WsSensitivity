@@ -31,9 +31,6 @@ namespace WsSensitivity.Models.UpDown
         [DisplayName("幂值")]
         public int udt_Power { get; set; }
 
-        [DisplayName("方法状态")]
-        public int udt_Methodstate { get; set; }
-
         [DisplayName("分组状态")]
         public int udt_Groupingstate { get; set; }
 

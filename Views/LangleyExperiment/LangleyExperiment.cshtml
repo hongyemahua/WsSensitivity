@@ -163,7 +163,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" data-type="responsePoint" id="responsePointButton">
+                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" data-type="responsePoint" id="responsePointButton" disabled>
                                                                     响应点
                                                                 </button>
                                                             </div>
@@ -180,7 +180,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="layui-col-md3">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityButton" data-type="responseProbability">响应概率</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityButton" data-type="responseProbability" disabled>响应概率</button>
                                                             </div>
                                                             <div class="layui-col-md3">
                                                                 <input type="text" name="responseProbabilityValue" id="responseProbabilityValue" autocomplete="off" class="layui-input" readonly style="background-color: darkgray">
@@ -238,7 +238,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate">响应概率区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responseProbabilityInterval" data-type="responseProbabilityIntervalEstimate" disabled>响应概率区间估计</button>
                                                     </div>
                                                 </div>
 
@@ -256,7 +256,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-col-md4">
-                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate">响应点区间估计</button>
+                                                        <button type="button" class="layui-btn layui-btn-disabled" style="width:100%;" id="responsePointInterval" data-type="responsePointIntervalEstimate" disabled>响应点区间估计</button>
                                                     </div>
                                                 </div>
                                                 <br />
@@ -385,7 +385,7 @@
                                                             </div>
 
                                                             <div class="layui-col-md12 layui-col-space5">
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation">批量区间计算，并导出数据</button>
+                                                                <button type="button" class="layui-btn layui-btn-disabled" name="IntervalCalculation" id="IntervalCalculation" style="width:100%;" data-type="BatchIntervalCalculation" disabled>批量区间计算，并导出数据</button>
                                                             </div>
 
                                                         </div>
@@ -741,10 +741,15 @@
                             $("#testNumber").text(data[5]);
                             $("#NM").text(data[6]);
                             document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                            $("#responsePointButton").removeAttr("disabled");
                             document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityButton").removeAttr("disabled");
                             document.getElementById("responseProbabilityInterval").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityInterval").removeAttr("disabled","disable");
                             document.getElementById("responsePointInterval").classList.remove('layui-btn-disabled');
+                            $("#responsePointInterval").removeAttr("disabled");
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
+                            $("#IntervalCalculation").removeAttr("disabled");
                         }
                     });
                     table.reload('langley_list');
