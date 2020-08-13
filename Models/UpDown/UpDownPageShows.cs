@@ -7,12 +7,8 @@ namespace WsSensitivity.Models.UpDown
 {
     public class UpDownPageShows
     {
-        public int id { get; set; }
-        public string Groupingstate { get; set; }
-        public string ProductName { get; set; }
-        public string Distribution { get; set; }
-        public string Standardstate { get; set; }
-        public string Methodstate { get; set; }
-
+        public int id { get; set; }//组id
+        public string Groupingstate { get; set; }//分组状态
+        public string ProductName { get; set; }//产品名称
     }
 }

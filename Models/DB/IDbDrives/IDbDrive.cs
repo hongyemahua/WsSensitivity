@@ -1,10 +1,5 @@
-﻿using WsSensitivity.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data;
-using WsSensitivity.Models.UpDown;
 
 namespace WsSensitivity.Models.IDbDrives
 {
@@ -90,15 +85,19 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract bool Delete(DoptimizeDataTable ddt);
         #endregion
 
-        //#region 升降法表数据操作
-        //public abstract bool Inster(UpDownExperiment experiment);
-        //public abstract bool Inster(UpDownGroup testDate);
-        //public abstract bool Delete(UpDownExperiment experiment);
-        //public abstract bool Update(UpDownExperiment experiment);
-        //public abstract List<UpDownExperiment> GetAllUpDownExperiments();
-        //public abstract UpDownExperiment FindUpDownExperiment(int id);
-        //public abstract List<UpDownExperiment> QueryUpDownExperiments(string udt_ProdectName,DateTime stardate,DateTime stopdate);
-        
-        //#endregion
+        #region 升降法表数据操作
+        public abstract bool Insert(UpDownExperiment experiment);
+        public abstract bool Insert(UpDownGroup group);
+        public abstract bool Insert(UpDownDataTable upDownDataTable);
+        public abstract bool Update(UpDownExperiment upDownExperiment);
+        public abstract bool Delete(UpDownDataTable upDownDataTable);
+        public abstract bool Delete(UpDownGroup upDownGroup);
+        public abstract UpDownGroup GetDownGroup(int id);
+        public abstract UpDownExperiment GetUpDownExperiment(int id);
+        public abstract List<UpDownDataTable> GetUpDownDataTables(int id);
+        public abstract List<UpDownView> GetUpDownViews(int id);
+        public abstract List<UpDownView> GetUpDownViews_UDEID(int id);
+        public abstract List<UpDownGroup> GetUpDownGroups(int id);
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace WsSensitivity.Models.UpDown
+namespace WsSensitivity.Models
 {
     public class UpDownExperiment
     {
@@ -29,10 +29,7 @@ namespace WsSensitivity.Models.UpDown
         public int udt_Standardstate { get; set; }
 
         [DisplayName("幂值")]
-        public int udt_Power { get; set; }
-
-        [DisplayName("方法状态")]
-        public int udt_Methodstate { get; set; }
+        public double udt_Power { get; set; }
 
         [DisplayName("分组状态")]
         public int udt_Groupingstate { get; set; }

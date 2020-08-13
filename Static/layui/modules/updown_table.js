@@ -19,10 +19,10 @@ layui.define(['table', 'form','element'], function (exports) {
         , toolbar: '#toolbarDemo'
         , cols: [[
             { type: 'checkbox', fixed: 'left' }
-            , { field: 'id', title: '编号', sort: true }
-            , { field: 'cjl', title: '刺激量' }
-            , { field: 'xy', title: '响应' }
-            , { field: 'cjlbz', title: '刺激量(标准)' }
+            , { field: 'number', title: '编号', sort: true }
+            , { field: 'stimulusQuantity', title: '刺激量' }
+            , { field: 'response', title: '响应' }
+            , { field: 'standardStimulus', title: '刺激量(标准)' }
         ]]
         , page: true
         , limit: 10

@@ -13,7 +13,7 @@ namespace WsSensitivity.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202008110355487_v1"; }
+            get { return "202008110720590_v1"; }
         }
         
         string IMigrationMetadata.Source

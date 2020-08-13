@@ -157,9 +157,13 @@
     <Compile Include="Migrations\201912250259269_InitialCreate1.Designer.cs">
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202008110355487_v1.cs" />
-    <Compile Include="Migrations\202008110355487_v1.Designer.cs">
-      <DependentUpon>202008110355487_v1.cs</DependentUpon>
+    <Compile Include="Migrations\202008110720590_v1.cs" />
+    <Compile Include="Migrations\202008110720590_v1.designer.cs">
+      <DependentUpon>202008110720590_v1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008120150486_V2.cs" />
+    <Compile Include="Migrations\202008120150486_V2.Designer.cs">
+      <DependentUpon>202008120150486_V2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
@@ -179,17 +183,22 @@
     <Compile Include="Models\LangleyAndDOptimize\DistributionSelection.cs" />
     <Compile Include="Models\LangleyExperimentTable.cs" />
     <Compile Include="Models\LangleyAndDOptimize\MethodStandardSelection.cs" />
+    <Compile Include="Models\Lifting\LiftingAlgorithm.cs" />
+    <Compile Include="Models\Lifting\LiftingDistributionSelection.cs" />
+    <Compile Include="Models\Lifting\LiftingMethodStandardSelection.cs" />
+    <Compile Include="Controllers\LiftingPublic.cs" />
+    <Compile Include="Models\Lifting\updownMethod.cs" />
     <Compile Include="Models\MLR_polar.cs" />
     <Compile Include="Models\pub_function.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\SysParam.cs" />
     <Compile Include="Models\updownMethod.cs" />
     <Compile Include="Models\UpDown\NewGroupUpDownTable.cs" />
-    <Compile Include="Models\UpDown\UpDownDataTable.cs" />
-    <Compile Include="Models\UpDown\UpDownExperiment.cs" />
-    <Compile Include="Models\UpDown\UpDownGroup.cs" />
+    <Compile Include="Models\UpDownDataTable.cs" />
+    <Compile Include="Models\UpDownExperiment.cs" />
+    <Compile Include="Models\UpDownGroup.cs" />
     <Compile Include="Models\UpDown\UpDownPageShows.cs" />
-    <Compile Include="Models\UpDown\UpDownView.cs" />
+    <Compile Include="Models\UpDownView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -448,8 +457,11 @@
     <EmbeddedResource Include="Migrations\201912250259269_InitialCreate1.resx">
       <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008110355487_v1.resx">
-      <DependentUpon>202008110355487_v1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008110720590_v1.resx">
+      <DependentUpon>202008110720590_v1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008120150486_V2.resx">
+      <DependentUpon>202008120150486_V2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

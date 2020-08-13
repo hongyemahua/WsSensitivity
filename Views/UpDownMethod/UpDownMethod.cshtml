@@ -1,4 +1,4 @@
-﻿@model WsSensitivity.Models.UpDown.UpDownPageShows
+﻿@model WsSensitivity.Controllers.UpDownMethodModel.
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +15,7 @@
         <div class="layui-col-sm12" style="background:#ffffff;">
             <div class="layui-tab layui-tab-brief" lay-filter="updown_tab">
                 <div class="layui-col-md3 ">
-                    <label class="layui-form-label" id="UpDownName" name="UpDownName" style="width:auto;text-anchor:inherit">升降法：@Model.Distribution@Model.Standardstate/@Model.Methodstate/@Model.Groupingstate</label>
+                    <label class="layui-form-label" id="UpDownName" name="UpDownName" style="width:auto;text-anchor:inherit">升降法：@Model.ExperimentalLabelName/@Model.Groupingstate</label>
                 </div>
                 <ul class="layui-tab-title">
                     @if (Model.Groupingstate.Equals("不分组"))

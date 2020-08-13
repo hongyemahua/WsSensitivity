@@ -6,61 +6,32 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WsSensitivity.Models.IDbDrives;
-using WsSensitivity.Models.UpDown;
+using WsSensitivity.Models;
+using AlgorithmReconstruct;
+using System.Web.Security;
 
 namespace WsSensitivity.Controllers
 {
-    public class SingleunitListData
-    {
-        public int i;
-        public int i2;
-        public int vi;
-        public int mi;
-        public int ivi;
-        public int i2vi;
-        public int imi1;
-        public int i2mi1;
-    }
-    public class ComprehensiveListData
-    {
-        public int Groupid;
-        public double Udt_Initialstimulus;
-        public double Udt_Stepd;
-        public int Datacount;
-        public double Avg;
-        public double Standarddeviation;
-        public double Standarderrormean;
-        public double Standarddeviationerror;
-        public double Analyzewithheuristics;
-        public double G;
-        public double H;
-        public double A;
-        public double B;
-        public double M;
-        public double b;
-        public double p;
-        public double Zeroone;
-        public double Zeronine;
-    }
-
     public class UpDownMethodController : Controller
     {
-        private static int upd_Id;
+        public static UpDownExperiment ude;
+        public static List<UpDownView> udv;
         IDbDrive dbDrive = new LingImp();
-        public static UpDownPageShows upDownMethod = new UpDownPageShows();
-        public ActionResult UpDownMethod(int upd_id)
+        public ActionResult UpDownMethod(int udg_id)
         {
-            int udt_Groupingstate = 0;
-            upd_Id = upd_id;
-            upDownMethod.id = upd_Id;
-            upDownMethod.ProductName = "测试1";
-            upDownMethod.Standardstate = "标准";
-            if (udt_Groupingstate == 1)
-                upDownMethod.Groupingstate = "不分组";
-            else upDownMethod.Groupingstate = "多组试验";
-            upDownMethod.Distribution = "正态";
-            upDownMethod.Methodstate = "传统法";
-            return View(upDownMethod);
+            UpDownMethodModel upDM = new UpDownMethodModel();
+            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(upDownGroup.dudt_ExperimentId);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            upDM.id = udg_id;
+            upDM.ExperimentalId = upDownGroup.dudt_ExperimentId;
+            upDM.ExperimentalLabelName = lr.DistributionNameAndMethodStandardName();
+            upDM.ProductName = upDownExperiment.udt_ProdectName;
+            if (upDownExperiment.udt_Groupingstate == 0)
+                upDM.Groupingstate = "不分组";
+            else 
+                upDM.Groupingstate = "多组试验";
+            return View(upDM);
         }
         public ActionResult Query()
         {
@@ -76,22 +47,33 @@ namespace WsSensitivity.Controllers
 
 
         //修改技术条件页面
-        public ActionResult Add(int upd_id)
+        public ActionResult Add(int udg_id)
         {
-            UpDownExperiment upDown = new UpDownExperiment();
-            upDown.udt_Technicalconditions = "升降法技术条件" + upd_id;
-            return View(upDown);
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            ude = upDownExperiment;
+            udv = list_udv;
+            return View(upDownExperiment);
         }
         //修改技术条件方法
         [HttpPost]
         public ActionResult UpDownParameter_add()
         {
-            return Json(1);
+            var sr = new StreamReader(Request.InputStream);
+            var stream = sr.ReadToEnd();
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            UpDownExperiment upDownExperiment = ude;
+            upDownExperiment.udt_Technicalconditions = js.Deserialize<UpDownExperiment>(stream).udt_Technicalconditions;
+            return Json(dbDrive.Update(upDownExperiment));
         }
         //修改升降法分析参数页面
-        public ActionResult AlterParameterSetting(int id)
+        public ActionResult AlterParameterSetting(int udg_id)
         {
-            return View();
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            ude = upDownExperiment;
+            udv = list_udv;
+            return View(upDownExperiment);
         }
         //修改分析参数
         [HttpPost]
@@ -100,73 +82,131 @@ namespace WsSensitivity.Controllers
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            UpDownExperiment upDownExperiment = js.Deserialize<UpDownExperiment>(stream);
-            string[] str = { "1", "试验数据/分布/标准/分组" };//[0]表示修改状态，[1]代表修改后的试验参数
+            UpDownExperiment upDownExperiment = ude;
+            upDownExperiment.udt_Distribution = js.Deserialize<UpDownExperiment>(stream).udt_Distribution;
+            var isTure = dbDrive.Update(upDownExperiment);
+            double[] xArray = new double[udv.Count];
+            int[] vArray = new int[udv.Count];
+            for (int i = 0; i < udv.Count; i++)
+            {
+                xArray[i] = udv[i].dtup_Standardstimulus;
+                vArray[i] = LiftingPublic.Filp(udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
+            }
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+            double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
+            double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
+            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString() };//[0]表示修改状态，[1]代表修改后的试验参数
             return Json(str);
         }
 
         [HttpPost]//计算当前组数据
-        public ActionResult CalculateCurrentData(int upd_id)
+        public ActionResult CalculateCurrentData(int udg_id)
         {
-            return Json(1);
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            double[] xArray = new double[list_udv.Count];
+            int[] vArray = new int[list_udv.Count];
+            for (int i = 0; i < list_udv.Count; i++)
+            {
+                xArray[i] = list_udv[i].dtup_Standardstimulus;
+                vArray[i] = LiftingPublic.Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
+            }
+            var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+            double[] prec = lr.GetPrec(up.μ0_final,up.σ0_final);
+            double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu,up.Sigma_sigma);
+            string[] value = { up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(),up.b.ToString(),prec[0].ToString(),prec[1].ToString(),rpse[0].ToString(),rpse[1].ToString(),up.p.ToString(),up.G.ToString(),up.n.ToString(),up.H.ToString() };
+            return Json(value);
         }
         [HttpPost]//前一组实验
-        public ActionResult FromerGroup(int upd_id)//2
+        public ActionResult FromerGroup(int udg_id,int ExperimentalId)
         {
-            upd_Id = upd_id - 1;
-            List<string> str = new List<string> { "1", upd_Id + "" };
+            List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
+            //判断当前组是否为第一组
+            bool isTure = false;
+            if (upDownGroups[0].Id != udg_id)
+                isTure = true;
+            string[] str ={ isTure.ToString(), udg_id.ToString()};
             return Json(str);
         }
         [HttpPost]//后一组实验
-        public ActionResult AfterGroup(int upd_id)
+        public ActionResult AfterGroup(int udg_id, int ExperimentalId)
         {
-            //upd_Id = upd_id;
-            upd_Id = upd_id + 1;
-            List<string> str = new List<string>();
-            str.Add(upd_Id + "");
-            if (upd_Id > 2)
-            {//当前组为最后一组
-                str.Add("0");
-                return Json(str);
-            }
-            else
-            {
-                str.Add("1");
-                return Json(str);//当前组不为最后一组
-            }
+            List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
+            //判断当前组是否为最后一组
+            bool isTure = false;
+            if (upDownGroups[upDownGroups.Count - 1].Id != udg_id)
+                isTure = true;
+            string[] str = { isTure.ToString(), udg_id.ToString() };
+            return Json(str);
         }
         //新增多组实验页面
-        public ActionResult Manyexperiments(int id)
+        public ActionResult Manyexperiments(int ExperimentalId,string average,string standardDeviation)
         {
-
-
-            return View();
+            ManyexperimentsModel manyexperimentsModel = new ManyexperimentsModel();
+            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ExperimentalId);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
+            manyexperimentsModel.previousSetNumber = list_udg[list_udg.Count - 1].dudt_Stepd;
+            manyexperimentsModel.currentSetNumber = list_udg.Count + 1;
+            manyexperimentsModel.ProductName = upDownExperiment.udt_ProdectName;
+            manyexperimentsModel.stimulusQuantity = average;
+            manyexperimentsModel.stepLength = standardDeviation;
+            manyexperimentsModel.distribution = LiftingPublic.SelectState(upDownExperiment).DistributionNameAndMethodStandardName();
+            return View(manyexperimentsModel);
         }
         //多组实验参数设置
         [HttpPost]
-        public ActionResult ManyexperimentsSetings()
+        public ActionResult ManyexperimentsSetings(int ExperimentalId)
         {
             var sr = new StreamReader(Request.InputStream);
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
-            UpDownGroup upDownGroup = js.Deserialize<UpDownGroup>(stream);
-            UpDownDataTable upDownDataTable = js.Deserialize<UpDownDataTable>(stream);
-            //以下为测试数据
-            upDownGroup.Id = upd_Id;
+            ManyexperimentsModel mm = js.Deserialize<ManyexperimentsModel>(stream);
+            UpDownGroup upDownGroup = new UpDownGroup();
+            UpDownDataTable upDownDataTable = new UpDownDataTable();
+            upDownGroup.dudt_ExperimentId = ExperimentalId;
+            upDownGroup.dudt_Stepd = double.Parse(mm.stepLength);
+            dbDrive.Insert(upDownGroup);
             upDownDataTable.dtup_DataTableId = upDownGroup.Id;
-            return Json(upd_Id);
+            upDownDataTable.dtup_Standardstimulus = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).GetStandardStimulus(upDownDataTable.dtup_Initialstimulus);
+            upDownDataTable.dtup_Initialstimulus = double.Parse(mm.stimulusQuantity); 
+            upDownDataTable.dtup_response = 0;
+            return Json(dbDrive.Insert(upDownDataTable));
         }
         //撤销最后一组实验数据
         [HttpPost]
-        public ActionResult RevocationData(int upd_id, int id)
+        public ActionResult RevocationData(int udg_id)
         {
-            return Json(1);
+            List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
+            UpDownDataTable upDownDataTable = list_udt[list_udt.Count - 1];
+            return Json(dbDrive.Delete(upDownDataTable));
         }
         //响应不响应
         [HttpPost]
-        public ActionResult InsertData(string response, string sq, int upd_id)
+        public ActionResult InsertData(string response, int udg_id)
         {
-            return Json(true);
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            list_udv[list_udv.Count - 1].dtup_response = int.Parse(response);
+            double[] xArray = new double[list_udv.Count];
+            int[] vArray = new int[list_udv.Count];
+            for (int i = 0; i<list_udv.Count;i++)
+            {
+                xArray[i] = list_udv[i].dtup_Standardstimulus;
+                vArray[i] = LiftingPublic.Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
+            }
+            var up = lr.GetReturn(xArray,vArray,upDownExperiment.udt_Initialstimulus,upDownExperiment.udt_Stepd,out double z,upDownExperiment.udt_Instrumentresolution,out double z1);  
+            UpDownDataTable upDownDataTable = new UpDownDataTable();
+            upDownDataTable.dtup_DataTableId = udg_id;
+            upDownDataTable.dtup_Initialstimulus = z;
+            upDownDataTable.dtup_response = 0;
+            upDownDataTable.dtup_Standardstimulus = z1;
+            bool isTure = dbDrive.Insert(upDownDataTable);
+            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(upDownExperiment.id);
+            string[] value = { isTure.ToString(),LiftingPublic.CurrentSetNumber(list_udg,udg_id).ToString(),(list_udv.Count + 1).ToString(),lr.StepsNumber(xArray,vArray).ToString(),z.ToString()};
+            return Json(value);
         }
         #endregion
 
@@ -177,35 +217,6 @@ namespace WsSensitivity.Controllers
         {
             ViewData["res"] = res;
             return View();
-        }
-        //前一组实验
-        [HttpPost]
-        public ActionResult FromerGroupSingle(int upd_id)//2
-        {
-            upd_Id = upd_id - 1;
-            string name = "单组数据前一组";
-            List<string> str = new List<string> { "1",upd_Id+"",name };
-            return Json(str);
-        }
-        [HttpPost]//后一组实验
-        public ActionResult AfterGroupSingle(int upd_id)
-        {
-            //upd_Id = upd_id;
-            upd_Id = upd_id + 1;
-            List<string> str = new List<string>();
-            str.Add(upd_Id + "");
-            if (upd_Id > 2)
-            {//当前组为最后一组
-                str.Add("0");
-                return Json(str);
-            }
-            else
-            {
-                string name = "单组数据后一组";
-                str.Add(name);
-                str.Add("1");
-                return Json(str);//当前组不为最后一组
-            }
         }
         //单组试验结果响应点计算
         [HttpPost]
@@ -251,15 +262,19 @@ namespace WsSensitivity.Controllers
             JavaScriptSerializer js = new JavaScriptSerializer();
             UpDownExperiment experiment = js.Deserialize<UpDownExperiment>(stream);
             experiment.udt_Creationtime = DateTime.Now.Date;
-            UpDownGroup group = new UpDownGroup();
-            group.Id = 1;
-            group.dudt_ExperimentId = experiment.id;
-            group.dudt_Stepd = experiment.udt_Stepd;
-
-            //updownMethod updownMethod = new updownMethod();
-            //UpDownData upDownData = updownMethod.get_norm_tradition(new double[] { 1200, 1250, 1200 }, new int[] { 0, 1, 1 }, 1200, 50.0);
-            string[] str = { "1", group.Id + "", "测试1" };
-            return Json(str/*dbDrive.Insert(experiment)*/);//需要传输本次实验的ID
+            dbDrive.Insert(experiment);
+            UpDownGroup upDownGroup = new UpDownGroup();
+            upDownGroup.dudt_ExperimentId = experiment.id;
+            upDownGroup.dudt_Stepd = experiment.udt_Stepd;
+            dbDrive.Insert(upDownGroup);
+            UpDownDataTable upDownDataTable = new UpDownDataTable();
+            upDownDataTable.dtup_DataTableId = upDownGroup.Id;
+            upDownDataTable.dtup_Standardstimulus = LiftingPublic.SelectState(experiment).GetStandardStimulus(experiment.udt_Initialstimulus);
+            upDownDataTable.dtup_Initialstimulus = experiment.udt_Initialstimulus;
+            upDownDataTable.dtup_response = 0;
+            var isTure = dbDrive.Insert(upDownDataTable);
+            string[] str = { isTure.ToString(), upDownGroup.Id.ToString() ,experiment.udt_ProdectName };
+            return Json(str);//需要传输本次实验的ID
         }
 
         //获取全部试验数据
@@ -270,16 +285,12 @@ namespace WsSensitivity.Controllers
             return Json(1/*new { code = 0, msg = "", count = experiments.Count, data = experiments }, JsonRequestBehavior.AllowGet*/);
         }
 
-        //删除试验数据
+        //删除当前组试验数据
         [HttpPost]
-        public ActionResult Experiment_delete()
+        public ActionResult Experiment_delete(int udg_id)
         {
-            var sr = new StreamReader(Request.InputStream);
-            var stream = sr.ReadToEnd();
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            //UpDownExperiment experiment = new UpDownExperiment();
-            //experiment.id = id;
-            return Json(/*dbDrive.Delete(experiment)*/1);
+            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
+            return Json(dbDrive.Delete(upDownGroup));
         }
 
         ////查询
@@ -290,116 +301,102 @@ namespace WsSensitivity.Controllers
             return Json(1/*new { code = 0, msg = "", count = experiments.Count, data = experiments }, JsonRequestBehavior.AllowGet*/);
         }
         //查询当前ID下的所有当组实验数据
-        public ActionResult GetAllUpDownMethods()
+        public ActionResult GetAllUpDownMethods(int udg_id, int page = 1, int limit = 20)
         {
             //数据的当前组ID为upd_Id
-            int id = upd_Id;
-            UpDownDataTable upDownData = new UpDownDataTable();
-            upDownData.dtup_DataTableId = upd_Id;
-            upDownData.Id = 1;
-            upDownData.dtup_Initialstimulus = 1;
-            upDownData.dtup_response = 1;
-            upDownData.dtup_Standardstimulus = 1;
-            UpDownDataTable langley2 = new UpDownDataTable();
-            langley2.Id = 2;
-            langley2.dtup_DataTableId = upd_Id;
-            langley2.dtup_Initialstimulus = 2;
-            langley2.dtup_response = 1;
-            langley2.dtup_Standardstimulus = 2;
-            UpDownDataTable langley3 = new UpDownDataTable();
-            langley3.dtup_DataTableId = upd_Id;
-            langley3.Id = 3;
-            langley3.dtup_Initialstimulus = 1400;
-            langley3.dtup_response = 0;
-            langley3.dtup_Standardstimulus = 1500;
-            UpDownDataTable langley4 = new UpDownDataTable();
-            langley4.Id = 4;
-            langley4.dtup_DataTableId = upd_Id;
-            langley4.dtup_Initialstimulus = 250;
-            langley4.dtup_response = 1;
-            langley4.dtup_Standardstimulus = 1000;
-            List<UpDownDataTable> langleys = new List<UpDownDataTable>();
-            langleys.Add(upDownData);
-            langleys.Add(langley2);
-            langleys.Add(langley3);
-            langleys.Add(langley4);
+            List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
+            List<GetAllUpDownMethodsModel> all_udms = new List<GetAllUpDownMethodsModel>();
+            for (int i = 0;i< list_udt.Count;i++)
+            {
+                GetAllUpDownMethodsModel all_udm = new GetAllUpDownMethodsModel();
+                all_udm.number = i + 1;
+                all_udm.stimulusQuantity = list_udt[i].dtup_Initialstimulus;
+                all_udm.response = list_udt[i].dtup_response;
+                all_udm.standardStimulus = list_udt[i].dtup_Standardstimulus;
+                all_udms.Add(all_udm);
+            }
+            all_udms.Reverse();
+            List<GetAllUpDownMethodsModel> PagesUdt = new List<GetAllUpDownMethodsModel>();
+            int last = all_udms.Count - (page - 1) * limit;
+            int first = 0;
+            if (page * limit < all_udms.Count)
+            {
+                first = all_udms.Count - page * limit;
+            }
+            for (int i = first; i < last; i++)
+            {
+                PagesUdt.Add(all_udms[i]);
+            }
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
-            return Json(new { code = 0, msg = "", count = langleys.Count, data = langleys }, JsonRequestBehavior.AllowGet);
+            return Json(new { code = 0, msg = "", count = all_udms.Count, data = PagesUdt }, JsonRequestBehavior.AllowGet);
         }
 
         //单组试验结果数据
-        public ActionResult GetAllsingleunitList()
+        public ActionResult GetAllsingleunitList(int[] i,int[] vi,int[] mi)
         {
-            //当前数据的组Id为upd_Id
-            int id = upd_Id;
-            SingleunitListData listData1 = new SingleunitListData();
-            listData1.i = 1;
-            listData1.i2 = 1;
-            listData1.vi = 2;
-            listData1.mi = 0;
-            listData1.ivi = 2;
-            listData1.i2vi = 2;
-            listData1.imi1 = 0;
-            listData1.i2mi1 = 0;
-            //SingleunitListData listData2 = new SingleunitListData();
-            //listData2.i = 2;
-            //listData2.i2 = 3;
-            //listData2.vi = 2;
-            //listData2.mi = 0;
-            //listData2.ivi = 2;
-            //listData2.i2vi = 2;
-            //listData2.imi1 = 0;
-            //listData2.i2mi1 = 0;
-            //SingleunitListData listData3 = new SingleunitListData();
-            //listData3.i = 1;
-            //listData3.i2 = 1;
-            //listData3.vi = 2;
-            //listData3.mi = 0;
-            //listData3.ivi = 2;
-            //listData3.i2vi = 2;
-            //listData3.imi1 = 0;
-            //listData3.i2mi1 = 0;
-            //SingleunitListData listData4 = new SingleunitListData();
-            //listData4.i = 1;
-            //listData4.i2 = 1;
-            //listData4.vi = 2;
-            //listData4.mi = 0;
-            //listData4.ivi = 2;
-            //listData4.i2vi = 2;
-            //listData4.imi1 = 0;
-            //listData4.i2mi1 = 0;
-            List<SingleunitListData> listDatas = new List<SingleunitListData>();
-            listDatas.Add(listData1);
-            //listDatas.Add(listData2);
-            //listDatas.Add(listData3);
-            //listDatas.Add(listData4);
+            List<SingleExperimentTable> singleExperimentTables = new List<SingleExperimentTable>();
+            for (int w = 0;w<i.Length;w++)
+            {
+                SingleExperimentTable singleExperimentTable = new SingleExperimentTable();
+                singleExperimentTable.i = i[w];
+                singleExperimentTable.i2 = i[w] * i[w];
+                singleExperimentTable.i2mi1 = i[w] * i[w] * mi[w];
+                singleExperimentTable.i2vi = i[w] * i[w] * vi[w];
+                singleExperimentTable.imi1 = i[w] * mi[w];
+                singleExperimentTable.ivi = i[w] * vi[w];
+                singleExperimentTable.mi = mi[w];
+                singleExperimentTable.vi = vi[w];
+                singleExperimentTables.Add(singleExperimentTable);
+            }
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
-            return Json(new { code="",msg="",count=listDatas.Count(),data=listDatas},JsonRequestBehavior.AllowGet);
+            return Json(new { code="",msg="",count=i.Length,data= singleExperimentTables},JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ComprehensiveList()
+        public ActionResult ComprehensiveList(int ude_id)
         {
-            ComprehensiveListData listData = new ComprehensiveListData();
-            listData.Groupid = 1;
-            listData.Udt_Initialstimulus = 4500.45;
-            listData.Udt_Stepd = 56.45;
-            listData.Datacount = 3;
-            listData.Avg = 236.012;
-            listData.Standarddeviation = 34.5;
-            listData.Standarddeviationerror = 67.45087567;
-            listData.Standarderrormean = 4658.9809;
-            listData.Analyzewithheuristics = 45546;
-            listData.G = 34.545;
-            listData.H = 45;
-            listData.A = 89;
-            listData.B = 456;
-            listData.M = 253.021654622;
-            listData.b = 4124;
-            listData.p = 4575;
-            listData.Zeroone = 12.25644;
-            listData.Zeronine = 1256.15;
-            List<ComprehensiveListData> listDatas = new List<ComprehensiveListData>();
-            listDatas.Add(listData);
-            return Json(new { code="",msg="",count=listDatas.Count(),data=listDatas},JsonRequestBehavior.AllowGet);
+            List<ComprehensiveResultsModel> list_crm = new List<ComprehensiveResultsModel>();
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews_UDEID(ude_id);
+            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ude_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ude_id);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            for (int i=0;i< list_udg.Count;i++)
+            {
+                ComprehensiveResultsModel comprehensiveResultsModel = new ComprehensiveResultsModel();
+                List<UpDownView> upDownViews = new List<UpDownView>();
+                foreach (var j in list_udv)
+                {
+                    if (list_udg[i].Id == j.udg_Id)
+                        upDownViews.Add(j);
+                }
+                double[] xArray = new double[list_udv.Count];
+                int[] vArray = new int[list_udv.Count];
+                for (int w = 0; w < list_udv.Count; w++)
+                {
+                    xArray[w] = list_udv[w].dtup_Standardstimulus;
+                    vArray[w] = LiftingPublic.Filp(list_udv[w].dtup_response, upDownExperiment.udt_Flipresponse);
+                }
+                var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+                double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
+                comprehensiveResultsModel.setNumber = i + 1;
+                comprehensiveResultsModel.stimulusQuantity = upDownViews[0].dtup_Initialstimulus;
+                comprehensiveResultsModel.stepLength = upDownViews[0].dudt_Stepd;
+                comprehensiveResultsModel.sampleNumber = upDownViews.Count();
+                comprehensiveResultsModel.average = up.μ0_final;
+                comprehensiveResultsModel.standardDeviation = up.σ0_final;
+                comprehensiveResultsModel.msde = up.Sigma_mu;
+                comprehensiveResultsModel.sdsde = up.Sigma_sigma;
+                comprehensiveResultsModel.temptationNumber = up.n;
+                comprehensiveResultsModel.G = up.G;
+                comprehensiveResultsModel.H = up.H;
+                comprehensiveResultsModel.A = up.A;
+                comprehensiveResultsModel.B = up.B;
+                comprehensiveResultsModel.M = up.M;
+                comprehensiveResultsModel.b = up.b;
+                comprehensiveResultsModel.p = up.p;
+                comprehensiveResultsModel.percentage01 = prec[0];
+                comprehensiveResultsModel.percentage999 = prec[1];
+                list_crm.Add(comprehensiveResultsModel);
+            }
+            return Json(new { code="",msg="",count= list_crm.Count(),data= list_crm},JsonRequestBehavior.AllowGet);
         }
         #region 区间估计
         //响应概率区间估计

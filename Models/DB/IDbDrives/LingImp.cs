@@ -1,14 +1,9 @@
-﻿using WsSensitivity.Models;
-using WsSensitivity.Models.DB;
-using WsSensitivity.Models.IDbDrives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Web;
-using WsSensitivity.Models.UpDown;
+using WsSensitivity.Models.DB;
 
 namespace WsSensitivity.Models.IDbDrives
 {
@@ -479,89 +474,149 @@ namespace WsSensitivity.Models.IDbDrives
         }
         #endregion
 
-        //#region 升降法数据操作
-        //public override bool Inster(UpDownExperiment experiment)
-        //{
-        //    try {
-        //        db.UpDownExperiment.Add(experiment);
-        //        db.SaveChanges();
-        //    }
-        //    catch (Exception) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        #region 升降法数据操作
+        public override bool Insert(UpDownExperiment experiment)
+        {
+            try
+            {
+                db.UpDownExperiment.Add(experiment);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
 
-        //public override bool Inster(UpDown.UpDownGroup testDate)
-        //{
-        //    try {
-        //        db.TestDate.Add(testDate);
-        //        db.SaveChanges();
-        //    }
-        //    catch (Exception) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        public override bool Insert(UpDownGroup group)
+        {
+            try
+            {
+                db.UpDownGroup.Add(group);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
 
-        //public override bool Delete(UpDownExperiment experiment)
-        //{
-        //    UpDownExperiment upDown = db.UpDownExperiment.FirstOrDefault(m=>m.id == experiment.id);
-        //    if (upDown == null)
-        //    {
-        //        return false;
-        //    }
-        //    else {
-        //        try {
-        //            db.UpDownExperiment.Remove(upDown);
-        //            db.SaveChanges();
-        //        } catch (Exception) {
-        //            return false;
-        //        }
-        //        return true;
-        //    }
-        //}
+        public override bool Insert(UpDownDataTable upDownDataTable)
+        {
+            try
+            {
+                db.UpDownDataTable.Add(upDownDataTable);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
 
-        //public override bool Update(UpDownExperiment experiment)
-        //{
-        //    try {
-        //        var entry = db.Set<UpDownExperiment>().Find(experiment.id);
-        //        if (entry != null) {
-        //            db.Entry<UpDownExperiment>(entry).State = EntityState.Detached;
-        //        }
-        //        db.UpDownExperiment.Attach(entry);
-        //        db.Entry(experiment).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //    }
-        //    catch (Exception) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        public override UpDownGroup GetDownGroup(int id)
+        {
+            UpDownGroup udg = new UpDownGroup();
+            udg = db.UpDownGroup.Where(m => m.Id == id).ToList()[0];
+            return udg;
+        }
 
-        //public override List<UpDownExperiment> GetAllUpDownExperiments()
-        //{
-        //    List<UpDownExperiment> upDowns = new List<UpDownExperiment>();
-        //    upDowns = db.UpDownExperiment.ToList();
-        //    return upDowns;
-        //}
+        public override UpDownExperiment GetUpDownExperiment(int id)
+        {
+            UpDownExperiment ude = new UpDownExperiment();
+            ude = db.UpDownExperiment.Where(m => m.id == id).ToList()[0];
+            return ude;
+        }
 
-        //public override UpDownExperiment FindUpDownExperiment(int id)
-        //{
-        //    UpDownExperiment experiment = db.UpDownExperiment.Find(id);
-        //    return experiment;
-        //}
+        public override List<UpDownDataTable> GetUpDownDataTables(int id)
+        {
+            List<UpDownDataTable> udts = new List<UpDownDataTable>();
+            udts = db.UpDownDataTable.Where(m => m.dtup_DataTableId == id).ToList();
+            return udts;
+        }
 
-        //public override List<UpDownExperiment> QueryUpDownExperiments(string udt_ProdectName, DateTime stardate, DateTime stopdate)
-        //{
-        //    List<UpDownExperiment> experiments = udt_ProdectName.Equals("") ? GetAllUpDownExperiments() : db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(udt_ProdectName)).ToList();
-        //    var resultList = from item in experiments
-        //                     where item.udt_Creationtime >= stardate && item.udt_Creationtime <= stopdate
-        //                     select item;
-        //    experiments = resultList.ToList();
-        //    return experiments;
-        //}
+        public override List<UpDownView> GetUpDownViews(int id)
+        {
+            List<UpDownView> udvs = new List<UpDownView>();
+            udvs = db.UpDownView.Where(m => m.udg_Id == id).ToList();
+            return udvs;
+        }
 
-        //#endregion
+        public override List<UpDownGroup> GetUpDownGroups(int id)
+        {
+            List<UpDownGroup> udgs = new List<UpDownGroup>();
+            udgs = db.UpDownGroup.Where(m => m.dudt_ExperimentId == id).ToList();
+            return udgs;
+        }
+
+        public override bool Update(UpDownExperiment upDownExperiment)
+        {
+            try
+            {
+                var entry = db.Set<UpDownExperiment>().Find(upDownExperiment.id);
+                if (entry != null)
+                {
+                    db.Entry<UpDownExperiment>(entry).State = EntityState.Detached; //这个是在同一个上下文能修改的关键
+                }
+                db.UpDownExperiment.Attach(upDownExperiment);
+                db.Entry(upDownExperiment).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override bool Delete(UpDownDataTable upDownDataTable)
+        {
+            UpDownDataTable modle = db.UpDownDataTable.FirstOrDefault(m => m.Id == upDownDataTable.Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.UpDownDataTable.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override bool Delete(UpDownGroup upDownGroup)
+        {
+            UpDownGroup modle = db.UpDownGroup.FirstOrDefault(m => m.Id == upDownGroup.Id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.UpDownGroup.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override List<UpDownView> GetUpDownViews_UDEID(int id)
+        {
+            List<UpDownView> udvs = new List<UpDownView>();
+            udvs = db.UpDownView.Where(m => m.dudt_ExperimentId == id).ToList();
+            return udvs;
+        }
+
+        #endregion
     }
 }

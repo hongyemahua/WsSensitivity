@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace WsSensitivity.Models.UpDown
+namespace WsSensitivity.Models
 {
     public class UpDownGroup
     {
