@@ -57,7 +57,7 @@
                                         </button>
                                         @if (Model.Groupingstate.Equals("多组试验"))
                                         {
-                                            if (Model.id == 1)
+                                            if (Model.IsLastGroup)
                                             {
                                                 <button type="button" class="layui-btn layui-btn-disabled" disabled lay-event="fromergroup">
                                                     <i class="layui-icon layui-icon-prev"></i>前组
@@ -71,7 +71,7 @@
                                             }
                                         }
                                         <button type="button" class="layui-btn">
-                                            当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.id</span>
+                                            当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.GroupNumber</span>
                                         </button>
                                         @if (Model.Groupingstate.Equals("多组试验"))
                                         {
@@ -108,7 +108,9 @@
                                 </script>
 
                                 <script type="text/html" id="state">
+                                    {{# if(d.number == d.count-1){}}
                                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
+                                    {{# } }}
                                 </script>
                             </div>
                             <div class="layui-col-sm12">
@@ -159,7 +161,7 @@
                                         </button>
                                         @if (Model.Groupingstate.Equals("多组试验"))
                                         {
-                                            if (Model.id == 1)
+                                            if (Model.IsLastGroup)
                                             {
                                                 <button type="button" class="layui-btn layui-btn-disabled" disabled lay-event="fromergroup_single">
                                                     <i class="layui-icon layui-icon-prev"></i>前组
@@ -172,7 +174,7 @@
                                                 </button>
                                             }
                                             <button type="button" class="layui-btn">
-                                                当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.id</span>
+                                                当前组次<span class="layui-badge layui-bg-gray" name="dangqianzuci" id="dangqianzuci">@Model.GroupNumber</span>
                                             </button>
                                             <button type="button" class="layui-btn" id="aftergroup_singleBtn" name="aftergroup_singleBtn" lay-event="aftergroup_single">
                                                 后组<i class="layui-icon layui-icon-next"></i>
@@ -536,10 +538,10 @@
         height: 700
         , toolbar: '#toolbarDemo'
         , cols: [[
-            { field: 'Id', title: '编号', align: 'center', sort: true }
-            , { field: 'dtup_Initialstimulus', align: 'center', title: '刺激量' }
-            , { field: 'dtup_response', title: '响应', templet:'#reverse_state', minWidth:80, align:'center' }
-            , { field: 'dtup_Standardstimulus', align: 'center', title: '刺激量(标准)' }
+            { field: 'number', title: '编号', align: 'center', sort: true }
+            , { field: 'stimulusQuantity', align: 'center', title: '刺激量' }
+            , { field: 'response', title: '响应', templet:'#reverse_state', minWidth:80, align:'center' }
+            , { field: 'standardStimulus', align: 'center', title: '刺激量(标准)' }
             , { title: '操作', align: 'center', fixed: 'right', toolbar: '#state' }
              ]]
         , page: true
@@ -632,10 +634,13 @@
                 break;
 
             case 'altersetting':
+                if (!flage) {
+                    tishi();
+                } else {
                 layer.open({
                     type: 2
                     , title: '升降法分析参数设置'
-                    , content: '../UpDownMethod/AlterParameterSetting?udg_id='+@Model.id,
+                    , content: '../UpDownMethod/AlterParameterSetting?udg_id=' +@Model.id,
                     area: ['600px', '230px']
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
@@ -668,7 +673,7 @@
                                             time: 1000  //1秒关闭
                                         });
                                     }
-                                    document.getElementById("UpDownName").innerText = data[1];
+                                    document.getElementById("UpDownName").innerText = data[17];
                                 }
                             });
                             @*location.href = '../UpDownMethod/UpDownMethod?upd_id='+@Model.id;*@
@@ -677,6 +682,7 @@
                         submit.trigger('click');
                     }
                 });
+                }
                 break;
             case 'tabChange'://计算当前组数据
                 $.ajax({
@@ -719,25 +725,17 @@
                 } else {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/FromerGroup?udg_id=' +@Model.id+'&ExperimentalId='+@Model.ExperimentalId,
+                        url: '../UpDownMethod/FromerGroup',
+                         data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                            "setTime":@Model.GroupNumber,
+                        },
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            //if (data[0]) {
-                            //    //document.getElementById("dangqianzuci").value = data[1];
-                            //    layer.msg('修改成功', {
-                            //        icon: 1,
-                            //        time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                            //    });
-                            //} else {
-                            //    layer.msg('修改失败', {
-                            //        icon: 2,
-                            //        shift: -1,  //震动效果
-                            //        time: 1000  //1秒关闭
-                            //    });
-                            //}
-                            location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
+                            location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[2];
                            //table.reload('updown_list');
                         }
                     });
@@ -747,32 +745,31 @@
                 if (!flage) {
                     tishi();
                 } else {
-                    var avg = parseFloat(document.getElementById("avg").value);
-                    var atan = parseFloa(document.getElementById("bzc").value);
+                    var avg = document.getElementById("avg").value;
+                    var atan = document.getElementById("bzc").value;
                     $.ajax({
                        type: "post",
-                        url: '../UpDownMethod/AfterGroup?udg_id=' +@Model.id+'&ExperimentalId='+@Model.ExperimentalId,
+                        url: '../UpDownMethod/AfterGroup',
+                        data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                            "setTime":@Model.GroupNumber,
+                        },
                        datatype: "json",
                        contenttype: "application/json; charset=utf-8",
                        async: false,
                         success: function (data) {
-                            if (!data[0]) {//新增试验
+                            if (data[0] == 'True') {//新增试验
                                 layer.open({
                                     type: 2
                                     , title: '多组实验'
-                                    , content: '../UpDownMethod/Manyexperiments',
-                                    data: {
-                                        "ExperimentalId":@Model.ExperimentalId,
-                                        "average": avg,
-                                        "standardDeviation": atan,
-                                    },
+                                    , content: '../UpDownMethod/Manyexperiments?ExperimentalId=' + data[1] + '&average=' + avg + '&standardDeviation=' + atan,
                                      area: ['600px', '500px']
                                     , btn: ['确定', '取消']
                                     , yes: function (index, layero) {
                                         var iframeWindow = window['layui-layer-iframe' + index]
                                             , submitID = 'testdata_submit'
                                             , submit = layero.find('iframe').contents().find('#' + submitID);
-
                                         //监听提交
                                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                                             var field = data.field; //获取提交的字段
@@ -780,14 +777,14 @@
                                             //提交 Ajax 成功后，静态更新表格中的数据
                                             $.ajax({
                                                 type: "post",
-                                                url: '../UpDownMethod/ManyexperimentsSetings',
+                                                url: '../UpDownMethod/ManyexperimentsSetings?ExperimentalId='+@Model.ExperimentalId,
                                                 datatype: "json",
                                                 contenttype: "application/json; charset=utf-8",
                                                 data: admin,
                                                 async: false,
                                                 success: function (data) {
-                                                    if (data) {
-                                                        location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data;
+                                                    if (data[0]) {
+                                                        location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
                                                         //table.reload('updown_list');
                                                     }
                                                 }
@@ -798,7 +795,7 @@
                                     }
                                 });
                             } else {
-                                location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
+                                location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[2];
                                 //table.reload('updown_list');
                             }
                        }
@@ -1019,6 +1016,10 @@
             , data = checkStatus.data; //获取选中的数据
         switch (obj.event) {
             case 'altersetting':
+                if (!flage) {
+                    tishi();
+                } else {
+
                 layer.open({
                     type: 2
                     , title: '升降法分析参数设置'
@@ -1057,7 +1058,23 @@
                                         });
                                     }
                                     layer.close(index); //关闭弹层
-                                    document.getElementById("UpDownName").innerText = data[1];
+                                    document.getElementById("avg").value = data[1];
+                                    document.getElementById("bzc").value = data[2];
+                                    document.getElementById("jzbzwc").value = data[3];
+                                    document.getElementById("bzcbzwc").value = data[4];
+                                    document.getElementById("a").value = data[5];
+                                    document.getElementById("m").value = data[6];
+                                    document.getElementById("db").value = data[7];
+                                    document.getElementById("b").value = data[8];
+                                    document.getElementById("zeroone").value = data[9];
+                                    document.getElementById("nine").value = data[10];
+                                    document.getElementById("zeroonebzwc").value = data[11];
+                                    document.getElementById("ninebzwc").value = data[12];
+                                    document.getElementById("p").value = data[13];
+                                    document.getElementById("g").value = data[14];
+                                    document.getElementById("stcs").value = data[15];
+                                    document.getElementById("h").value = data[16];
+                                    document.getElementById("UpDownName").innerText = data[17];
                                     table.reload('singleunit_list');
                                 }
                             });
@@ -1065,6 +1082,7 @@
                         submit.trigger('click');
                     }
                 });
+                }
                 break;
             case 'lntervalestimation':
                 if (flage) {
@@ -1084,13 +1102,17 @@
                 } else {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/FromerGroupSingle?upd_id='+@Model.id,
+                        url: '../UpDownMethod/FromerGroup',
+                        data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                            "setTime":@Model.GroupNumber,
+                        },
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
-                            document.getElementById("UpDownName").innerText = data[2];
+                            location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[2];
                             //table.reload('singleunit_list');
                             //table.reload('updown_list'); //数据刷新
 
@@ -1102,18 +1124,25 @@
                 if (!flage) {
                     tishi();
                 } else {
+                    var avg = document.getElementById("avg").value;
+                    var atan = document.getElementById("bzc").value;
                     $.ajax({
                        type: "post",
-                        url: '../UpDownMethod/AfterGroupSingle?upd_id='+@Model.id,
+                        url: '../UpDownMethod/AfterGroup',
+                        data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                            "setTime":@Model.GroupNumber,
+                        },
                        datatype: "json",
                        contenttype: "application/json; charset=utf-8",
                        async: false,
                         success: function (data) {
-                            if (data[1] == "0") {//新增试验
+                            if (data[0] == "True") {//新增试验
                                 layer.open({
                                     type: 2
                                     , title: '多组实验'
-                                    , content: '../UpDownMethod/Manyexperiments?id='+@Model.id,
+                                    , content: '../UpDownMethod/Manyexperiments?ExperimentalId=' + data[1] + '&average=' + avg + '&standardDeviation=' + atan,
                                      area: ['600px', '500px']
                                     , btn: ['确定', '取消']
                                     , yes: function (index, layero) {
@@ -1128,14 +1157,14 @@
                                             //提交 Ajax 成功后，静态更新表格中的数据
                                             $.ajax({
                                                 type: "post",
-                                                url: '../UpDownMethod/ManyexperimentsSetings',
+                                                url: '../UpDownMethod/ManyexperimentsSetings?ExperimentalId='+@Model.ExperimentalId,
                                                 datatype: "json",
                                                 contenttype: "application/json; charset=utf-8",
                                                 data: admin,
                                                 async: false,
                                                 success: function (data) {
-                                                    if (data) {
-                                                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data;
+                                                    if (data[0]) {
+                                                        location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
                                                         //table.reload('singleunit_list');
                                                     }
                                                 }
@@ -1146,7 +1175,7 @@
                                     }
                                 });
                             } else {
-                                location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                                location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[2];
                                 //table.reload('singleunit_list');
                             }
                        }
@@ -1231,6 +1260,8 @@
                     //单组响应点
                     responsePoint: function () {
                         var is = true;
+                        var avg = document.getElementById("avg").value;
+                        var atan = document.getElementById("bzc").value;
                         var ProbabilityResponse = parseFloat(document.getElementById("ProbabilityResponse").value);
                         if (ProbabilityResponse.toString() == "NaN") {
                             is = false;
@@ -1259,7 +1290,9 @@
                                 datatype: "json",
                                 contenttype: "application/json; charset=utf-8",
                                 data: {
-                                    "upd_id":@Model.id,
+                                    "ExperimentalId":@Model.ExperimentalId,
+                                    "average": avg,
+                                    "standardDeviation":atan,
                                     "ResponsePointValue": ProbabilityResponse,
                                 },
                                 async: false,
@@ -1273,6 +1306,8 @@
                     //单组响应概率
                     responseProbability: function () {
                         var is = true;
+                        var avg = document.getElementById("avg").value;
+                        var atan = document.getElementById("bzc").value;
                         var StimulusQuantity = parseFloat(document.getElementById("StimulusQuantity").value);
                         if (StimulusQuantity.toString() == "NaN") {
                             is = false;
@@ -1297,12 +1332,14 @@
                         if (is) {
                             $.ajax({
                                 type: "post",
-                                url: '../UpDownMethod/StimulusQuantity',
+                                url: '../UpDownMethod/ResponsePoint',
                                 datatype: "json",
                                 contenttype: "application/json; charset=utf-8",
                                 data: {
-                                    "upd_id":@Model.id,
-                                    "StimulusQuantityValue": StimulusQuantity,
+                                     "ExperimentalId":@Model.ExperimentalId,
+                                    "average": avg,
+                                    "standardDeviation":atan,
+                                    "ResponsePointValue": StimulusQuantity,
                                 },
                                 async: false,
                                 success: function (data) {
