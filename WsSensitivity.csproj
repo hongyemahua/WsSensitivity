@@ -149,21 +149,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201912170906581_InitialCreate.cs" />
-    <Compile Include="Migrations\201912170906581_InitialCreate.Designer.cs">
-      <DependentUpon>201912170906581_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201912250259269_InitialCreate1.cs" />
-    <Compile Include="Migrations\201912250259269_InitialCreate1.Designer.cs">
-      <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008110720590_v1.cs" />
-    <Compile Include="Migrations\202008110720590_v1.designer.cs">
-      <DependentUpon>202008110720590_v1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008120150486_V2.cs" />
-    <Compile Include="Migrations\202008120150486_V2.Designer.cs">
-      <DependentUpon>202008120150486_V2.cs</DependentUpon>
+    <Compile Include="Migrations\202008140051543_v1.cs" />
+    <Compile Include="Migrations\202008140051543_v1.Designer.cs">
+      <DependentUpon>202008140051543_v1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DoptimizeDataTable.cs" />
@@ -451,17 +439,8 @@
     <Content Include="Views\UpDownMethod\Manyexperiments.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201912170906581_InitialCreate.resx">
-      <DependentUpon>201912170906581_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201912250259269_InitialCreate1.resx">
-      <DependentUpon>201912250259269_InitialCreate1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008110720590_v1.resx">
-      <DependentUpon>202008110720590_v1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008120150486_V2.resx">
-      <DependentUpon>202008120150486_V2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008140051543_v1.resx">
+      <DependentUpon>202008140051543_v1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
