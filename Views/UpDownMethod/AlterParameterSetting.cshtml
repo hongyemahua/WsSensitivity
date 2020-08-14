@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model WsSensitivity.Models.UpDownExperiment
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -17,14 +18,39 @@
                     <fieldset class="layui-elem-field">
                         <label class="layui-form-label">正态分布:</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="1" title="传统法" checked>
-                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="2" title="修正法">
-                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="3" title="结合法">
+                            @if (Model.udt_Distribution == 0)
+                            {
+                                <input type="radio" name="udt_Distribution" id="udt_Distribution" value="0" title="传统法" checked>
+                            }
+                            else {
+                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="0" title="传统法">
+                            }
+                            @if (Model.udt_Distribution == 1)
+                            {
+                                <input type="radio" name="udt_Distribution" id="udt_Distribution" value="1" title="修正法" checked>
+                            }
+                            else {
+                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="1" title="修正法">
+                            }
+                            @if (Model.udt_Distribution == 2)
+                            {
+                                <input type="radio" name="udt_Distribution" id="udt_Distribution" value="2" title="结合法" checked>
+                            }
+                            else {
+                            <input type="radio" name="udt_Distribution" id="udt_Distribution" value="2" title="结合法">
+                            }
+
                         </div>
                     </fieldset>
                 </div>
                 <div class="layui-col-md2">
-                    <input type="radio" name="udt_Distribution" id="ljsdfb" value="4" title="逻辑斯谛分布">
+                    @if (Model.udt_Distribution == 3)
+                    {
+                        <input type="radio" name="udt_Distribution" id="ljsdfb" value="3" title="逻辑斯谛分布" checked>
+                    }
+                    else {
+                    <input type="radio" name="udt_Distribution" id="ljsdfb" value="3" title="逻辑斯谛分布">
+                    }
                 </div>
             </div>
 

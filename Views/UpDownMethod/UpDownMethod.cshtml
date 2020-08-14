@@ -1,4 +1,4 @@
-﻿@model WsSensitivity.Controllers.UpDownMethodModel.
+﻿@model WsSensitivity.Controllers.UpDownMethodModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -117,7 +117,7 @@
                                         <div class="layui-col-md12">
                                             <label class="layui-form-label" style="width:auto">当前试验次数：</label>
                                             <div class="layui-input-block">
-                                                <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber">4</label>
+                                                <label class="layui-form-label" style="width:5%" id="testNumber" name="testNumber">1</label>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +125,7 @@
                                         <div class="layui-col-md12">
                                             <label class="layui-form-label" style="width:auto">当前刺激量：</label>
                                             <div class="layui-input-block">
-                                                <label class="layui-form-label" style="width:5%" id="NM" name="NM">11</label>
+                                                <label class="layui-form-label" style="width:5%" id="NM" name="NM"></label>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +133,7 @@
                                         <div class="layui-col-md12">
                                             <label class="layui-form-label" style="width:40%">台阶数：</label>
                                             <div class="layui-input-block">
-                                                <label class="layui-form-label" style="width:5%" id="label3">22</label>
+                                                <label class="layui-form-label" style="width:5%" id="label3">0</label>
                                             </div>
                                         </div>
                                     </div>
@@ -189,28 +189,28 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">平均值</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="avg" id="avg" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">均值标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:97%" readonly>
+                                                <input type="text" name="jzbzwc" id="jzbzwc" autocomplete="off" class="layui-input" style="width:97%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">A</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="a" id="a" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">B</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="db" id="db" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
@@ -221,28 +221,28 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">标准差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="bzc" id="bzc" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">标准差标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
+                                                <input type="text" name="bzcbzwc" id="bzcbzwc" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">M</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="m" id="m" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">b</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="b" id="b" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
@@ -253,28 +253,28 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">0.1%</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="zeroone" id="zeroone" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">0.1%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
+                                                <input type="text" name="zeroonebzwc" id="zeroonebzwc" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">ρ</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="p" id="p" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">试探次数</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="stcs" id="stcs" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
@@ -285,28 +285,28 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">99.9%</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="nine" id="nine" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">99.9%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
+                                                <input type="text" name="ninebzwc" id="ninebzwc" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">G</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="g" id="g" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">H</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="h" id="h" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
@@ -532,14 +532,14 @@
             //实验表格
     table.render({
         elem: '#updown_list'
-        , url: '../UpDownMethod/GetAllUpDownMethods' //模拟接口
-        , height: 700
+        , url: '../UpDownMethod/GetAllUpDownMethods?udg_id='+@Model.id, //模拟接口
+        height: 700
         , toolbar: '#toolbarDemo'
         , cols: [[
             { field: 'Id', title: '编号', align: 'center', sort: true }
             , { field: 'dtup_Initialstimulus', align: 'center', title: '刺激量' }
             , { field: 'dtup_response', title: '响应', templet:'#reverse_state', minWidth:80, align:'center' }
-            , { field: 'dtup_Standardstimulus', align: 'center', title: '刺激量(@Model.Standardstate)' }
+            , { field: 'dtup_Standardstimulus', align: 'center', title: '刺激量(标准)' }
             , { title: '操作', align: 'center', fixed: 'right', toolbar: '#state' }
              ]]
         , page: true
@@ -568,7 +568,7 @@
                             url: '../UpDownMethod/Experiment_delete',
                             datatype: "json",
                             data: {
-                                "id":@Model.id,
+                                "udg_id":@Model.id,
                             },
                             contenttype: "application/json; charset=utf-8",
                             async: false,
@@ -604,7 +604,7 @@
                                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                                            });
                                                            // location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
-                                                           parent.top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?upd_id=' + data[1], '升降法实验1');
+                                                           parent.top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?udg_id=' + data[1], '升降法实验1');
 
                                                        }
                                                    }
@@ -623,7 +623,7 @@
                                        }
                                    });
                                } else {
-                                   location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                                   location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[0];
                                }
                             }
                      });
@@ -635,7 +635,7 @@
                 layer.open({
                     type: 2
                     , title: '升降法分析参数设置'
-                    , content: '../UpDownMethod/AlterParameterSetting?id='+@Model.id,
+                    , content: '../UpDownMethod/AlterParameterSetting?udg_id='+@Model.id,
                     area: ['600px', '230px']
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
@@ -681,21 +681,35 @@
             case 'tabChange'://计算当前组数据
                 $.ajax({
                     type: "post",
-                    url: '../UpDownMethod/CalculateCurrentData?upd_id='+@Model.id,
+                    url: '../UpDownMethod/CalculateCurrentData?udg_id='+@Model.id,
                     datatype: "json",
                     contenttype: "application/json; charset=utf-8",
                     async: false,
                     success: function (data) {
-                        if (data) {
-                            flage = true;
-                            document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
-                            $("#responsePointButton").removeAttr("disabled", "disabled");
-                            document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
-                            $("#responseProbabilityButton").removeAttr("disabled", "disabled");
-                        }
+                        flage = true;
+                        document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                        $("#responsePointButton").removeAttr("disabled", "disabled");
+                        document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                        $("#responseProbabilityButton").removeAttr("disabled", "disabled");
                         element.tabChange('updown_tab', '22');
                         table.reload('singleunit_list');
                         table.reload('comprehensive_list');
+                        document.getElementById("avg").value = data[0];
+                        document.getElementById("bzc").value = data[1];
+                        document.getElementById("jzbzwc").value = data[2];
+                        document.getElementById("bzcbzwc").value = data[3];
+                        document.getElementById("a").value = data[4];
+                        document.getElementById("m").value = data[5];
+                        document.getElementById("db").value = data[6];
+                        document.getElementById("b").value = data[7];
+                        document.getElementById("zeroone").value = data[8];
+                        document.getElementById("nine").value = data[9];
+                        document.getElementById("zeroonebzwc").value = data[10];
+                        document.getElementById("ninebzwc").value = data[11];
+                        document.getElementById("p").value = data[12];
+                        document.getElementById("g").value = data[13];
+                        document.getElementById("stcs").value = data[14];
+                        document.getElementById("h").value = data[15];
                     }
                 });
                 break;
@@ -705,25 +719,25 @@
                 } else {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/FromerGroup?upd_id='+@Model.id,
+                        url: '../UpDownMethod/FromerGroup?udg_id=' +@Model.id+'&ExperimentalId='+@Model.ExperimentalId,
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         async: false,
                         success: function (data) {
-                            if (data[0]) {
-                                //document.getElementById("dangqianzuci").value = data[1];
-                                layer.msg('修改成功', {
-                                    icon: 1,
-                                    time: 1000 //1秒关闭（如果不配置，默认是3秒）
-                                });
-                            } else {
-                                layer.msg('修改失败', {
-                                    icon: 2,
-                                    shift: -1,  //震动效果
-                                    time: 1000  //1秒关闭
-                                });
-                            }
-                            location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
+                            //if (data[0]) {
+                            //    //document.getElementById("dangqianzuci").value = data[1];
+                            //    layer.msg('修改成功', {
+                            //        icon: 1,
+                            //        time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                            //    });
+                            //} else {
+                            //    layer.msg('修改失败', {
+                            //        icon: 2,
+                            //        shift: -1,  //震动效果
+                            //        time: 1000  //1秒关闭
+                            //    });
+                            //}
+                            location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
                            //table.reload('updown_list');
                         }
                     });
@@ -733,18 +747,25 @@
                 if (!flage) {
                     tishi();
                 } else {
+                    var avg = parseFloat(document.getElementById("avg").value);
+                    var atan = parseFloa(document.getElementById("bzc").value);
                     $.ajax({
                        type: "post",
-                        url: '../UpDownMethod/AfterGroup?upd_id='+@Model.id,
+                        url: '../UpDownMethod/AfterGroup?udg_id=' +@Model.id+'&ExperimentalId='+@Model.ExperimentalId,
                        datatype: "json",
                        contenttype: "application/json; charset=utf-8",
                        async: false,
                         success: function (data) {
-                            if (data[1] == "0") {//新增试验
+                            if (!data[0]) {//新增试验
                                 layer.open({
                                     type: 2
                                     , title: '多组实验'
-                                    , content: '../UpDownMethod/Manyexperiments?id='+@Model.id,
+                                    , content: '../UpDownMethod/Manyexperiments',
+                                    data: {
+                                        "ExperimentalId":@Model.ExperimentalId,
+                                        "average": avg,
+                                        "standardDeviation": atan,
+                                    },
                                      area: ['600px', '500px']
                                     , btn: ['确定', '取消']
                                     , yes: function (index, layero) {
@@ -766,7 +787,7 @@
                                                 async: false,
                                                 success: function (data) {
                                                     if (data) {
-                                                        location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data;
+                                                        location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data;
                                                         //table.reload('updown_list');
                                                     }
                                                 }
@@ -777,7 +798,7 @@
                                     }
                                 });
                             } else {
-                                location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[0];
+                                location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
                                 //table.reload('updown_list');
                             }
                        }
@@ -790,18 +811,19 @@
                         url: "../UpDownMethod/InsertData",
                         type: "post",
                         data: {
-                            "response": data,
-                            "sq": 0,
-                            "upd_id": @Model.id,
+                            "response": 0,
+                            "udg_id": @Model.id,
                         }
                         ,dataType: "json",
                         success: function (data) {
-                            if (data) {
+                            if (data[0]) {
                                 layer.msg('增加成功', {
                                     icon: 1,
                                     time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                 });
-
+                                document.getElementById("testNumber").innerText = data[2];
+                                document.getElementById("NM").innerText = data[4];
+                                document.getElementById("label3").innerText = data[3];
                             } else {
                                 layer.msg('增加失败', {
                                     icon: 2,
@@ -819,9 +841,8 @@
                         url: "../UpDownMethod/InsertData",
                         type: "post",
                         data: {
-                            "response": data,
-                            "sq": 1,
-                            "upd_id": @Model.id,
+                            "response": 1,
+                            "udg_id": @Model.id,
                         }
                         ,dataType: "json",
                         success: function (data) {
@@ -838,6 +859,9 @@
                                     time: 1000  //1秒关闭
                                 });
                             }
+                            document.getElementById("testNumber").innerText = data[2];
+                            document.getElementById("NM").innerText = data[4];
+                            document.getElementById("label3").innerText = data[3];
                             table.reload('updown_list'); //数据刷新
                         }
                     });
@@ -846,7 +870,7 @@
                  layer.open({
                         type: 2
                         , title: '修改技术条件'
-                        , content: '../UpDownMethod/Add?upd_id='+@Model.id,
+                        , content: '../UpDownMethod/Add?udg_id='+@Model.id,
                          area: ['400px', '400px']
                         , btn: ['确定', '取消']
                         , yes: function (index, layero) {
@@ -873,12 +897,12 @@
                                     async: false,
                                     success: function (data) {
                                         if (data) {
-                                            layer.msg('添加成功', {
+                                            layer.msg('修改成功', {
                                                 icon: 1,
                                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                             });
                                         } else {
-                                            layer.msg('添加失败', {
+                                            layer.msg('修改失败', {
                                                 icon: 2,
                                                 shift: -1,  //震动效果
                                                 time: 1000  //1秒关闭
@@ -939,8 +963,7 @@
                         type: "post",
                         data: {
                             "response": data,
-                            "sq": 1,
-                            "upd_id": @Model.id,
+                            "udg_id": @Model.id,
                         }
                         ,dataType: "json",
                         success: function (data) {
@@ -949,7 +972,9 @@
                                     icon: 1,
                                     time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                 });
-
+                                document.getElementById("testNumber").innerText = data[2];
+                                document.getElementById("NM").innerText = data[4];
+                                document.getElementById("label3").innerText = data[3];
                             } else {
                                 layer.msg('增加失败', {
                                     icon: 2,
@@ -997,7 +1022,7 @@
                 layer.open({
                     type: 2
                     , title: '升降法分析参数设置'
-                    , content: '../UpDownMethod/AlterParameterSetting?id='+@Model.id,
+                    , content: '../UpDownMethod/AlterParameterSetting?udg_id='+@Model.id,
                      area: ['600px', '230px']
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
