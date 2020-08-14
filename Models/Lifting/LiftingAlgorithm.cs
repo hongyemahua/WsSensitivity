@@ -28,6 +28,18 @@ namespace AlgorithmReconstruct
         public double b;
         public double p;
     }
+
+    public struct MultigroupTest
+    {
+        public double μ0_final;
+        public double σ0_final;
+        public double Sigma_mu;
+        public double Sigma_sigma;
+        public double prec01;
+        public double prec999;
+        public double rpse01;
+        public double rpse999;
+    }
     public class LiftingAlgorithm
     {
         public LiftingAlgorithm(LiftingMethodStandardSelection liftingMethodStandardSelection,LiftingDistributionSelection liftingDistributionSelection)
@@ -261,25 +273,25 @@ namespace AlgorithmReconstruct
         }
 
         //计算多组试验结果
-        public double[] MultigroupTestResult(int[] nj,double[] Gj,double[] Hj,double[] muj,double[] sigmaj)
+        public MultigroupTest MultigroupTestResult(int[] nj,double[] Gj,double[] Hj,double[] muj,double[] sigmaj)
         {
-            double[] mtr = new double[8];
             int nfinal = 0;
-            mtr = get_multiGroup_result(nj,muj,sigmaj,Gj,Hj,mtr,out nfinal);
-            double f001 = Math.Sqrt(Math.Pow(mtr[2],2) + Math.Pow(mtr[3],2) * Math.Pow(LiftingDistributionSelection.QValue(0.001),2));
-            pub_function.resolution_getReso(f001, 0.000001,out mtr[4]);
-            double f999 = Math.Sqrt(Math.Pow(mtr[2], 2) + Math.Pow(mtr[3], 2) * Math.Pow(LiftingDistributionSelection.QValue(0.999), 2));
-            pub_function.resolution_getReso(f999, 0.000001, out mtr[5]);
-            double p001 = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(mtr[0]) - LiftingDistributionSelection.DistributionProcess() * mtr[1]);
-            pub_function.resolution_getReso(p001,0.000001,out mtr[6]);
-            double p999 = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(mtr[0]) + LiftingDistributionSelection.DistributionProcess() * mtr[1]);
-            pub_function.resolution_getReso(p999,0.000001,out mtr[7]);
-            return mtr;
+            var multigroupTest = get_multiGroup_result(nj,muj,sigmaj,Gj,Hj, out nfinal);
+            double f001 = Math.Sqrt(Math.Pow(multigroupTest.Sigma_mu, 2) + Math.Pow(multigroupTest.Sigma_sigma, 2) * Math.Pow(LiftingDistributionSelection.QValue(0.001),2));
+            pub_function.resolution_getReso(f001, 0.000001,out multigroupTest.prec01);
+            double f999 = Math.Sqrt(Math.Pow(multigroupTest.Sigma_mu, 2) + Math.Pow(multigroupTest.Sigma_sigma, 2) * Math.Pow(LiftingDistributionSelection.QValue(0.999), 2));
+            pub_function.resolution_getReso(f999, 0.000001, out multigroupTest.prec999);
+            double p001 = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(multigroupTest.μ0_final) - LiftingDistributionSelection.DistributionProcess() * multigroupTest.σ0_final);
+            pub_function.resolution_getReso(p001,0.000001,out multigroupTest.rpse01);
+            double p999 = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(multigroupTest.μ0_final) + LiftingDistributionSelection.DistributionProcess() * multigroupTest.σ0_final);
+            pub_function.resolution_getReso(p999,0.000001,out multigroupTest.rpse999);
+            return multigroupTest;
 
         }
 
-        private double[] get_multiGroup_result(int[] n, double[] mu, double[] sigma, double[] G, double[] H, double[] mtr, out int N)
+        private MultigroupTest get_multiGroup_result(int[] n, double[] mu, double[] sigma, double[] G, double[] H, out int N)
         {
+            MultigroupTest multigroupTest = new MultigroupTest();
             double mu_final_zi = 0;
             double mu_final_mu = 0;
             double sigma_final_zi = 0;
@@ -295,13 +307,13 @@ namespace AlgorithmReconstruct
                 sigma_final_mu = sigma_final_mu + n[w] / Math.Pow(H[w], 2);
                 sumN = sumN + n[w];
             }
-            mtr[0] = mu_final_zi / mu_final_mu;
-            mtr[1] = sigma_final_zi / sigma_final_mu;
-            mtr[2] = mtr[0] / Math.Sqrt(mu_final_mu);
-            mtr[3] = mtr[1] / Math.Sqrt(sigma_final_mu);
+            multigroupTest.μ0_final = mu_final_zi / mu_final_mu;
+            multigroupTest.σ0_final = sigma_final_zi / sigma_final_mu;
+            multigroupTest.Sigma_mu = multigroupTest.μ0_final / Math.Sqrt(mu_final_mu);
+            multigroupTest.Sigma_sigma = multigroupTest.σ0_final / Math.Sqrt(sigma_final_mu);
             N = sumN;
-            mtr[0] = LiftingMethodStandardSelection.ProcessValue(mtr[0]);
-            return mtr;
+            multigroupTest.μ0_final = LiftingMethodStandardSelection.ProcessValue(multigroupTest.μ0_final);
+            return multigroupTest;
         }
 
         public string DistributionNameAndMethodStandardName()
