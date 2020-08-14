@@ -22,6 +22,7 @@ namespace WsSensitivity.Controllers
         public double stimulusQuantity { get; set; }
         public int response { get; set; }
         public double standardStimulus { get; set; }
+        public double count { get; set; }
     }
     public class SingleExperimentTable
     {
@@ -85,9 +86,9 @@ namespace WsSensitivity.Controllers
             if (updateException.udt_Distribution == 0)
                 lds = new TraditionalMethod();
             else if (updateException.udt_Distribution == 1)
-                lds = new CombinationMethod();
-            else if (updateException.udt_Distribution == 2)
                 lds = new AmendmentMethod();
+            else if (updateException.udt_Distribution == 2)
+                lds = new CombinationMethod();
             else if (updateException.udt_Distribution == 3)
                 lds = new LiftingLogistic();
 
