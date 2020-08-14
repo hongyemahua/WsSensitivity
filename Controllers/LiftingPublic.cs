@@ -12,6 +12,8 @@ namespace WsSensitivity.Controllers
         public string Groupingstate { get; set; }//分组状态
         public string ProductName { get; set; }//产品名称
         public string ExperimentalLabelName { get; set; }
+        public bool IsLastGroup { get; set; }
+        public int GroupNumber { get; set; }
     }
 
     public class GetAllUpDownMethodsModel

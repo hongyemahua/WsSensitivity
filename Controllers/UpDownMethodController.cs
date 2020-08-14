@@ -22,15 +22,21 @@ namespace WsSensitivity.Controllers
             UpDownMethodModel upDM = new UpDownMethodModel();
             UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(upDownGroup.dudt_ExperimentId);
+            List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(upDownExperiment.id);
             var lr = LiftingPublic.SelectState(upDownExperiment);
             upDM.id = udg_id;
             upDM.ExperimentalId = upDownGroup.dudt_ExperimentId;
             upDM.ExperimentalLabelName = lr.DistributionNameAndMethodStandardName();
             upDM.ProductName = upDownExperiment.udt_ProdectName;
-            if (upDownExperiment.udt_Groupingstate == 0)
-                upDM.Groupingstate = "不分组";
-            else 
-                upDM.Groupingstate = "多组试验";
+            upDM.Groupingstate = upDownExperiment.udt_Groupingstate == 0 ? "不分组" : "多组试验";
+            upDM.IsLastGroup = upDownGroups[upDownGroups.Count - 1].Id == udg_id ? true : false;
+            int count = 1;
+            for (int i = 0; i < upDownGroups.Count; i++)
+            {
+                if (upDownGroups[i].Id != udg_id)
+                    count++;
+            }
+            upDM.GroupNumber = count; 
             return View(upDM);
         }
         public ActionResult Query()
@@ -96,7 +102,7 @@ namespace WsSensitivity.Controllers
             var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
             double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
             double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
-            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString() };//[0]表示修改状态，[1]代表修改后的试验参数
+            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString(),lr.DistributionNameAndMethodStandardName()};//[0]表示修改状态，[1]代表修改后的试验参数
             return Json(str);
         }
 
@@ -120,25 +126,45 @@ namespace WsSensitivity.Controllers
             return Json(value);
         }
         [HttpPost]//前一组实验
-        public ActionResult FromerGroup(int udg_id,int ExperimentalId)
+        public ActionResult FromerGroup(int udg_id,int ExperimentalId,string setTime)
         {
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
             //判断当前组是否为第一组
             bool isTure = false;
+            int st = int.Parse(setTime);
             if (upDownGroups[0].Id != udg_id)
+            {
                 isTure = true;
-            string[] str ={ isTure.ToString(), udg_id.ToString()};
+                st -= st;
+                for (int i = 0;i< upDownGroups.Count;i++)
+                {
+                    if (upDownGroups[i].Id == udg_id)
+                        udg_id = upDownGroups[i - 1].Id;
+                }
+            }
+
+            string[] str = { isTure.ToString(), st.ToString(),udg_id.ToString()};
             return Json(str);
         }
         [HttpPost]//后一组实验
-        public ActionResult AfterGroup(int udg_id, int ExperimentalId)
+        public ActionResult AfterGroup(int udg_id, int ExperimentalId, string setTime)
         {
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
             //判断当前组是否为最后一组
             bool isTure = false;
+            int st = int.Parse(setTime);
             if (upDownGroups[upDownGroups.Count - 1].Id != udg_id)
+            {
                 isTure = true;
-            string[] str = { isTure.ToString(), udg_id.ToString() };
+                st += st;
+                for (int i = 0; i < upDownGroups.Count; i++)
+                {
+                    if (upDownGroups[i].Id == udg_id)
+                        udg_id = upDownGroups[i + 1].Id;
+                }
+            }
+                
+            string[] str = { isTure.ToString(),st.ToString(), udg_id.ToString() };
             return Json(str);
         }
         //新增多组实验页面
@@ -218,17 +244,19 @@ namespace WsSensitivity.Controllers
             ViewData["res"] = res;
             return View();
         }
-        //单组试验结果响应点计算
+        //单组试验结果&&综合计算结果响应点计算
         [HttpPost]
-        public ActionResult ResponsePoint(int upd_id,double ResponsePointValue)
+        public ActionResult ResponsePoint(int ExperimentalId, string average, string standardDeviation, double ResponsePointValue)
         {
-            return Json("55.024");
+            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponsePointCalculation(ResponsePointValue,double.Parse(standardDeviation),double.Parse(average));
+            return Json(rpc);
         }
-        //单组试验结果响应概率计算
+        //单组试验结果&&综合计算结果响应概率计算
         [HttpPost]
-        public ActionResult StimulusQuantity(int upd_id,double StimulusQuantityValue)
+        public ActionResult StimulusQuantity(int ExperimentalId,string average, string standardDeviation, double StimulusQuantityValue)
         {
-            return Json(250.25);
+            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponseProbabilityCalculation(StimulusQuantityValue, double.Parse(standardDeviation), double.Parse(average));
+            return Json(rpc);
         }
 
 
@@ -242,18 +270,18 @@ namespace WsSensitivity.Controllers
             JavaScriptSerializer js = new JavaScriptSerializer();
             return Json(1);
         }
-        //综合试验结果响应点计算
-        [HttpPost]
-        public ActionResult ResponsePointD(int upd_id, double ResponsePointValue)
-        {
-            return Json("885.23");
-        }
-        //综合试验结果响应概率计算
-        [HttpPost]
-        public ActionResult StimulusQuantityD(int upd_id, double StimulusQuantityValue)
-        {
-            return Json(23516.154);
-        }
+        ////综合试验结果响应点计算
+        //[HttpPost]
+        //public ActionResult ResponsePointD(int ExperimentalId, string average, string standardDeviation, double ResponsePointValue)
+        //{
+        //    return Json("885.23");
+        //}
+        ////综合试验结果响应概率计算
+        //[HttpPost]
+        //public ActionResult StimulusQuantityD(int ExperimentalId, string average, string standardDeviation, double StimulusQuantityValue)
+        //{
+        //    return Json(23516.154);
+        //}
         //设置升降法初始参数
         public ActionResult ParameterSettingData()
         {
