@@ -269,11 +269,12 @@ namespace WsSensitivity.Controllers
         #endregion
         //综合结果计算多组试验结果
         [HttpPost]
-        public ActionResult MultipleExperimentsCalculated(int ExperimentalId, int[] nj, double[] Gj, double[] Hj, double[] muj, double[] sigmaj)
+        public ActionResult MultipleExperimentsCalculated(/*int ExperimentalId,*/ int[] nj/* double[] Gj, double[] Hj, double[] muj, double[] sigmaj*/)
         {
-            var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj,Gj,Hj,muj,sigmaj);
-            string[] value = { mtr.μ0_final.ToString(),mtr.σ0_final.ToString(),mtr.Sigma_mu.ToString(),mtr.Sigma_sigma.ToString(),mtr.prec01.ToString(),mtr.prec999.ToString(),mtr.rpse01.ToString(),mtr.rpse999.ToString()};
-            return Json(value);
+            //var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj,Gj,Hj,muj,sigmaj);
+            //string[] value = { mtr.μ0_final.ToString(),mtr.σ0_final.ToString(),mtr.Sigma_mu.ToString(),mtr.Sigma_sigma.ToString(),mtr.prec01.ToString(),mtr.prec999.ToString(),mtr.rpse01.ToString(),mtr.rpse999.ToString()};
+            //return Json(value);
+            return Json(1);
         }
 
         //设置升降法初始参数

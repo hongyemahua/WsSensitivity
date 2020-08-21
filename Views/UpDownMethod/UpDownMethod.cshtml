@@ -575,7 +575,7 @@
                             contenttype: "application/json; charset=utf-8",
                             async: false,
                            success: function (data) {
-                               if (data[0] == '0') {
+                               if (data[1] == '-1') {
                                    var index1 = layer.open({
                                        type: 2
                                        , title: "升降法参数设置" //不显示标题栏
@@ -605,8 +605,7 @@
                                                                icon: 1,
                                                                time: 1000 //1秒关闭（如果不配置，默认是3秒）
                                                            });
-                                                           // location.href = '../UpDownMethod/UpDownMethod?upd_id=' + data[1];
-                                                           parent.top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?udg_id=' + data[1], '升降法实验1');
+                                                           location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
 
                                                        }
                                                    }
@@ -625,7 +624,7 @@
                                        }
                                    });
                                } else {
-                                   location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[0];
+                                   location.href = '../UpDownMethod/UpDownMethod?udg_id=' + data[1];
                                }
                             }
                      });
@@ -1188,20 +1187,20 @@
     //综合表格
     table.render({
         elem: '#comprehensive_list'
-        , url: '../UpDownMethod/ComprehensiveList' //模拟接口
-        , height: 'full-340' //高度最大化减去差值
+        , url: '../UpDownMethod/ComprehensiveList?ude_id='+@Model.ExperimentalId, //模拟接口
+         height: 'full-340' //高度最大化减去差值
         , cellMinWidth: 150
         , toolbar: '#comprehensive_tool'
         , cols: [[
-            { field: 'Groupid', title: '组次', minWidth:80 }
-            , { field: 'Udt_Initialstimulus', title: '刺激量',minWidth:100 }
-            , { field: 'Udt_Stepd', title: '步长' }
-            , { field: 'Datacount', title: '样本量' }
-            , { field: 'Avg', title: '平均值' }
-            , { field: 'Standarddeviation', title: '标准差' }
-            , { field: 'Standarderrormean', title: '均值标准误差', minWidth: 150 }
-            , { field: 'Standarddeviationerror', title: '标准差标准误差', minWidth: 150 }
-            , { field: 'Analyzewithheuristics', title: '分析用试探数', minWidth: 150 }
+            { field: 'setNumber', title: '组次', minWidth:80 }
+            , { field: 'stimulusQuantity', title: '刺激量',minWidth:100 }
+            , { field: 'stepLength', title: '步长' }
+            , { field: 'sampleNumber', title: '样本量' }
+            , { field: 'average', title: '平均值' }
+            , { field: 'standardDeviation', title: '标准差' }
+            , { field: 'msde', title: '均值标准误差', minWidth: 150 }
+            , { field: 'sdsde', title: '标准差标准误差', minWidth: 150 }
+            , { field: 'temptationNumber', title: '分析用试探数', minWidth: 150 }
             , { field: 'G', title: 'G' }
             , { field: 'H', title: 'H' }
             , { field: 'A', title: 'A' }
@@ -1209,13 +1208,22 @@
             , { field: 'M', title: 'M' }
             , { field: 'b', title: 'b' }
             , { field: 'p', title: 'p' }
-            , { field: 'Zeroone', title: '0.1%' }
-            , { field: 'Zeronine', title: '99.9%' }
+            , { field: 'percentage01', title: '0.1%' }
+            , { field: 'percentage999', title: '99.9%' }
         ]]
         , page: true
         , limit: 10
         , text: '对不起，加载出现异常！'
-    });
+                });
+                var nj = [1, 2, 3];
+                var Gj = new Array();
+                var Hj = new Array();
+                var muj = new Array();
+                var sigmaj = new Array();
+                Gj = [4, 5, 6];
+                Hj = [7, 8, 9];
+                muj = [12, 34, 45];
+                sigmaj = [23,45,7];
     //综合监听头工具栏事件
     table.on('toolbar(comprehensive_list)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id)
@@ -1223,14 +1231,25 @@
         switch (obj.event) {
             //计算多组试验结果
             case 'MultipleExperimentsCalculated':
+               
                 if (flage) {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/MultipleExperimentsCalculated?id=' +@Model.id,
+                        url: '../UpDownMethod/MultipleExperimentsCalculated',
+                        data: {
+                            //"ExperimentalId":1,
+                            "nj": nj,
+                            //"Gj": Gj,
+                            //"Hj": Hj,
+                            //"muj": muj,
+                            //"sigmaj": sigmaj
+                        },
+                        traditional: true,
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
                         data: obj.data,
                         async: false,
+                        cache: false,
                         success: function (data) {
                             document.getElementById("responsePointButtonD").classList.remove('layui-btn-disabled');
                             $("#responsePointButtonD").removeAttr("disabled", "disabled");
