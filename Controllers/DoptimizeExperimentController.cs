@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Spire.Pdf.Exporting.XPS.Schema;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -35,11 +38,11 @@ namespace WsSensitivity.Controllers
             double mean = ddt.ddt_Mean;
             double standardDeviation = ddt.ddt_StandardDeviation;
             double[] precs = lr.Precs(mean, standardDeviation);
-            string[] value = { mean.ToString("f6"), standardDeviation.ToString("f6"), precs[0].ToString("f6"), precs[1].ToString("f6") }; 
+            string[] value = { mean.ToString("f6"), standardDeviation.ToString("f6"), precs[0].ToString("f6"), precs[1].ToString("f6") };
             return Json(value);
         }
         //根据Id获取该id的D优化法数据
-        public ActionResult GetAllDoptimizes(int dop_id,int page = 1, int limit = 20)
+        public ActionResult GetAllDoptimizes(int dop_id, int page = 1, int limit = 20)
         {
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
             List<DoptimizeDataTable> PagesLdt = new List<DoptimizeDataTable>();
@@ -55,24 +58,24 @@ namespace WsSensitivity.Controllers
             }
             if (page == 1)
                 PagesLdt.RemoveRange(PagesLdt.Count - 1, 1);
-            return Json(new { code = 0, msg = "", count = ddt_list.Count - 1, data = DoptimizePublic.GetDoptimizes(PagesLdt,ddt_list.Count) }, JsonRequestBehavior.AllowGet) ;
+            return Json(new { code = 0, msg = "", count = ddt_list.Count - 1, data = DoptimizePublic.GetDoptimizes(PagesLdt, ddt_list.Count) }, JsonRequestBehavior.AllowGet);
         }
         //响应操作
         [HttpPost]
-        public JsonResult InsertData(int dop_id,string response,string sq)
+        public JsonResult InsertData(int dop_id, string response, string sq)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
             ddt_list[ddt_list.Count - 1].ddt_StimulusQuantity = sq != "" ? double.Parse(sq) : ddt_list[ddt_list.Count - 1].ddt_StimulusQuantity;
             ddt_list[ddt_list.Count - 1].ddt_Response = int.Parse(response);
-            var der_list = DoptimizePublic.DoptimizeExperimentRecoedsList(ddt_list,det);
+            var der_list = DoptimizePublic.DoptimizeExperimentRecoedsList(ddt_list, det);
             var xAndV = DoptimizePublic.ReturnXarrayAndVarray(der_list);
             var outputParameter = DoptimizePublic.SelectState(det).GetResult(xAndV.xArray, xAndV.vArray, det.det_StimulusQuantityFloor, det.det_StimulusQuantityCeiling, det.det_PrecisionInstruments, out double z, ddt_list[ddt_list.Count - 1].ddt_SigmaGuess);
             DoptimizeDataTable ddt = ddt_list[ddt_list.Count - 1];
-            DoptimizePublic.UpdateDoptimizeDataTable(ref ddt,outputParameter,response,sq);
+            DoptimizePublic.UpdateDoptimizeDataTable(ref ddt, outputParameter, response, sq);
             dbDrive.Update(ddt);
             bool isTurn = dbDrive.Insert(DoptimizePublic.DoptimizeDataTable(det.det_Id, dbDrive, double.Parse(z.ToString("f6")), outputParameter));
-            string[] value = { isTurn.ToString(), ddt_list.Count.ToString(), z.ToString()};
+            string[] value = { isTurn.ToString(), ddt_list.Count.ToString(), z.ToString() };
             return Json(value);
         }
         //撤销操作
@@ -83,12 +86,12 @@ namespace WsSensitivity.Controllers
             var isTurn = dbDrive.Delete(ddt_list[ddt_list.Count - 1]);
             int updateShowNumber = ddt_list.Count - 2;
             double nextStimulusQuantity = ddt_list[ddt_list.Count - 2].ddt_StimulusQuantity;
-            string[] valve = { isTurn.ToString(), updateShowNumber.ToString(), nextStimulusQuantity.ToString()};
+            string[] valve = { isTurn.ToString(), updateShowNumber.ToString(), nextStimulusQuantity.ToString() };
             return Json(valve);
         }
         //响应点
         [HttpPost]
-        public JsonResult ResponsePointCalculate(int dop_id,double fq, double favg, double fsigma)
+        public JsonResult ResponsePointCalculate(int dop_id, double fq, double favg, double fsigma)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             var lr = DoptimizePublic.SelectState(det);
@@ -96,7 +99,7 @@ namespace WsSensitivity.Controllers
         }
         [HttpPost]
         //响应概率计算
-        public ActionResult ResponseProbabilityCalculate(int dop_id,double fq, double favg, double fsigma)
+        public ActionResult ResponseProbabilityCalculate(int dop_id, double fq, double favg, double fsigma)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             var lr = DoptimizePublic.SelectState(det);
@@ -104,7 +107,7 @@ namespace WsSensitivity.Controllers
         }
         //响应概率区间估计
         [HttpPost]
-        public ActionResult ResponseProbabilityIntervalEstimate(int dop_id,double reponseProbability2, double confidenceLevel)
+        public ActionResult ResponseProbabilityIntervalEstimate(int dop_id, double reponseProbability2, double confidenceLevel)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
@@ -117,7 +120,7 @@ namespace WsSensitivity.Controllers
         }
         //响应点区间估计
         [HttpPost]
-        public ActionResult ResponsePointIntervalEstimate(int dop_id,double reponseProbability2, double confidenceLevel2, double cjl, double favg, double fsigma)
+        public ActionResult ResponsePointIntervalEstimate(int dop_id, double reponseProbability2, double confidenceLevel2, double cjl, double favg, double fsigma)
         {
             DoptimizeExperimentTable det = dbDrive.GetDoptimizeExperimentTable(dop_id);
             List<DoptimizeDataTable> ddt_list = dbDrive.GetDoptimizeDataTables(dop_id);
@@ -166,29 +169,37 @@ namespace WsSensitivity.Controllers
         }
         //文件接收方法
         [HttpPost]
-        public ActionResult InputIntervalCalculation(string SheetName, HttpPostedFileBase excel)
+        public ActionResult InputIntervalCalculation()
         {
-            string filename = Request.MapPath("~/Excel/") + Path.GetFileName(excel.FileName);
-            excel.SaveAs(filename); //这两句是把要上传的excel先保存到本地路径 然后获取
-            //string filename = "导出信息";  //文件的命名   
-            //string constr = "server=.;database=aaa;user=sa;pwd=sa"; //连接数据库
-
-            //using (SqlConnection conn = new SqlConnection(constr))
-            //{
-            //    conn.Open();
-
-            //    string sql = "select * from table1"; //这里是你要导出的数据信息 sql 语句
-            //    SqlCommand comm = new SqlCommand(sql, conn);
-            //    System.Data.DataTable dt = new System.Data.DataTable();
-            //    SqlDataAdapter ada = new SqlDataAdapter(comm);
-            //    ada.Fill(dt);
-            //    ExcelHelper.ExcelHelper eh = new ExcelHelper.ExcelHelper(filename.ToString());
-            //    var result = eh.DataTableToExcelX(dt, "导出信息", true);
-
-            //    return File(result, "application/vnd.ms-excel", " " + filename + ".xlsx");
-            //}
-
+            try
+            {
+                HttpFileCollectionBase files = Request.Files;
+                HttpPostedFileBase file = files[0];
+                string filename = file.FileName;
+                string savePath = Server.MapPath("/UploadExcel/") + filename;
+                file.SaveAs(savePath);
+                //File.SetAttributes(savePath, FileAttributes.Normal);
+                var list_excels = ExcelHelper.ExcelToDataTable(savePath);
+                //List<RegNumInfo> regList = ConvertDtToInfo(dt);//将datatable转为list
+            }
+            catch (Exception ex)
+            { 
+            }
             return View();
+        }
+
+        [HttpPost]
+        //导出excel
+        public JsonResult ExportXls(int DoptimizeExpTableId)
+        {
+            try
+            {
+                DoptimizeExperimentTable doptimizeExperimentTable = dbDrive.GetDoptimizeExperimentTable(DoptimizeExpTableId);
+                List<DoptimizeDataTable> ddts = dbDrive.GetDoptimizeDataTables(doptimizeExperimentTable.det_Id);
+                FreeSpire.DoptimizeFreeSpireExcel(doptimizeExperimentTable, ddts);
+            }
+            catch (Exception ex) { }
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }

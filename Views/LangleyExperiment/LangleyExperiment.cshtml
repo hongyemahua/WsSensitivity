@@ -94,6 +94,7 @@
                         <label class="layui-form-label" style="width:auto">兰利法: @langLeyStringName/@langLeyName</label>
                     </div>
                 </div>
+                
             </div>
             <div class="layui-card layui-col-sm12">
                 <div class="layui-tab">
@@ -189,16 +190,17 @@
                                                     </div>
                                                     <div class="layui-col-md4 layui-col-space10">
                                                         <div class="layui-btn-group layui-col-md12">
-                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="ParameterSetting">
+                                                            <button type="button" class="layui-btn" style="width:50%;" data-type="ParameterSetting">
                                                                 修改分析参数
+                                                            </button>
+                                                            <button type="button" class="layui-btn" style="width:50%;" data-type="technicalconditions">
+                                                                技术条件
                                                             </button>
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
-
-                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions">
-                                                                技术条件
+                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Excel">
+                                                                导出excel
                                                             </button>
-
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
 
@@ -1106,6 +1108,19 @@
                             }
                         });
                     }
+                },
+                Excel: function () {
+                    $.ajax({
+                        type: "post"
+                        ,data: { "langlryExpTableId":@langlryExpTableId}
+                        ,url: '@Url.Action("ExportXls", "LangleyExperiment")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                        , success: function (data) {
+
+                        }
+                    });
                 },
             }
 

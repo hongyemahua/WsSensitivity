@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc.Routing.Constraints;
 
 namespace WsSensitivity.Models
 {
@@ -67,7 +68,7 @@ namespace WsSensitivity.Models
                 return intervalEstimations;
             }
 
-            private IntervalEstimation GetIntervalEstimationValue(IntervalEstimation rt)
+            public IntervalEstimation GetIntervalEstimationValue(IntervalEstimation rt)
             {
                 rt.Confidence.Down = StandardSelection.ProcessValue(rt.Confidence.Down);
                 rt.Confidence.Up = StandardSelection.ProcessValue(rt.Confidence.Up);

@@ -6,6 +6,10 @@ using System.Web.Mvc;
 using WsSensitivity.Models;
 using WsSensitivity.Models.IDbDrives;
 using static WsSensitivity.Models.AlgorithmReconstruct;
+using Spire.Xls;
+using WebGrease.Css.Ast;
+using Microsoft.Ajax.Utilities;
+using System.Drawing;
 
 namespace WsSensitivity.Controllers
 {
@@ -187,6 +191,20 @@ namespace WsSensitivity.Controllers
                 LangleyPublic.incredibleIntervalType = "拟然比区间计算-双侧置信区间";
             LangleyPublic.incredibleLevelName = BatchConfidenceLevel.ToString();
             return Json(true);
+        }
+
+        [HttpPost]
+        //导出excel
+        public JsonResult ExportXls(int langlryExpTableId)
+        {
+            try
+            {
+                LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(langlryExpTableId);
+                List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
+                FreeSpire.LangleyFreeSpireExcel(langlryExpTable, ldts);
+            }
+            catch (Exception ex) { }
+            return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
 }

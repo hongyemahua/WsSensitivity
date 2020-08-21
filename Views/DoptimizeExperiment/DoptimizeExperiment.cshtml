@@ -173,6 +173,12 @@
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="technicalconditions">
                                                                 技术条件
                                                             </button>
+                                                            
+                                                        </div>
+                                                        <div class="layui-btn-group layui-col-md12">
+                                                            <button type="button" class="layui-btn" style="width:100%;" data-type="Excel">
+                                                                导出excel
+                                                            </button>
                                                         </div>
                                                         <div class="layui-btn-group layui-col-md12">
                                                             <button type="button" class="layui-btn" style="width:100%;" data-type="pointcalculate">
@@ -363,7 +369,7 @@
 
                                                             <div class="layui-col-md12 layui-col-space5">
                                                                 @*<button type="button" class="layui-btn layui-btn-disabled" name="InputIntervalCalculation" id="excel" style="width:100%;" data-type="InputBatchIntervalCalculation">导入批量区间计算数据</button>*@
-                                                                <button type="button" class="layui-btn layui-btn-disabled" name="excel" id="excel" style="width:100%;" disabled><i class="layui-icon"></i>导入批量区间计算数据</button>
+                                                                <button type="button" class="layui-btn" name="excel" id="excel" style="width:100%;"><i class="layui-icon"></i>导入批量区间计算数据</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -898,7 +904,7 @@
                             , time: 3000
                         });
                     }
-                    
+
                     if (isresponseEstimaate) {
                          $.ajax({
                              type: "post",
@@ -1035,6 +1041,19 @@
                     });
                 }
               },
+                Excel: function () {
+                    $.ajax({
+                        type: "post"
+                        , data: { "DoptimizeExpTableId":@Model.det.det_Id}
+                        ,url: '@Url.Action("ExportXls", "DoptimizeExperiment")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                        , success: function (data) {
+
+                        }
+                    });
+                },
           }
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
@@ -1043,7 +1062,17 @@
         });
 
 
-
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#excel'
+            , url: '@Url.Action("InputIntervalCalculation", "DoptimizeExperiment")' //改成您自己的上传接口
+            , accept: 'file' //普通文件
+            , exts:'xls|xlsx'
+            , done: function (res) {
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
     </script>
 
 </body>
