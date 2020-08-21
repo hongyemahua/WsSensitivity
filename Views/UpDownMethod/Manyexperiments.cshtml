@@ -1,4 +1,4 @@
-﻿
+﻿@model WsSensitivity.Controllers.ManyexperimentsModel
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,39 +20,39 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">上一组步长：</label>
                         <div class="layui-input-block">
-                            <input type="text" autocomplete="off" placeholder="11" class="layui-input" readonly>
+                            <input type="text" autocomplete="off" placeholder="@Model.previousSetNumber" class="layui-input" readonly>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">当前组次：</label>
                         <div class="layui-input-block">
-                            <input type="text" autocomplete="off" placeholder="22" class="layui-input" readonly>
+                            <input type="text" autocomplete="off" placeholder="@Model.currentSetNumber" class="layui-input" readonly>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">产品名称：</label>
                         <div class="layui-input-block">
-                            <input type="text" autocomplete="off" placeholder="33" class="layui-input" readonly>
+                            <input type="text" autocomplete="off" placeholder="@Model.ProductName" class="layui-input" readonly>
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">初始刺激量：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dtup_Initialstimulus" id="dtup_Initialstimulus" autocomplete="off" value="44" class="layui-input">
+                            <input type="text" name="stimulusQuantity" id="stimulusQuantity" autocomplete="off" value="@Model.stimulusQuantity" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">步长：</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dudt_Stepd" id="dudt_Stepd" autocomplete="off" value="55" class="layui-input">
+                            <input type="text" name="stepLength" id="stepLength" autocomplete="off" value="@Model.stepLength" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">分布方式：</label>
                         <div class="layui-input-block">
-                            <input type="text" autocomplete="off" placeholder="66" class="layui-input" readonly>
+                            <input type="text" autocomplete="off" placeholder="@Model.distribution" class="layui-input" readonly>
                         </div>
                     </div>
                     <div class="layui-form-item layui-hide">

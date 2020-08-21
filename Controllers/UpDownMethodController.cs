@@ -29,12 +29,13 @@ namespace WsSensitivity.Controllers
             upDM.ExperimentalLabelName = lr.DistributionNameAndMethodStandardName();
             upDM.ProductName = upDownExperiment.udt_ProdectName;
             upDM.Groupingstate = upDownExperiment.udt_Groupingstate == 0 ? "不分组" : "多组试验";
-            upDM.IsLastGroup = upDownGroups[upDownGroups.Count - 1].Id == udg_id ? true : false;
-            int count = 1;
+            upDM.IsLastGroup = upDownGroups[0].Id == udg_id ? true : false;
+            int count = 0;
             for (int i = 0; i < upDownGroups.Count; i++)
             {
-                if (upDownGroups[i].Id != udg_id)
                     count++;
+                if (upDownGroups[i].Id == udg_id)
+                    break;
             }
             upDM.GroupNumber = count; 
             return View(upDM);
@@ -101,8 +102,9 @@ namespace WsSensitivity.Controllers
             var lr = LiftingPublic.SelectState(upDownExperiment);
             var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
             double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
+            var group = upDownExperiment.udt_Groupingstate == 0 ? "不分组" : "多组试验";
             double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
-            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString(),lr.DistributionNameAndMethodStandardName()};//[0]表示修改状态，[1]代表修改后的试验参数
+            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString(),"升降法："+lr.DistributionNameAndMethodStandardName()+"/"+group};//[0]表示修改状态，[1]代表修改后的试验参数
             return Json(str);
         }
 
@@ -135,14 +137,15 @@ namespace WsSensitivity.Controllers
             if (upDownGroups[0].Id != udg_id)
             {
                 isTure = true;
-                st -= st;
+                --st;
                 for (int i = 0;i< upDownGroups.Count;i++)
                 {
-                    if (upDownGroups[i].Id == udg_id)
+                    if (upDownGroups[i].Id == udg_id) {
                         udg_id = upDownGroups[i - 1].Id;
+                        break;
+                    }
                 }
             }
-
             string[] str = { isTure.ToString(), st.ToString(),udg_id.ToString()};
             return Json(str);
         }
@@ -151,28 +154,30 @@ namespace WsSensitivity.Controllers
         {
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
             //判断当前组是否为最后一组
-            bool isTure = false;
+            bool isTure = true;
             int st = int.Parse(setTime);
             if (upDownGroups[upDownGroups.Count - 1].Id != udg_id)
             {
-                isTure = true;
-                st += st;
+                isTure = false;
+                ++st;
                 for (int i = 0; i < upDownGroups.Count; i++)
                 {
-                    if (upDownGroups[i].Id == udg_id)
+                    if (upDownGroups[i].Id == udg_id) {
                         udg_id = upDownGroups[i + 1].Id;
+                        break;
+                    }
                 }
-            }
-                
-            string[] str = { isTure.ToString(),st.ToString(), udg_id.ToString() };
+            } 
+            string[] str = { isTure.ToString(),ExperimentalId.ToString(), udg_id.ToString() };
             return Json(str);
         }
         //新增多组实验页面
-        public ActionResult Manyexperiments(int ExperimentalId,string average,string standardDeviation)
+        public ActionResult Manyexperiments(string ExperimentalId,string average,string standardDeviation)
         {
+            int Experimentalid = Int32.Parse(ExperimentalId);
             ManyexperimentsModel manyexperimentsModel = new ManyexperimentsModel();
-            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ExperimentalId);
-            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
+            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(Experimentalid);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(Experimentalid);
             manyexperimentsModel.previousSetNumber = list_udg[list_udg.Count - 1].dudt_Stepd;
             manyexperimentsModel.currentSetNumber = list_udg.Count + 1;
             manyexperimentsModel.ProductName = upDownExperiment.udt_ProdectName;
@@ -264,11 +269,12 @@ namespace WsSensitivity.Controllers
         #endregion
         //综合结果计算多组试验结果
         [HttpPost]
-        public ActionResult MultipleExperimentsCalculated(int ExperimentalId, int[] nj, double[] Gj, double[] Hj, double[] muj, double[] sigmaj)
+        public ActionResult MultipleExperimentsCalculated(/*int ExperimentalId,*/ int[] nj/* double[] Gj, double[] Hj, double[] muj, double[] sigmaj*/)
         {
-            var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj,Gj,Hj,muj,sigmaj);
-            string[] value = { mtr.μ0_final.ToString(),mtr.σ0_final.ToString(),mtr.Sigma_mu.ToString(),mtr.Sigma_sigma.ToString(),mtr.prec01.ToString(),mtr.prec999.ToString(),mtr.rpse01.ToString(),mtr.rpse999.ToString()};
-            return Json(value);
+            //var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj,Gj,Hj,muj,sigmaj);
+            //string[] value = { mtr.μ0_final.ToString(),mtr.σ0_final.ToString(),mtr.Sigma_mu.ToString(),mtr.Sigma_sigma.ToString(),mtr.prec01.ToString(),mtr.prec999.ToString(),mtr.rpse01.ToString(),mtr.rpse999.ToString()};
+            //return Json(value);
+            return Json(1);
         }
 
         //设置升降法初始参数

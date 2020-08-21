@@ -20,112 +20,108 @@
                         <legend>拟然比区间估计方法</legend>
                         <div class="layui-field-box">
                             <div class="layui-row layui-col-space15">
-
-                                <div class="layui-col-md12 layui-col-space10">
-                                    <div class="layui-col-md12 layui-col-space5">
-                                        <div class="layui-col-md4">
-                                            <label class="layui-form-label">响应概率</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="Srb_ProbabilityResponse" id="Srb_ProbabilityResponse" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                @if (res.Equals("S"))
+                                {
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <div class="layui-col-md12 layui-col-space5">
+                                            <div class="layui-col-md4">
+                                                <label class="layui-form-label">响应概率</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Srb_ProbabilityResponse" id="Srb_ProbabilityResponse" value="0.999" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="layui-col-md4">
-                                            <label class="layui-form-label">置信水平</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="Srb_ConfidencelevelP" id="Srb_ConfidencelevelP" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            <div class="layui-col-md4">
+                                                <label class="layui-form-label">置信水平</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Srb_ConfidencelevelP" id="Srb_ConfidencelevelP" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                </div>
                                             </div>
-                                        </div>
-                                        @if (res.Equals("S"))
-                                        {
                                             <div class="layui-col-md4">
                                                 <button type="button" class="layui-btn" style="width:100%;" data-type="IntervalEstimationResponseProbability">响应概率区间估计</button>
                                             </div>
-                                        }
+                                        </div>
+
+                                        <div class="layui-col-md12 layui-col-space5">
+                                            <div class="layui-col-md4">
+                                                <label class="layui-form-label">刺激量</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Srb_StimulusQuantity" id="Srb_StimulusQuantity" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-md4">
+                                                <label class="layui-form-label">置信水平</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                </div>
+                                            </div>
+                                                <div class="layui-col-md4">
+                                                    <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
+                                                </div>
+                                        </div>
                                     </div>
+                                }
 
                                     <div class="layui-col-md12 layui-col-space5">
-                                        <div class="layui-col-md4">
-                                            <label class="layui-form-label">刺激量</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="Srb_StimulusQuantity" id="Srb_StimulusQuantity" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>双侧置信区间</legend>
+                                            <div class="layui-field-box">
+                                                <div class="layui-row">
+                                                    <div class="layui-col-md12 layui-col-space5">
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="Points" id="Points" placeholder="响应点置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="Intervals" id="Intervals" placeholder="均值置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="StandardIntervals" id="StandardIntervals" placeholder="标准差置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="layui-col-md4">
-                                            <label class="layui-form-label">置信水平</label>
-                                            <div class="layui-input-block">
-                                                <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
-                                            </div>
-                                        </div>
-                                        @if (res.Equals("S"))
-                                        {
-                                            <div class="layui-col-md4">
-                                                <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
-                                            </div>
-                                        }
+                                        </fieldset>
                                     </div>
-                                </div>
 
-                                <div class="layui-col-md12 layui-col-space5">
-                                    <fieldset class="layui-elem-field">
-                                        <legend>双侧置信区间</legend>
-                                        <div class="layui-field-box">
-                                            <div class="layui-row">
-                                                <div class="layui-col-md12 layui-col-space5">
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">响应点置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="Points" id="Points" placeholder="响应点置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                    <div class="layui-col-md12 layui-col-space10">
+                                        <fieldset class="layui-elem-field">
+                                            <legend>单侧置信区间</legend>
+                                            <div class="layui-field-box">
+                                                <div class="layui-row">
+                                                    <div class="layui-col-md12 layui-col-space5">
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">响应点置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="Point" id="Point" placeholder="响应点置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">均值置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="Intervals" id="Intervals" placeholder="均值置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">均值置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="Interval" id="Interval" placeholder="均值置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">标准差置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="StandardIntervals" id="StandardIntervals" placeholder="标准差置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                        <div class="layui-col-md4">
+                                                            <label class="layui-form-label" style="width:auto">标准差置信区间</label>
+                                                            <div class="layui-input-block">
+                                                                <input type="text" name="StandardInterval" id="StandardInterval" placeholder="标准差置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
+                                        </fieldset>
+                                    </div>
 
-                                <div class="layui-col-md12 layui-col-space10">
-                                    <fieldset class="layui-elem-field">
-                                        <legend>单侧置信区间</legend>
-                                        <div class="layui-field-box">
-                                            <div class="layui-row">
-                                                <div class="layui-col-md12 layui-col-space5">
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">响应点置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="Point" id="Point" placeholder="响应点置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">均值置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="Interval" id="Interval" placeholder="均值置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
-                                                        </div>
-                                                    </div>
-                                                    <div class="layui-col-md4">
-                                                        <label class="layui-form-label" style="width:auto">标准差置信区间</label>
-                                                        <div class="layui-input-block">
-                                                            <input type="text" name="StandardInterval" id="StandardInterval" placeholder="标准差置信区间" autocomplete="off" class="layui-input" style="width:93%" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
                                 </div>
-
-                            </div>
                         </div>
                     </fieldset>
 
