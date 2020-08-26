@@ -178,9 +178,7 @@ namespace WsSensitivity.Controllers
                 string filename = file.FileName;
                 string savePath = Server.MapPath("/UploadExcel/") + filename;
                 file.SaveAs(savePath);
-                //File.SetAttributes(savePath, FileAttributes.Normal);
                 var list_excels = ExcelHelper.ExcelToDataTable(savePath);
-                //List<RegNumInfo> regList = ConvertDtToInfo(dt);//将datatable转为list
             }
             catch (Exception ex)
             { 

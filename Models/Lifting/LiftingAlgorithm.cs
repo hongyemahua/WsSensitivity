@@ -77,7 +77,7 @@ namespace AlgorithmReconstruct
         public int StepsNumber(double[] xArray,int[] vArray)
         {
             int tjs;
-            updownMethod.upanddown_tjs(xArray.Length - 1,xArray,vArray,out tjs);
+            updownMethod.upanddown_tjs(xArray.Length,xArray,vArray,out tjs);
             return tjs;
         }
 
@@ -309,7 +309,7 @@ namespace AlgorithmReconstruct
             }
             multigroupTest.μ0_final = mu_final_zi / mu_final_mu;
             multigroupTest.σ0_final = sigma_final_zi / sigma_final_mu;
-            multigroupTest.Sigma_mu = multigroupTest.μ0_final / Math.Sqrt(mu_final_mu);
+            multigroupTest.Sigma_mu = multigroupTest.σ0_final / Math.Sqrt(mu_final_mu);
             multigroupTest.Sigma_sigma = multigroupTest.σ0_final / Math.Sqrt(sigma_final_mu);
             N = sumN;
             multigroupTest.μ0_final = LiftingMethodStandardSelection.ProcessValue(multigroupTest.μ0_final);

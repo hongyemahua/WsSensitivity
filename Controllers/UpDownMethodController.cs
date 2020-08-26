@@ -9,6 +9,9 @@ using WsSensitivity.Models.IDbDrives;
 using WsSensitivity.Models;
 using AlgorithmReconstruct;
 using System.Web.Security;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Web.WebSockets;
+using System.Net.Sockets;
 
 namespace WsSensitivity.Controllers
 {
@@ -33,15 +36,23 @@ namespace WsSensitivity.Controllers
             int count = 0;
             for (int i = 0; i < upDownGroups.Count; i++)
             {
-                    count++;
+                count++;
                 if (upDownGroups[i].Id == udg_id)
                     break;
             }
-            upDM.GroupNumber = count; 
+            upDM.GroupNumber = count;
             return View(upDM);
         }
         public ActionResult Query()
         {
+            var udes = dbDrive.GetUpDownExperiments();
+            List<string> productName = new List<string>();
+            foreach (var ude in udes)
+            {
+                if (!productName.Contains(ude.udt_ProdectName))
+                    productName.Add(ude.udt_ProdectName);
+            }
+            ViewData["pn"] = productName;
             return View();
         }
         public ActionResult ParameterSetting()
@@ -104,7 +115,7 @@ namespace WsSensitivity.Controllers
             double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
             var group = upDownExperiment.udt_Groupingstate == 0 ? "不分组" : "多组试验";
             double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
-            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString(),"升降法："+lr.DistributionNameAndMethodStandardName()+"/"+group};//[0]表示修改状态，[1]代表修改后的试验参数
+            string[] str = { isTure.ToString(), up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[1].ToString(), prec[0].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString(), "升降法：" + lr.DistributionNameAndMethodStandardName() + "/" + group };//[0]表示修改状态，[1]代表修改后的试验参数
             return Json(str);
         }
 
@@ -112,23 +123,18 @@ namespace WsSensitivity.Controllers
         public ActionResult CalculateCurrentData(int udg_id)
         {
             List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
             var lr = LiftingPublic.SelectState(upDownExperiment);
-            double[] xArray = new double[list_udv.Count];
-            int[] vArray = new int[list_udv.Count];
-            for (int i = 0; i < list_udv.Count; i++)
-            {
-                xArray[i] = list_udv[i].dtup_Standardstimulus;
-                vArray[i] = LiftingPublic.Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
-            }
-            var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
-            double[] prec = lr.GetPrec(up.μ0_final,up.σ0_final);
-            double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu,up.Sigma_sigma);
-            string[] value = { up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(),up.b.ToString(),prec[0].ToString(),prec[1].ToString(),rpse[0].ToString(),rpse[1].ToString(),up.p.ToString(),up.G.ToString(),up.n.ToString(),up.H.ToString() };
+            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, upDownGroup, lr);
+
+            double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
+            double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
+            string[] value = { up.μ0_final.ToString(), up.σ0_final.ToString(), up.Sigma_mu.ToString(), up.Sigma_sigma.ToString(), up.A.ToString(), up.M.ToString(), up.B.ToString(), up.b.ToString(), prec[0].ToString(), prec[1].ToString(), rpse[0].ToString(), rpse[1].ToString(), up.p.ToString(), up.G.ToString(), up.n.ToString(), up.H.ToString() };
             return Json(value);
         }
         [HttpPost]//前一组实验
-        public ActionResult FromerGroup(int udg_id,int ExperimentalId,string setTime)
+        public ActionResult FromerGroup(int udg_id, int ExperimentalId, string setTime)
         {
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ExperimentalId);
             //判断当前组是否为第一组
@@ -138,7 +144,7 @@ namespace WsSensitivity.Controllers
             {
                 isTure = true;
                 --st;
-                for (int i = 0;i< upDownGroups.Count;i++)
+                for (int i = 0; i < upDownGroups.Count; i++)
                 {
                     if (upDownGroups[i].Id == udg_id) {
                         udg_id = upDownGroups[i - 1].Id;
@@ -146,7 +152,7 @@ namespace WsSensitivity.Controllers
                     }
                 }
             }
-            string[] str = { isTure.ToString(), st.ToString(),udg_id.ToString()};
+            string[] str = { isTure.ToString(), st.ToString(), udg_id.ToString() };
             return Json(str);
         }
         [HttpPost]//后一组实验
@@ -167,12 +173,12 @@ namespace WsSensitivity.Controllers
                         break;
                     }
                 }
-            } 
-            string[] str = { isTure.ToString(),ExperimentalId.ToString(), udg_id.ToString() };
+            }
+            string[] str = { isTure.ToString(), ExperimentalId.ToString(), udg_id.ToString() };
             return Json(str);
         }
         //新增多组实验页面
-        public ActionResult Manyexperiments(string ExperimentalId,string average,string standardDeviation)
+        public ActionResult Manyexperiments(string ExperimentalId, string average, string standardDeviation)
         {
             int Experimentalid = Int32.Parse(ExperimentalId);
             ManyexperimentsModel manyexperimentsModel = new ManyexperimentsModel();
@@ -200,37 +206,45 @@ namespace WsSensitivity.Controllers
             upDownGroup.dudt_Stepd = double.Parse(mm.stepLength);
             dbDrive.Insert(upDownGroup);
             upDownDataTable.dtup_DataTableId = upDownGroup.Id;
+            upDownDataTable.dtup_Initialstimulus = double.Parse(mm.stimulusQuantity);
             upDownDataTable.dtup_Standardstimulus = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).GetStandardStimulus(upDownDataTable.dtup_Initialstimulus);
-            upDownDataTable.dtup_Initialstimulus = double.Parse(mm.stimulusQuantity); 
             upDownDataTable.dtup_response = 0;
             bool isTure = dbDrive.Insert(upDownDataTable);
-            string[] value = { isTure.ToString(), upDownGroup.Id.ToString()};
+            string[] value = { isTure.ToString(), upDownGroup.Id.ToString() };
             return Json(value);
         }
         //撤销最后一组实验数据
         [HttpPost]
-        public ActionResult RevocationData(int udg_id)
+        public ActionResult RevocationData(int udg_id, int ExperimentalId)
         {
             List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            var xAndV = LiftingPublic.GetXArrayAndVArray(list_udt, upDownExperiment);
+            if (list_udt.Count == 1)
+            {
+                string[] value = { "false", list_udt.Count.ToString(), list_udt[list_udt.Count - 1].dtup_Initialstimulus.ToString(), lr.StepsNumber(xAndV.xArray, xAndV.vArray).ToString() };
+                return Json(value);
+            }
+
             UpDownDataTable upDownDataTable = list_udt[list_udt.Count - 1];
-            return Json(dbDrive.Delete(upDownDataTable));
+            var isTure = dbDrive.Delete(upDownDataTable);
+            List<UpDownDataTable> list_udtDelete = dbDrive.GetUpDownDataTables(udg_id);
+            var xAndVDelete = LiftingPublic.GetXArrayAndVArray(list_udtDelete, upDownExperiment);
+            string[] valueDelete = { isTure.ToString(), (list_udt.Count - 1).ToString(), list_udtDelete[list_udtDelete.Count - 1].dtup_Initialstimulus.ToString(), lr.StepsNumber(xAndVDelete.xArray, xAndVDelete.vArray).ToString() };
+            return Json(valueDelete);
         }
         //响应不响应
         [HttpPost]
-        public ActionResult InsertData(string response, int udg_id)
+        public ActionResult InsertData(string response, int udg_id, int ExperimentalId)
         {
-            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
-            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
+            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
             var lr = LiftingPublic.SelectState(upDownExperiment);
-            list_udv[list_udv.Count - 1].dtup_response = int.Parse(response);
-            double[] xArray = new double[list_udv.Count];
-            int[] vArray = new int[list_udv.Count];
-            for (int i = 0; i<list_udv.Count;i++)
-            {
-                xArray[i] = list_udv[i].dtup_Standardstimulus;
-                vArray[i] = LiftingPublic.Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
-            }
-            var up = lr.GetReturn(xArray,vArray,upDownExperiment.udt_Initialstimulus,upDownExperiment.udt_Stepd,out double z,upDownExperiment.udt_Instrumentresolution,out double z1);  
+            list_udt[list_udt.Count - 1].dtup_response = int.Parse(response);
+            var xAndV = LiftingPublic.GetXArrayAndVArray(list_udt, upDownExperiment);
+            var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownExperiment.udt_Initialstimulus, upDownGroup.dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
             UpDownDataTable upDownDataTable = new UpDownDataTable();
             upDownDataTable.dtup_DataTableId = udg_id;
             upDownDataTable.dtup_Initialstimulus = z;
@@ -238,7 +252,9 @@ namespace WsSensitivity.Controllers
             upDownDataTable.dtup_Standardstimulus = z1;
             bool isTure = dbDrive.Insert(upDownDataTable);
             List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(upDownExperiment.id);
-            string[] value = { isTure.ToString(),LiftingPublic.CurrentSetNumber(list_udg,udg_id).ToString(),(list_udv.Count + 1).ToString(),lr.StepsNumber(xArray,vArray).ToString(),z.ToString()};
+            List<UpDownDataTable> list_udtInsert = dbDrive.GetUpDownDataTables(udg_id);
+            var xAndVInsert = LiftingPublic.GetXArrayAndVArray(list_udtInsert, upDownExperiment);
+            string[] value = { isTure.ToString(), LiftingPublic.CurrentSetNumber(list_udg, udg_id).ToString(), (list_udtInsert.Count).ToString(), lr.StepsNumber(xAndVInsert.xArray, xAndVInsert.vArray).ToString(), z.ToString() };
             return Json(value);
         }
         #endregion
@@ -246,35 +262,62 @@ namespace WsSensitivity.Controllers
         #region 单组数据
 
         //单组数据区间估计
-        public ActionResult LntervalEstimation(int id,string res)
+        public ActionResult LntervalEstimation(int udg_id, int ExperimentalId, string res, double avg, double sigma, double sigmaavg, double sigmasigma, int text)
         {
             ViewData["res"] = res;
+            ViewData["udg_id"] = udg_id;
+            ViewData["ExperimentalId"] = ExperimentalId;
+            ViewData["avg"] = avg;
+            ViewData["sigma"] = sigma;
+            ViewData["sigmaavg"] = sigmaavg;
+            ViewData["sigmasigma"] = sigmasigma;
+            ViewData["text"] = text;
             return View();
         }
         //单组试验结果&&综合计算结果响应点计算
         [HttpPost]
         public ActionResult ResponsePoint(int ExperimentalId, string average, string standardDeviation, double ResponsePointValue)
         {
-            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponsePointCalculation(ResponsePointValue,double.Parse(standardDeviation),double.Parse(average));
+            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponsePointCalculation(ResponsePointValue, double.Parse(standardDeviation), double.Parse(average));
             return Json(rpc);
         }
         //单组试验结果&&综合计算结果响应概率计算
         [HttpPost]
-        public ActionResult StimulusQuantity(int ExperimentalId,string average, string standardDeviation, double StimulusQuantityValue)
+        public ActionResult StimulusQuantity(int ExperimentalId, string average, string standardDeviation, double StimulusQuantityValue)
         {
-            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponseProbabilityCalculation(StimulusQuantityValue, double.Parse(standardDeviation), double.Parse(average));
+            var rpc = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).ResponseProbabilityCalculation(StimulusQuantityValue, double.Parse(average), double.Parse(standardDeviation));
             return Json(rpc);
         }
 
         #endregion
         //综合结果计算多组试验结果
         [HttpPost]
-        public ActionResult MultipleExperimentsCalculated(/*int ExperimentalId,*/ int[] nj/* double[] Gj, double[] Hj, double[] muj, double[] sigmaj*/)
+        public ActionResult MultipleExperimentsCalculated(int ExperimentalId)
         {
-            //var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj,Gj,Hj,muj,sigmaj);
-            //string[] value = { mtr.μ0_final.ToString(),mtr.σ0_final.ToString(),mtr.Sigma_mu.ToString(),mtr.Sigma_sigma.ToString(),mtr.prec01.ToString(),mtr.prec999.ToString(),mtr.rpse01.ToString(),mtr.rpse999.ToString()};
-            //return Json(value);
-            return Json(1);
+            List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ExperimentalId);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            int[] nj = new int[list_udg.Count];
+            double[] Gj = new double[list_udg.Count];
+            double[] Hj = new double[list_udg.Count];
+            double[] muj = new double[list_udg.Count];
+            double[] sigmaj = new double[list_udg.Count];
+            int n = 0;
+            for (int i = 0; i < list_udg.Count; i++)
+            {
+                List<UpDownDataTable> upDownDataTables = dbDrive.GetUpDownDataTables(list_udg[i].Id);
+                var xAndV = LiftingPublic.GetXArrayAndVArray(upDownDataTables, upDownExperiment);
+                var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownDataTables[0].dtup_Standardstimulus, list_udg[i].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+                nj[i] = up.n;
+                Gj[i] = up.G;
+                Hj[i] = up.H;
+                muj[i] = up.μ0_final;
+                sigmaj[i] = up.σ0_final;
+                n += up.n;
+            }
+            var mtr = LiftingPublic.SelectState(dbDrive.GetUpDownExperiment(ExperimentalId)).MultigroupTestResult(nj, Gj, Hj, muj, sigmaj);
+            string[] value = { mtr.μ0_final.ToString(), mtr.σ0_final.ToString(), mtr.Sigma_mu.ToString(), mtr.Sigma_sigma.ToString(), mtr.prec01.ToString(), mtr.prec999.ToString(), mtr.rpse01.ToString(), mtr.rpse999.ToString(), n.ToString() };
+            return Json(value);
         }
 
         //设置升降法初始参数
@@ -284,7 +327,7 @@ namespace WsSensitivity.Controllers
             var stream = sr.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
             UpDownExperiment experiment = js.Deserialize<UpDownExperiment>(stream);
-            experiment.udt_Creationtime = DateTime.Now.Date;
+            experiment.udt_Creationtime = DateTime.Now;
             dbDrive.Insert(experiment);
             UpDownGroup upDownGroup = new UpDownGroup();
             upDownGroup.dudt_ExperimentId = experiment.id;
@@ -296,21 +339,31 @@ namespace WsSensitivity.Controllers
             upDownDataTable.dtup_Initialstimulus = experiment.udt_Initialstimulus;
             upDownDataTable.dtup_response = 0;
             var isTure = dbDrive.Insert(upDownDataTable);
-            string[] str = { isTure.ToString(), upDownGroup.Id.ToString() ,experiment.udt_ProdectName };
+            string[] str = { isTure.ToString(), upDownGroup.Id.ToString(), experiment.udt_ProdectName };
             return Json(str);//需要传输本次实验的ID
         }
 
         //获取全部试验数据
-        public ActionResult GetAllExperiments()
+        public ActionResult GetAllExperiments(int page = 1, int limit = 20)
         {
-            //    List<UpDownExperiment> experiments = dbDrive.GetAllExperiments();
-            //    //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
-            return Json(1/*new { code = 0, msg = "", count = experiments.Count, data = experiments }, JsonRequestBehavior.AllowGet*/);
+            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments();
+            List<UpDownExperiment> PagesLet = new List<UpDownExperiment>();
+            int last = udes.Count - (page - 1) * limit;
+            int first = 0;
+            if (page * limit < udes.Count)
+            {
+                first = udes.Count - page * limit;
+            }
+            for (int i = first; i < last; i++)
+            {
+                PagesLet.Add(udes[i]);
+            }
+            return Json(new { code = 0, msg = "", fenye = 5, count = udes.Count, data = LiftingPublic.GetQueryModels(dbDrive, PagesLet, first) }, JsonRequestBehavior.AllowGet);
         }
 
         //删除当前组试验数据
         [HttpPost]
-        public ActionResult Experiment_delete(int udg_id)
+        public ActionResult Group_delete(int udg_id)
         {
             UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
             List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(upDownGroup.dudt_ExperimentId);
@@ -318,25 +371,41 @@ namespace WsSensitivity.Controllers
             int upDownGroupId = -1;
             if (list_udg[0].Id != udg_id)
             {
-                upDownGroupId = list_udg[list_udg.Count - 1].Id;
+                upDownGroupId = list_udg[list_udg.Count - 2].Id;
             }
-            string[] value = {isTure.ToString(),upDownGroupId.ToString() };
+            string[] value = { isTure.ToString(), upDownGroupId.ToString() };
             return Json(value);
+        }
+
+        //删除总数据
+        [HttpPost]
+        public ActionResult Experiment_delete(int ude_id)
+        {
+            var ude = dbDrive.GetUpDownExperiment(ude_id);
+            return Json(dbDrive.Delete(ude));
         }
 
         ////查询
         [HttpPost]
-        public ActionResult Experiment_query(string cpmc, DateTime startdate, DateTime stopdate)
+        public ActionResult Experiment_query(string cpmc, string startdate, string stopdate)
         {
-            //    List<UpDownExperiment> experiments = dbDrive.QueryExperiments(cpmc,startdate,stopdate);
-            return Json(1/*new { code = 0, msg = "", count = experiments.Count, data = experiments }, JsonRequestBehavior.AllowGet*/);
+            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments();
+            if (startdate != "" && stopdate != "")
+            {
+                DateTime st = Convert.ToDateTime(startdate);
+                DateTime et = Convert.ToDateTime(stopdate);
+                udes = dbDrive.QueryExperimentTable(cpmc, st, et.AddDays(1));
+            }
+            else
+                udes = dbDrive.QueryExperimentTable(cpmc);
+            return Json(new { code = 0, msg = "", fenye = 5, count = udes.Count, data = LiftingPublic.GetQueryModels(dbDrive, udes) }, JsonRequestBehavior.AllowGet);
         }
         //查询当前ID下的所有当组实验数据
         public ActionResult GetAllUpDownMethods(int udg_id, int page = 1, int limit = 20)
         {
             //数据的当前组ID为upd_Id
             List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
-            List<GetAllUpDownMethodsModel> all_udms = new List<GetAllUpDownMethodsModel>();
+            List<GetAllUpDownMethodsModel> list_udmm = new List<GetAllUpDownMethodsModel>(); 
             for (int i = 0;i< list_udt.Count;i++)
             {
                 GetAllUpDownMethodsModel all_udm = new GetAllUpDownMethodsModel();
@@ -344,73 +413,56 @@ namespace WsSensitivity.Controllers
                 all_udm.stimulusQuantity = list_udt[i].dtup_Initialstimulus;
                 all_udm.response = list_udt[i].dtup_response;
                 all_udm.standardStimulus = list_udt[i].dtup_Standardstimulus;
-                all_udms.Add(all_udm);
+                all_udm.count = list_udt.Count;
+                list_udmm.Add(all_udm);
             }
-            all_udms.Reverse();
-            List<GetAllUpDownMethodsModel> PagesUdt = new List<GetAllUpDownMethodsModel>();
-            int last = all_udms.Count - (page - 1) * limit;
-            int first = 0;
-            if (page * limit < all_udms.Count)
-            {
-                first = all_udms.Count - page * limit;
-            }
-            for (int i = first; i < last; i++)
-            {
-                PagesUdt.Add(all_udms[i]);
-            }
+            list_udmm.Reverse();
+            
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
-            return Json(new { code = 0, msg = "", count = all_udms.Count, data = PagesUdt }, JsonRequestBehavior.AllowGet);
+            return Json(new { code = 0, msg = "", count = list_udt.Count, data = list_udmm }, JsonRequestBehavior.AllowGet);
         }
 
         //单组试验结果数据
-        public ActionResult GetAllsingleunitList(int[] i,int[] vi,int[] mi)
+        public ActionResult GetAllsingleunitList(int udg_id)
         {
+            List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
+            UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
+            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
+            var lr = LiftingPublic.SelectState(upDownExperiment);
+            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, upDownGroup, lr);
             List<SingleExperimentTable> singleExperimentTables = new List<SingleExperimentTable>();
-            for (int w = 0;w<i.Length;w++)
+            for (int w = 0;w< up.result_i.Length;w++)
             {
                 SingleExperimentTable singleExperimentTable = new SingleExperimentTable();
-                singleExperimentTable.i = i[w];
-                singleExperimentTable.i2 = i[w] * i[w];
-                singleExperimentTable.i2mi1 = i[w] * i[w] * mi[w];
-                singleExperimentTable.i2vi = i[w] * i[w] * vi[w];
-                singleExperimentTable.imi1 = i[w] * mi[w];
-                singleExperimentTable.ivi = i[w] * vi[w];
-                singleExperimentTable.mi = mi[w];
-                singleExperimentTable.vi = vi[w];
+                singleExperimentTable.i = up.result_i[w];
+                singleExperimentTable.i2 = up.result_i[w] * up.result_i[w];
+                singleExperimentTable.i2mi1 = up.result_i[w] * up.result_i[w] * up.mi[w];
+                singleExperimentTable.i2vi = up.result_i[w] * up.result_i[w] * up.vi[w];
+                singleExperimentTable.imi1 = up.result_i[w] * up.mi[w];
+                singleExperimentTable.ivi = up.result_i[w] * up.vi[w];
+                singleExperimentTable.mi = up.mi[w];
+                singleExperimentTable.vi = up.vi[w];
                 singleExperimentTables.Add(singleExperimentTable);
             }
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
-            return Json(new { code="",msg="",count=i.Length,data= singleExperimentTables},JsonRequestBehavior.AllowGet);
+            return Json(new { code="",msg="",count= up.result_i.Length,data= singleExperimentTables},JsonRequestBehavior.AllowGet);
         }
         public ActionResult ComprehensiveList(int ude_id)
         {
             List<ComprehensiveResultsModel> list_crm = new List<ComprehensiveResultsModel>();
-            List<UpDownView> list_udv = dbDrive.GetUpDownViews_UDEID(ude_id);
             List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ude_id);
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ude_id);
             var lr = LiftingPublic.SelectState(upDownExperiment);
             for (int i=0;i< list_udg.Count;i++)
             {
                 ComprehensiveResultsModel comprehensiveResultsModel = new ComprehensiveResultsModel();
-                List<UpDownView> upDownViews = new List<UpDownView>();
-                foreach (var j in list_udv)
-                {
-                    if (list_udg[i].Id == j.udg_Id)
-                        upDownViews.Add(j);
-                }
-                double[] xArray = new double[list_udv.Count];
-                int[] vArray = new int[list_udv.Count];
-                for (int w = 0; w < list_udv.Count; w++)
-                {
-                    xArray[w] = list_udv[w].dtup_Standardstimulus;
-                    vArray[w] = LiftingPublic.Filp(list_udv[w].dtup_response, upDownExperiment.udt_Flipresponse);
-                }
-                var up = lr.GetReturn(xArray, vArray, upDownExperiment.udt_Initialstimulus, upDownExperiment.udt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+                List<UpDownView> list_udv = dbDrive.GetUpDownViews_UDEID(list_udg[i].Id);
+                var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, list_udg[i],lr);
                 double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
                 comprehensiveResultsModel.setNumber = i + 1;
-                comprehensiveResultsModel.stimulusQuantity = upDownViews[0].dtup_Initialstimulus;
-                comprehensiveResultsModel.stepLength = upDownViews[0].dudt_Stepd;
-                comprehensiveResultsModel.sampleNumber = upDownViews.Count();
+                comprehensiveResultsModel.stimulusQuantity = list_udv[0].dtup_Initialstimulus;
+                comprehensiveResultsModel.stepLength = list_udv[0].dudt_Stepd;
+                comprehensiveResultsModel.sampleNumber = list_udv.Count();
                 comprehensiveResultsModel.average = up.μ0_final;
                 comprehensiveResultsModel.standardDeviation = up.σ0_final;
                 comprehensiveResultsModel.msde = up.Sigma_mu;
@@ -423,10 +475,11 @@ namespace WsSensitivity.Controllers
                 comprehensiveResultsModel.M = up.M;
                 comprehensiveResultsModel.b = up.b;
                 comprehensiveResultsModel.p = up.p;
-                comprehensiveResultsModel.percentage01 = prec[0];
-                comprehensiveResultsModel.percentage999 = prec[1];
+                comprehensiveResultsModel.percentage01 = prec[1];
+                comprehensiveResultsModel.percentage999 = prec[0];
                 list_crm.Add(comprehensiveResultsModel);
             }
+            list_crm.Reverse();
             return Json(new { code="",msg="",count= list_crm.Count(),data= list_crm},JsonRequestBehavior.AllowGet);
         }
         #region 区间估计
@@ -444,7 +497,7 @@ namespace WsSensitivity.Controllers
                 vArray[i] = LiftingPublic.Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
             }
             var ies = LiftingPublic.SelectState(upDownExperiment).ResponseProbabilityIntervalEstimated(Srb_ProbabilityResponse, Srb_Confidencelevel,xArray,vArray, favg, fsigma);
-            string[] str = { ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") };
+            string[] str = { "("+ies[0].Confidence.Down.ToString("f6") + "," + ies[0].Confidence.Up.ToString("f6") + ")", "(" + ies[0].Mu.Down.ToString("f6") + "," + ies[0].Mu.Up.ToString("f6") + ")", "(" + ies[0].Sigma.Down.ToString("f6") + "," + ies[0].Sigma.Up.ToString("f6") + ")", "(" + ies[1].Confidence.Down.ToString("f6") + "," + ies[1].Confidence.Up.ToString("f6") + ")", "(" + ies[1].Mu.Down.ToString("f6") + "," + ies[1].Mu.Up.ToString("f6") + ")", "(" + ies[1].Sigma.Down.ToString("f6") + "," + ies[1].Sigma.Up.ToString("f6") +")"};
             return Json(str);
         }
         //响应点区间估计
@@ -470,7 +523,7 @@ namespace WsSensitivity.Controllers
         {
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
             var vfr = LiftingPublic.SelectState(upDownExperiment).VarianceFunctionResponseProbabilityIntervalEstimated(Fchs_ProbabilityResponse, xygl_zxsp, textNumber, favg, fsigma, fsigmaavg, fsigmasigma);
-            string[] value = { "(" + vfr[0].ToString("f6") + "," + vfr[1].ToString("f6") + ")", "(" + vfr[2].ToString("f6") + "," + vfr[3].ToString("f6") + ")", "(" + vfr[4].ToString("f6") + "," + vfr[5].ToString("f6") + ")", "(" + vfr[6].ToString("f6") + "," + vfr[7].ToString("f6") + ")" };
+            string[] value = { "(" + vfr[1].ToString("f6") + "," + vfr[0].ToString("f6") + ")", "(" + vfr[3].ToString("f6") + "," + vfr[2].ToString("f6") + ")", "(" + vfr[5].ToString("f6") + "," + vfr[4].ToString("f6") + ")", "(" + vfr[7].ToString("f6") + "," + vfr[6].ToString("f6") + ")" };
             return Json(value);
         }
         //方差函数响应点区间估计
@@ -479,7 +532,7 @@ namespace WsSensitivity.Controllers
         {
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
             var vfr = LiftingPublic.SelectState(upDownExperiment).VarianceFunctionResponsePointIntervalEstimated(cjl_zxsp, textNumber, Fchs_StimulusQuantity, favg, fsigma, fsigmaavg, fsigmasigma);
-            string[] value = { "(" + vfr[0].ToString("f6") + "," + vfr[1].ToString("f6") + ")", "(" + vfr[2].ToString("f6") + "," + vfr[3].ToString("f6") + ")", "(" + vfr[4].ToString("f6") + "," + vfr[5].ToString("f6") + ")", "(" + vfr[6].ToString("f6") + "," + vfr[7].ToString("f6") + ")" };
+            string[] value = { "(" + vfr[1].ToString("f6") + "," + vfr[0].ToString("f6") + ")", "(" + vfr[3].ToString("f6") + "," + vfr[2].ToString("f6") + ")", "(" + vfr[5].ToString("f6") + "," + vfr[4].ToString("f6") + ")", "(" + vfr[7].ToString("f6") + "," + vfr[6].ToString("f6") + ")" };
             return Json(value);
         }
         //似然比绘图

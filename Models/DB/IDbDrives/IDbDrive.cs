@@ -92,12 +92,16 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract bool Update(UpDownExperiment upDownExperiment);
         public abstract bool Delete(UpDownDataTable upDownDataTable);
         public abstract bool Delete(UpDownGroup upDownGroup);
+        public abstract bool Delete(UpDownExperiment upDownExperiment);
         public abstract UpDownGroup GetDownGroup(int id);
         public abstract UpDownExperiment GetUpDownExperiment(int id);
         public abstract List<UpDownDataTable> GetUpDownDataTables(int id);
         public abstract List<UpDownView> GetUpDownViews(int id);
         public abstract List<UpDownView> GetUpDownViews_UDEID(int id);
         public abstract List<UpDownGroup> GetUpDownGroups(int id);
+        public abstract List<UpDownExperiment> GetUpDownExperiments();
+        public abstract List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime);
+        public abstract List<UpDownExperiment> QueryExperimentTable(string productName);
         #endregion
     }
 }

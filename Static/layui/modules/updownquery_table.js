@@ -15,32 +15,31 @@ layui.define(['table', 'form'], function(exports){
   table.render({
     elem: '#updownquery_list'
     ,url: '../UpDownMethod/GetAllExperiments' //模拟接口
-    ,height: 'full-130' //高度最大化减去差值
+      , height: 'full-130' //高度最大化减去差值
+      , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+          , curr: 1 //设定初始在第 5 页
+          , groups: 3 //只显示 1 个连续页码
+          , first: '首页' //不显示首页
+          , last: '尾页' //不显示尾页
+
+      }
+      , limit: 20
     ,cols: [[
-      {field: 'id',title: '编号', sort: true}
-      ,{ field: 'cpmc', title: '产品名称'}
-      ,{field: 'cscjl',title: '初始刺激量', minWidth: 100}
-      ,{field: 'bcd',title: '步长'}
-      ,{field: 'fb',title: '分布状态'}
-      ,{ field: 'hs', title: '函数' }
-      ,{ field: 'sz', title: '组数'}
-      ,{ field: 'zybl', title: '总样本量'}
-      ,{ field: 'fzxy', title: '翻转响应',templet: '#fzxy_state', align: 'center'}
-      ,{ field: 'Date', title: '日期',templet:function (d) { return showTime(d.cjsj);}} 
-      ,{title: '操作',align:'center', fixed: 'right', toolbar: '#table-langleyquery-tool'}
+        { field: 'number', title: '编号', sort: true, minWidth: 80}
+        , { field: 'InitialStimulus',title: '初始刺激量'}
+        , { field: 'StepLength',title: '步长'}
+        , { field: 'PublishStatusMethods', title: '分布状态/方法', minWidth: 160}
+        , { field: 'Groping', title: '分组', templet: '#fz_state'}
+        , { field: 'pow', title: '幂', minWidth: 10 }
+        , { field: 'GroupNumber', title: '组数'}
+        , { field: 'TotalNumberSaples', title: '总样本量'}
+        , { field: 'FilpResponse', title: '翻转响应', templet: '#fzxy_state', align: 'center', minWidth: 80}
+        , { field: 'DateTime', title: '日期'} 
+        ,{title: '操作',align:'center', fixed: 'right', toolbar: '#table-langleyquery-tool'}
     ]]
-    ,page: true
-    ,limit: 30
     ,text: '对不起，加载出现异常！'
   });
-
-  //时间转换函数
-  function showTime(tempDate) {
-      var date = new Date(parseInt(tempDate.replace("/Date(", "").replace(")/", ""), 10));
-      var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-      var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-      return date.getFullYear() + "-" + month + "-" + currentDate;
-  }
 
   //监听工具条
   table.on('tool(updownquery_list)', function(obj){
@@ -51,10 +50,10 @@ layui.define(['table', 'form'], function(exports){
             btn: ['确认', '取消'] //按钮
         }, function () {
             $.ajax({
-                url: "../UpDownMethod/Experiment_delete",
+                url: "../UpDownMethod/GetAllExperiments",
                 type: "post",
                 data: {
-                    "id": data.id
+                    "ude_id": data.id
                 },
                 dataType: "json",
                 success: function (data) {
@@ -75,13 +74,9 @@ layui.define(['table', 'form'], function(exports){
             });
         });
       }
-      //else if (obj.event === 'edit') {//编辑
-      //    setTimeout(function () { top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?upd_id=' + data.id, '编辑' + data.projectname + '升降法实验'); }, 1000);
-      //}
-    });
-    table.on('rowDouble(updownquery_list)', function (obj) {
-        var data = obj.data;
-        setTimeout(function () { top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?upd_id=' + data.id, '编辑' + data.projectname + '升降法实验'); }, 1000);
+      else if (obj.event === 'edit') {     //编辑
+          top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?udg_id=' + data.id, '编辑' + data.projectname + '升降法实验')
+      }
     });
 
   exports('updownquery_table', {})

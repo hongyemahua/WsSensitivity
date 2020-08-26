@@ -1,7 +1,10 @@
 ﻿using AlgorithmReconstruct;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using WsSensitivity.Models;
+using WsSensitivity.Models.IDbDrives;
+using static WsSensitivity.Models.AlgorithmReconstruct;
 
 namespace WsSensitivity.Controllers
 {
@@ -77,6 +80,28 @@ namespace WsSensitivity.Controllers
         public string distribution { get; set; }
     }
 
+    public class XArrayAndVArray 
+    { 
+        public double[] xArray { get; set; }
+        public int[] vArray { get; set; }
+    }
+
+    public class QueryModel
+    {
+        public int id { get; set; }
+        public string projectname { get; set; }
+        public int number { get; set; }
+        public double InitialStimulus { get; set; }
+        public double StepLength { get; set; }
+        public string PublishStatusMethods { get; set; }
+        public int Groping { get; set; }
+        public double pow { get; set; }
+        public int GroupNumber { get; set; }
+        public int TotalNumberSaples { get; set; }
+        public int FilpResponse { get; set; }
+        public string DateTime { get; set; }
+    }
+
     public class LiftingPublic
     {
         public static LiftingAlgorithm SelectState(UpDownExperiment updateException)
@@ -116,6 +141,79 @@ namespace WsSensitivity.Controllers
                 count = i.Id == udg_id ? count : count++;
             }
             return count;
+        }
+
+        public static Upanddown Upanddown(List<UpDownView> list_udv, UpDownExperiment upDownExperiment, UpDownGroup upDownGroup, LiftingAlgorithm lr)
+        {
+            double[] xArray = new double[list_udv.Count];
+            int[] vArray = new int[list_udv.Count];
+            for (int i = 0; i < list_udv.Count; i++)
+            {
+                xArray[i] = list_udv[i].dtup_Standardstimulus;
+                vArray[i] = Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
+            }
+            return lr.GetReturn(xArray, vArray, xArray[0], upDownGroup.dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+        }
+
+        public static XArrayAndVArray GetXArrayAndVArray(List<UpDownDataTable> list_udt, UpDownExperiment upDownExperiment)
+        {
+            XArrayAndVArray xArrayAndVArray = new XArrayAndVArray();
+            double[] xArray = new double[list_udt.Count];
+            int[] vArray = new int[list_udt.Count];
+            for (int i = 0; i < list_udt.Count; i++)
+            {
+                xArray[i] = list_udt[i].dtup_Standardstimulus;
+                vArray[i] = Filp(list_udt[i].dtup_response, upDownExperiment.udt_Flipresponse);
+            }
+            xArrayAndVArray.xArray = xArray;
+            xArrayAndVArray.vArray = vArray;
+            return xArrayAndVArray;
+        }
+        public static List<QueryModel> GetQueryModels(IDbDrive dbDrive, List<UpDownExperiment> udes, int first)
+        {
+            List<QueryModel> queryModels = new List<QueryModel>();
+            for (int i = udes.Count - 1; i >= 0; i--)
+            {
+                var upDown_List = GetQueryModel(dbDrive, udes[i]);
+                upDown_List.number = i + 1 + first;
+                queryModels.Add(upDown_List);
+            }
+            return queryModels;
+        }
+
+        public static List<QueryModel> GetQueryModels(IDbDrive dbDrive, List<UpDownExperiment> udes)
+        {
+            List<QueryModel> queryModels = new List<QueryModel>();
+            for (int i = udes.Count - 1; i >= 0; i--)
+            {
+                var upDown_List = GetQueryModel(dbDrive, udes[i]);
+                upDown_List.number = i + 1;
+                queryModels.Add(upDown_List);
+            }
+            return queryModels;
+        }
+        private static QueryModel GetQueryModel(IDbDrive dbDrive, UpDownExperiment ude)
+        {
+            QueryModel query = new QueryModel();
+            query.id = ude.id;
+            query.InitialStimulus = ude.udt_Initialstimulus;
+            query.StepLength = ude.udt_Stepd;
+            query.Groping = ude.udt_Groupingstate;
+            query.PublishStatusMethods = DistributionState(ude);
+            query.pow = ude.udt_Power;
+            List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ude.id);
+            query.GroupNumber = upDownGroups.Count;
+            List<UpDownView> upDownViews = dbDrive.GetUpDownViews_UDEID(ude.id);
+            query.TotalNumberSaples = upDownViews.Count;
+            query.DateTime = ude.udt_Creationtime.ToString();
+            query.projectname = ude.udt_ProdectName;
+            return query;
+        }
+
+        private static string DistributionState(UpDownExperiment ude)
+        {
+            LiftingAlgorithm lr = SelectState(ude);
+            return lr.DistributionNameAndMethodStandardName();
         }
     }
 }

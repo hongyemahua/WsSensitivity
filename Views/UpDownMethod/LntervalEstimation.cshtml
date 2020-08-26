@@ -9,6 +9,13 @@
     <link href="~/static/layui/layui/css/layui.css" rel="stylesheet" />
     @{
         string res = (string)ViewData["res"];
+        int udg_id = (int)ViewData["udg_id"];
+        int ExperimentalId = (int)ViewData["ExperimentalId"];
+        double avg = (double)ViewData["avg"];
+        double sigma = (double)ViewData["sigma"];
+        double sigmaavg = (double)ViewData["sigmaavg"];
+        double sigmasigma = (double)ViewData["sigmasigma"];
+        int text = (int)ViewData["text"];
     }
 </head>
 <body>
@@ -16,12 +23,12 @@
         <div class="layui-col-sm12">
             <div class="layui-card">
                 <div class="layui-card-body">
-                    <fieldset class="layui-elem-field">
-                        <legend>拟然比区间估计方法</legend>
-                        <div class="layui-field-box">
-                            <div class="layui-row layui-col-space15">
-                                @if (res.Equals("S"))
-                                {
+                    @if (res.Equals("S"))
+                    {
+                        <fieldset class="layui-elem-field">
+                            <legend>拟然比区间估计方法</legend>
+                            <div class="layui-field-box">
+                                <div class="layui-row layui-col-space15">
                                     <div class="layui-col-md12 layui-col-space10">
                                         <div class="layui-col-md12 layui-col-space5">
                                             <div class="layui-col-md4">
@@ -54,12 +61,12 @@
                                                     <input type="text" name="Srb_ConfidencelevelS" id="Srb_ConfidencelevelS" value="0.9" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                 </div>
                                             </div>
-                                                <div class="layui-col-md4">
-                                                    <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
-                                                </div>
+                                            <div class="layui-col-md4">
+                                                <button type="button" class="layui-btn" style="width:100%;" data-type="ResponsePointIntervalEstimation">响应点区间估计</button>
+                                            </div>
                                         </div>
                                     </div>
-                                }
+
 
                                     <div class="layui-col-md12 layui-col-space5">
                                         <fieldset class="layui-elem-field">
@@ -122,9 +129,9 @@
                                     </div>
 
                                 </div>
-                        </div>
-                    </fieldset>
-
+                            </div>
+                        </fieldset>
+                    }
                     <fieldset class="layui-elem-field">
                         <legend>方差函数法区间计算方法</legend>
                         <div class="layui-field-box">
@@ -141,10 +148,10 @@
                                             <label class="layui-form-label">置信水平</label>
                                             <div class="layui-input-block">
                                                 <select name="xygl_zxsp" id="xygl_zxsp" lay-verify="required">
-                                                    <option value="0.95">0.95</option>
                                                     <option value="0.8">0.8</option>
                                                     <option value="0.85">0.85</option>
-                                                    <option value="0.9">0.8</option>
+                                                    <option value="0.9">0.9</option>
+                                                    <option value="0.95">0.95</option>
                                                     <option value="0.99">0.99</option>
                                                 </select>
                                             </div>
@@ -158,18 +165,18 @@
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">刺激量</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" value ="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" name="Fchs_StimulusQuantity" id="Fchs_StimulusQuantity" value="0" autocomplete="off" class="layui-input" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                             </div>
                                         </div>
                                         <div class="layui-col-md4">
                                             <label class="layui-form-label">置信水平</label>
                                             <div class="layui-input-block">
                                                 <select name="cjl_zxsp" id="cjl_zxsp" lay-verify="required">
-                                                    <option value="0.99">0.99</option>
                                                     <option value="0.8">0.8</option>
                                                     <option value="0.85">0.85</option>
-                                                    <option value="0.9">0.8</option>
+                                                    <option value="0.9">0.9</option>
                                                     <option value="0.95">0.95</option>
+                                                    <option value="0.99">0.99</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -318,16 +325,23 @@
                             type: "post"
                             , url: '../UpDownMethod/IntervalEstimationResponseProbability'
                             , data: {
+                                "ExperimentalId":@ExperimentalId,
+                                "udg_id":@udg_id,
                                 "Srb_ProbabilityResponse": Srb_ProbabilityResponse,
-                                "Srb_Confidencelevel": Srb_Confidencelevel
+                                "Srb_Confidencelevel": Srb_Confidencelevel,
+                                "favg":@avg,
+                                "fsigma":@sigma,
                             }
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                if (data[0]) {
-                                    layer.msg("成功");
-                                }
+                                document.getElementById("Point").value = data[0];
+                                document.getElementById("Interval").value = data[1];
+                                document.getElementById("StandardInterval").value = data[2];
+                                document.getElementById("Points").value = data[3];
+                                document.getElementById("Intervals").value = data[4];
+                                document.getElementById("StandardIntervals").value = data[5];
                             }
                         });
                     }
@@ -335,6 +349,7 @@
                 ResponsePointIntervalEstimation: function () {
                     var Srb_StimulusQuantity = parseFloat(document.getElementById("Srb_StimulusQuantity").value);
                     var Srb_ConfidencelevelS = parseFloat(document.getElementById("Srb_ConfidencelevelS").value);
+                    var Srb_ProbabilityResponse = parseFloat(document.getElementById("Srb_ProbabilityResponse").value);
                     var is = true;
                     if ((Srb_StimulusQuantity.toString() == "NaN") & is) {
                         is = false;
@@ -369,16 +384,24 @@
                             type: "post"
                             , url: '../UpDownMethod/ResponsePointIntervalEstimation'
                             , data: {
-                                "Srb_StimulusQuantity": Srb_StimulusQuantity,
-                                "Srb_ConfidencelevelS": Srb_ConfidencelevelS
+                                "ExperimentalId":@ExperimentalId,
+                                "udg_id":@udg_id,
+                                "Srb_ProbabilityResponse": Srb_ProbabilityResponse,
+                                "Srb_Confidencelevel": Srb_ConfidencelevelS,
+                                "fq": Srb_StimulusQuantity,
+                                "favg":@avg,
+                                "fsigma":@sigma,
                             }
                             , datatype: "json"
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , success: function (data) {
-                                if (data[0]) {
-                                    layer.msg("成功");
-                                }
+                                document.getElementById("Point").value = data[0];
+                                document.getElementById("Interval").value = data[1];
+                                document.getElementById("StandardInterval").value = data[2];
+                                document.getElementById("Points").value = data[3];
+                                document.getElementById("Intervals").value = data[4];
+                                document.getElementById("StandardIntervals").value = data[5];
                             }
                         });
                     }
@@ -413,11 +436,20 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , data: {
+                                "ExperimentalId":@ExperimentalId,
                                 "Fchs_ProbabilityResponse": Fchs_ProbabilityResponse,
-                                "xygl_zxsp": xygl_zxsp
+                                "xygl_zxsp": xygl_zxsp,
+                                "textNumber": @text,
+                                "favg": @avg,
+                                "fsigma":@sigma,
+                                "fsigmaavg": @sigmaavg,
+                                "fsigmasigma": @sigmasigma,
                             }
                             , success: function (data) {
-                                layer.msg("成功");
+                                document.getElementById("PointsIncredibleInterval").value = data[0];
+                                document.getElementById("AvgPointsInterval").value = data[2];
+                                document.getElementById("PointIncredibleInterval").value = data[1];
+                                document.getElementById("StandarddeviationInterval").value = data[3];
                             }
                         });
                     }
@@ -435,15 +467,6 @@
                             , time: 3000
                         });
                     }
-                    if (Fchs_StimulusQuantity > 1.0 || Fchs_StimulusQuantity <= 0) {
-                        is = false;
-                        layer.open({
-                            type: 4
-                            , content: ['响应概率取值范围(0,1]', '#Fchs_StimulusQuantity']
-                            , tips: [1, '#ff2121']
-                            , time: 3000
-                        });
-                    }
                     if (is) {
                         $.ajax({
                             type: "post"
@@ -452,11 +475,20 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                             , data: {
+                                "ExperimentalId":@ExperimentalId,
                                 "Fchs_StimulusQuantity": Fchs_StimulusQuantity,
-                                "cjl_zxsp": cjl_zxsp
+                                "cjl_zxsp": cjl_zxsp,
+                                 "textNumber": @text,
+                                "favg": @avg,
+                                "fsigma":@sigma,
+                                "fsigmaavg": @sigmaavg,
+                                "fsigmasigma": @sigmasigma,
                             }
                             , success: function (data) {
-                                layer.msg("成功");
+                                document.getElementById("PointsIncredibleInterval").value = data[0];
+                                document.getElementById("AvgPointsInterval").value = data[2];
+                                document.getElementById("PointIncredibleInterval").value = data[1];
+                                document.getElementById("StandarddeviationInterval").value = data[3];
                             }
                         });
                     }

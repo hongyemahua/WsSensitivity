@@ -9,6 +9,9 @@
     <link href="~/Static/layui/layui/css/layui.css" rel="stylesheet" />
     <link href="~/Static/layui/style/admin.css" rel="stylesheet" />
 </head>
+@{ 
+    List<string> productName = (List<string>)ViewData["pn"];
+}
 <body>
 
     <div class="layui-fluid">
@@ -18,7 +21,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">产品名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="cpmc" id="cpmc" placeholder="请输入" autocomplete="off" class="layui-input">
+                            <select name="modules">
+                                <option value="">请选择</option>
+                                @foreach (var p in @productName)
+                                {
+                                    <option value="@p">@p</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -45,14 +54,21 @@
                 <table id="updownquery_list" lay-filter="updownquery_list"></table>
 
                 <script type="text/html" id="fzxy_state">
-                    {{#  if(d.fzxy == "启用"){ }}
-                    <button class="layui-btn layui-btn-xs">启用</button>
+                    {{#  if(d.FilpResponse == "0"){ }}
+                    <button class="layui-btn layui-btn-xs">否</button>
                     {{#  } else { }}
-                    <button class="layui-btn layui-btn-primary layui-btn-xs">禁用</button>
+                    <button class="layui-btn layui-btn-primary layui-btn-xs">是</button>
                     {{#  } }}
                 </script>
-
+                <script type="text/html" id="fz_state">
+                    {{#  if(d.Groping == "0"){ }}
+                    <button class="layui-btn layui-btn-xs">不分组试验</button>
+                    {{#  } else { }}
+                    <button class="layui-btn layui-btn-primary layui-btn-xs">多组试验</button>
+                    {{#  } }}
+                </script>
                 <script type="text/html" id="table-langleyquery-tool">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
                 </script>
 
@@ -74,22 +90,11 @@
 
             laydate.render({
                 elem: '#startdate' //指定元素
-                ,value: '2018-08-18' //必须遵循format参数设定的格式
             });
 
             laydate.render({
                 elem: '#stopdate' //指定元素
-                , value: NowDate()
-                , max: new Date().getTime()
             });
-
-            //时间转换函数
-            function NowDate() {
-                var date = new Date();
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                return date.getFullYear() + "-" + month + "-" + currentDate;
-            }
 
             //监听搜索
             form.on('submit(experiment_search)', function (data) {
@@ -99,7 +104,7 @@
                     url: "@Url.Action("Experiment_query","UpDownMethod")"
                     , method: "post"
                     , where: {
-                        "cpmc": field.cpmc,
+                        "cpmc": field.modules,
                         "startdate": field.startdate,
                         "stopdate": field.stopdate
                     }

@@ -81,12 +81,12 @@
                                         }
                                     </div>
                                     <div class="layui-col-md2">
-                                        <label class="layui-form-label" style="width:auto; text-anchor:inherit">响应状态：</label>
-                                        <div class="layui-input-inline" style="width:50%">
+                                        <label class="layui-form-label" style="width:auto; text-anchor:inherit">当前响应状态：</label>
+                                        <div class="layui-input-inline" style="width:40%">
                                             <select name="modules" lay-verify="required" lay-filter="select_response">
                                                 <option value="">请选择</option>
-                                                <option value="1">1-响应</option>
-                                                <option value="0">0-不响应</option>
+                                                <option value="1">1</option>
+                                                <option value="0">0</option>
                                             </select>
                                         </div>
                                     </div>
@@ -99,16 +99,9 @@
                                         </div>
                                     </div>
                                 </script>
-                                <script type="text/html" id="reverse_state">
-                                    {{#  if(d.dtup_response == "0"){ }}
-                                    <button class="layui-btn layui-btn-primary layui-btn-xs">不响应</button>
-                                    {{#  } else { }}
-                                    <button class="layui-btn layui-btn-xs">响应</button>
-                                    {{#  } }}
-                                </script>
 
                                 <script type="text/html" id="state">
-                                    {{# if(d.number == d.count-1){}}
+                                    {{# if(d.number == d.count){}}
                                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i></i>撤销</a>
                                     {{# } }}
                                 </script>
@@ -380,28 +373,28 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">平均值</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="avg2" id="avg2" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">均值标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
+                                                <input type="text" name="sem2" id="sem2" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">标准差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="sigma2" id="sigma2" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">sigma_标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:90%" readonly>
+                                                <input type="text" name="sigma_sem2" id="sigma_sem2" autocomplete="off" class="layui-input" style="width:90%" readonly>
                                             </div>
                                         </div>
 
@@ -412,31 +405,37 @@
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">0.1%</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="pre01" id="pre01" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">0.1%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:96%" readonly>
+                                                <input type="text" name="pre_sem01" id="pre_sem01" autocomplete="off" class="layui-input" style="width:96%" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label">99.9%</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" readonly>
+                                                <input type="text" name="pre999" id="pre999" autocomplete="off" class="layui-input" readonly>
                                             </div>
                                         </div>
 
                                         <div class="layui-col-md3">
                                             <label class="layui-form-label" style="width:auto">99.9%标准误差</label>
                                             <div class="layui-input-block">
-                                                <input type="text" name="xh" id="xh" autocomplete="off" class="layui-input" style="width:92%" readonly>
+                                                <input type="text" name="pre_sem999" id="pre_sem999" autocomplete="off" class="layui-input" style="width:92%" readonly>
                                             </div>
                                         </div>
 
+                                        <div class="layui-col-md3" hidden>
+                                            <label class="layui-form-label" style="width:auto">分析用试探数</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="text_number" id="text_number" autocomplete="off" class="layui-input" style="width:92%" readonly>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="layui-col-md12 layui-col-space10">
@@ -502,7 +501,6 @@
                 var flage = false;
             //事件
             var active = {
-                //兰利法分析参数设置
                 updown: function () {
                     table.reload('updown_list');
                 },
@@ -567,7 +565,7 @@
                         layer.close(index);
                        $.ajax({
                             type: "post",
-                            url: '../UpDownMethod/Experiment_delete',
+                           url: '../UpDownMethod/Group_delete',
                             datatype: "json",
                             data: {
                                 "udg_id":@Model.id,
@@ -672,10 +670,25 @@
                                             time: 1000  //1秒关闭
                                         });
                                     }
+                                    document.getElementById("avg").value = data[1];
+                                    document.getElementById("bzc").value = data[2];
+                                    document.getElementById("jzbzwc").value = data[3];
+                                    document.getElementById("bzcbzwc").value = data[4];
+                                    document.getElementById("a").value = data[5];
+                                    document.getElementById("m").value = data[6];
+                                    document.getElementById("db").value = data[7];
+                                    document.getElementById("b").value = data[8];
+                                    document.getElementById("nine").value = data[10];
+                                    document.getElementById("zeroone").value = data[9];
+                                    document.getElementById("zeroonebzwc").value = data[11];
+                                    document.getElementById("ninebzwc").value = data[12];
+                                    document.getElementById("p").value = data[13];
+                                    document.getElementById("g").value = data[14];
+                                    document.getElementById("stcs").value = data[15];
+                                    document.getElementById("h").value = data[16];
                                     document.getElementById("UpDownName").innerText = data[17];
                                 }
                             });
-                            @*location.href = '../UpDownMethod/UpDownMethod?upd_id='+@Model.id;*@
                             layer.close(index); //关闭弹层
                         });
                         submit.trigger('click');
@@ -707,8 +720,8 @@
                         document.getElementById("m").value = data[5];
                         document.getElementById("db").value = data[6];
                         document.getElementById("b").value = data[7];
-                        document.getElementById("zeroone").value = data[8];
-                        document.getElementById("nine").value = data[9];
+                        document.getElementById("nine").value = data[8];
+                        document.getElementById("zeroone").value = data[9];
                         document.getElementById("zeroonebzwc").value = data[10];
                         document.getElementById("ninebzwc").value = data[11];
                         document.getElementById("p").value = data[12];
@@ -809,6 +822,7 @@
                         data: {
                             "response": 0,
                             "udg_id": @Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
                         }
                         ,dataType: "json",
                         success: function (data) {
@@ -839,6 +853,7 @@
                         data: {
                             "response": 1,
                             "udg_id": @Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
                         }
                         ,dataType: "json",
                         success: function (data) {
@@ -924,13 +939,13 @@
                    url: '../UpDownMethod/RevocationData',
                    type: "post",
                    data: {
-                       "upd_id": data.dtup_DataTableId,
-                       "id": data.Id
+                       "udg_id":  @Model.id,
+                       "ExperimentalId":@Model.ExperimentalId,
                    },
                    contenttype: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
-                        if (data) {
+                        if (data[0]) {
                             layer.msg('撤销成功', {
                                 icon: 1,
                                 time: 1000 //1秒关闭（如果不配置，默认是3秒）
@@ -943,6 +958,9 @@
                                 time: 1000  //1秒关闭
                             });
                         }
+                        document.getElementById("testNumber").innerText = data[1];
+                        document.getElementById("NM").innerText = data[2];
+                        document.getElementById("label3").innerText = data[3];
                         table.reload('updown_list');  //数据刷新
                     }
                 });
@@ -960,6 +978,7 @@
                         data: {
                             "response": data,
                             "udg_id": @Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
                         }
                         ,dataType: "json",
                         success: function (data) {
@@ -986,12 +1005,8 @@
     //单组表格
     table.render({
         elem: '#singleunit_list'
-        , url: '../UpDownMethod/GetAllsingleunitList?page='+1+'&limit='+10+'&a=' + 2+'&b='+3,//模拟接口
-        ////data: {
-        ////    "a":a,
-        ////    "b":b,
-        ////},
-         height: 'full-435' //高度最大化减去差值
+        , url: '../UpDownMethod/GetAllsingleunitList?udg_id='+@Model.id//模拟接口
+         ,height: 'full-435' //高度最大化减去差值
         , cellMinWidth: 206
         , toolbar: '#singleunit_tool'
         , cols: [[
@@ -1085,10 +1100,15 @@
                 break;
             case 'lntervalestimation':
                 if (flage) {
+                    var avg = document.getElementById("avg").value;
+                    var atan = document.getElementById("bzc").value;
+                    var sigmaavg = document.getElementById("jzbzwc").value;
+                    var sigmasigma = document.getElementById("bzcbzwc").value;
+                    var text = document.getElementById("stcs").value;
                     layer.open({
                         type: 2
                         , title: '单组数据区间估计'
-                        , content: '../UpDownMethod/LntervalEstimation?id=' +@Model.id+"&res="+"S",
+                        , content: '../UpDownMethod/LntervalEstimation?udg_id=' +@Model.id +'&ExperimentalId=' +@Model.ExperimentalId+'&res=' + "S" + '&avg=' + avg + '&sigma=' + atan + '&sigmaavg=' + sigmaavg + '&sigmasigma=' + sigmasigma + '&text=' + text,
                         area: ['80%', '90%']
                     });
                 } else {
@@ -1125,6 +1145,7 @@
                 } else {
                     var avg = document.getElementById("avg").value;
                     var atan = document.getElementById("bzc").value;
+
                     $.ajax({
                        type: "post",
                         url: '../UpDownMethod/AfterGroup',
@@ -1215,15 +1236,6 @@
         , limit: 10
         , text: '对不起，加载出现异常！'
                 });
-                var nj = [1, 2, 3];
-                var Gj = new Array();
-                var Hj = new Array();
-                var muj = new Array();
-                var sigmaj = new Array();
-                Gj = [4, 5, 6];
-                Hj = [7, 8, 9];
-                muj = [12, 34, 45];
-                sigmaj = [23,45,7];
     //综合监听头工具栏事件
     table.on('toolbar(comprehensive_list)', function (obj) {
         var checkStatus = table.checkStatus(obj.config.id)
@@ -1231,19 +1243,11 @@
         switch (obj.event) {
             //计算多组试验结果
             case 'MultipleExperimentsCalculated':
-               
+
                 if (flage) {
                     $.ajax({
                         type: "post",
-                        url: '../UpDownMethod/MultipleExperimentsCalculated',
-                        data: {
-                            //"ExperimentalId":1,
-                            "nj": nj,
-                            //"Gj": Gj,
-                            //"Hj": Hj,
-                            //"muj": muj,
-                            //"sigmaj": sigmaj
-                        },
+                        url: '../UpDownMethod/MultipleExperimentsCalculated?ExperimentalId='+@Model.ExperimentalId,
                         traditional: true,
                         datatype: "json",
                         contenttype: "application/json; charset=utf-8",
@@ -1257,6 +1261,16 @@
                             $("#responseProbabilityButtonD").removeAttr("disabled", "disabled");
                             document.getElementById("lntervalestimationD").classList.remove('layui-btn-disabled');
                             $("#lntervalestimationD").removeAttr("disabled", "disabled");
+
+                            document.getElementById("avg2").value = data[0];
+                            document.getElementById("sigma2").value = data[1];
+                            document.getElementById("sem2").value = data[2];
+                            document.getElementById("sigma_sem2").value = data[3];
+                            document.getElementById("pre999").value = data[7];
+                            document.getElementById("pre01").value = data[6];
+                            document.getElementById("pre_sem999").value = data[5];
+                            document.getElementById("pre_sem01").value = data[4];
+                            document.getElementById("text_number").value = data[8];
                         }
                     });
                 } else {
@@ -1265,10 +1279,15 @@
 
                 break;
             case 'lntervalestimation':
+                var avg = document.getElementById("avg2").value;
+                var atan = document.getElementById("sigma2").value;
+                var sigmaavg = document.getElementById("sem2").value;
+                var sigmasigma = document.getElementById("sigma_sem2").value;
+                var text = document.getElementById("text_number").value;
                     layer.open({
                         type: 2
                         , title: '多组数据区间估计'
-                        , content: '../UpDownMethod/LntervalEstimation?id=' +@Model.id+"&res=D"
+                        , content: '../UpDownMethod/LntervalEstimation?udg_id=' +@Model.id +'&ExperimentalId=' +@Model.ExperimentalId+'&res=' + "D" + '&avg=' + avg + '&sigma=' + atan + '&sigmaavg=' + sigmaavg + '&sigmasigma=' + sigmasigma + '&text=' + text
                         , area: ['80%', '90%']
                     });
                 break;
@@ -1351,14 +1370,14 @@
                         if (is) {
                             $.ajax({
                                 type: "post",
-                                url: '../UpDownMethod/ResponsePoint',
+                                url: '../UpDownMethod/StimulusQuantity',
                                 datatype: "json",
                                 contenttype: "application/json; charset=utf-8",
                                 data: {
                                      "ExperimentalId":@Model.ExperimentalId,
                                     "average": avg,
                                     "standardDeviation":atan,
-                                    "ResponsePointValue": StimulusQuantity,
+                                    "StimulusQuantityValue": StimulusQuantity,
                                 },
                                 async: false,
                                 success: function (data) {
@@ -1371,6 +1390,8 @@
                     responsePointD: function () {
                         var is = true;
                         var ProbabilityResponse = parseFloat(document.getElementById("ProbabilityResponseD").value);
+                        var avg = document.getElementById("avg2").value;
+                        var atan = document.getElementById("sigma2").value;
                         if (ProbabilityResponse.toString() == "NaN") {
                             is = false;
                             layer.open({
@@ -1394,11 +1415,13 @@
                         if (is) {
                             $.ajax({
                                 type: "post",
-                                url: '../UpDownMethod/ResponsePointD',
+                                url: '../UpDownMethod/ResponsePoint',
                                 datatype: "json",
                                 contenttype: "application/json; charset=utf-8",
                                 data: {
-                                    "upd_id":@Model.id,
+                                    "ExperimentalId":@Model.ExperimentalId,
+                                    "average": avg,
+                                    "standardDeviation":atan,
                                     "ResponsePointValue": ProbabilityResponse,
                                 },
                                 async: false,
@@ -1413,6 +1436,8 @@
                     responseProbabilityD: function () {
                         var is = true;
                         var StimulusQuantity = parseFloat(document.getElementById("StimulusQuantityD").value);
+                        var avg = document.getElementById("avg2").value;
+                        var atan = document.getElementById("sigma2").value;
                         if (StimulusQuantity.toString() == "NaN") {
                             is = false;
                             layer.open({
@@ -1436,11 +1461,13 @@
                         if (is) {
                             $.ajax({
                                 type: "post",
-                                url: '../UpDownMethod/StimulusQuantityD',
+                                url: '../UpDownMethod/StimulusQuantity',
                                 datatype: "json",
                                 contenttype: "application/json; charset=utf-8",
                                 data: {
-                                    "upd_id":@Model.id,
+                                    "ExperimentalId":@Model.ExperimentalId,
+                                    "average": avg,
+                                    "standardDeviation":atan,
                                     "StimulusQuantityValue": StimulusQuantity,
                                 },
                                 async: false,

@@ -617,6 +617,46 @@ namespace WsSensitivity.Models.IDbDrives
             return udvs;
         }
 
+        public override List<UpDownExperiment> GetUpDownExperiments()
+        {
+            List<UpDownExperiment> udes = new List<UpDownExperiment>();
+            udes = db.UpDownExperiment.ToList();
+            return udes;
+        }
+
+        public override List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        {
+            List<UpDownExperiment> udes = new List<UpDownExperiment>();
+            udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName) && DateTime.Compare(startTime, m.udt_Creationtime) <= 0 && DateTime.Compare(endTime, m.udt_Creationtime) >= 0).ToList();
+            return udes;
+        }
+
+        public override List<UpDownExperiment> QueryExperimentTable(string productName)
+        {
+            List<UpDownExperiment> udes = new List<UpDownExperiment>();
+            udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName)).ToList();
+            return udes;
+        }
+
+        public override bool Delete(UpDownExperiment upDownExperiment)
+        {
+            UpDownExperiment modle = db.UpDownExperiment.FirstOrDefault(m => m.id == upDownExperiment.id);
+            if (modle == null)
+            {
+                return false;
+            }
+            try
+            {
+                db.UpDownExperiment.Remove(modle);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
         #endregion
     }
 }
