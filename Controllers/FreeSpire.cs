@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Web;
+using AlgorithmReconstruct;
 using Spire.Xls;
 using WsSensitivity.Models;
 using static WsSensitivity.Models.AlgorithmReconstruct;
@@ -30,7 +31,7 @@ namespace WsSensitivity.Controllers
             sheet.Range["B3:D3"].Text = langlryExpTable.let_ProductName;
             sheet.Range["B3:D3"].Merge();
             sheet.Range["E3"].Text = "试验时间";
-            sheet.Range["F3:H3"].Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            sheet.Range["F3:H3"].Text = langlryExpTable.let_ExperimentalDate.ToString("yyyy-MM-dd HH:mm");
             sheet.Range["F3:H3"].Merge();
             sheet.Range["A4"].Text = "实验数量";
             sheet.Range["B4"].Text = ldts.Count.ToString();
@@ -106,7 +107,7 @@ namespace WsSensitivity.Controllers
             sheet.Range["F" + count + ""].Text = "试验人";
             //设置行宽
             sheet.Range["A1:H1"].RowHeight = 20;
-            var strFullName = @"D:\Data\Upload\" + "兰利法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+            var strFullName = @"C:\Users\Administrator\Desktop\兰利法\" + "兰利法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
             book.SaveToFile(strFullName, ExcelVersion.Version2010);
         }
 
@@ -130,7 +131,7 @@ namespace WsSensitivity.Controllers
             sheet.Range["B3:D3"].Text = doptimizeExperimentTable.det_ProductName;
             sheet.Range["B3:D3"].Merge();
             sheet.Range["E3"].Text = "试验时间";
-            sheet.Range["F3:H3"].Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            sheet.Range["F3:H3"].Text = doptimizeExperimentTable.det_ExperimentalDate.ToString("yyyy-MM-dd HH:mm");
             sheet.Range["F3:H3"].Merge();
             sheet.Range["A4"].Text = "实验数量";
             sheet.Range["B4"].Text = ddts.Count.ToString();
@@ -201,7 +202,7 @@ namespace WsSensitivity.Controllers
             sheet.Range["F" + count + ""].Text = "试验人";
             //设置行宽
             sheet.Range["A1:H1"].RowHeight = 20;
-            var strFullName = @"D:\Data\Upload\" + "D-优化法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+            var strFullName = @"C:\Users\Administrator\Desktop\D-优化法\" + "D-优化法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
             book.SaveToFile(strFullName, ExcelVersion.Version2010);
         }
 
@@ -266,6 +267,185 @@ namespace WsSensitivity.Controllers
         private static string DoptimizeIgnition(List<DoptimizeDataTable> ddts, LangleyAlgorithm lr, double probability)
         {
             return ddts[ddts.Count - 1].ddt_StandardDeviation == 0 ? "0" : "" + lr.ResponsePointCalculate(probability, ddts[ddts.Count - 1].ddt_Mean, ddts[ddts.Count - 1].ddt_StandardDeviation) + "";
+        }
+
+        private static string UpDownIgnition(double StandardDeviation,double Mean, LiftingAlgorithm lr, double probability)
+        {
+            return StandardDeviation == 0 ? "0" : "" + lr.ResponsePointCalculate(probability, Mean, StandardDeviation) + "";
+        }
+
+        public static void UpDownFreeSpireExcel(UpDownExperiment upDownExperiment, List<UpDownView> upDownViews, int grop, List<UpDownView> upDownViews1, int[] nj, double[] Gj, double[] Hj,double[] muj,double[] sigmaj,LiftingAlgorithm lr,List<UpDownGroup> upDownGroups)
+        {
+            var up = LiftingPublic.Upanddown(upDownViews, upDownExperiment, lr);
+            var mtr = lr.MultigroupTestResult(nj, Gj, Hj, muj, sigmaj);
+            Workbook book = new Workbook();
+            Worksheet sheet = book.Worksheets[0];
+            var iCellcount = 1;
+            //1.设置表头
+            if(grop == 0)
+                sheet.Range[1, iCellcount++].Text = "单组升降法试验记录及数据处理结果";
+            else
+                sheet.Range[1, iCellcount++].Text = "多组升降法试验数据处理结果";
+            sheet.Range["A1:AO1"].Merge();
+            sheet.Range["A1:AO1"].Style.HorizontalAlignment = HorizontalAlignType.Center;
+            sheet.Range["A2:C2"].Text = "产品名称";
+            sheet.Range["A2:C2"].Merge();
+            sheet.Range["D2:L2"].Text = upDownExperiment.udt_ProdectName;
+            sheet.Range["D2:L2"].Merge();
+            sheet.Range["M2:O2"].Text = "产品数量";
+            sheet.Range["M2:O2"].Merge();
+            if (grop == 0)
+                sheet.Range["P2:U2"].Text = upDownViews.Count.ToString();
+            else
+                sheet.Range["P2:U2"].Text = upDownViews1.Count.ToString();
+            sheet.Range["P2:U2"].Merge();
+            sheet.Range["V2:Z2"].Text = "技术条件";
+            sheet.Range["V2:Z2"].Merge();
+            sheet.Range["AA2:AO2"].Text = upDownExperiment.udt_Technicalconditions;
+            sheet.Range["AA2:AO2"].Merge();
+            sheet.Range["A3:C3"].Text = "试验时间";
+            sheet.Range["A3:C3"].Merge();
+            sheet.Range["D3:L3"].Text = upDownExperiment.udt_Creationtime.ToString("yyyy-MM-dd HH:mm");
+            sheet.Range["D3:L3"].Merge();
+            int count = 7;
+            string[] s = { "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO" };
+            if (grop == 0)
+            {
+                sheet.Range["M3:Q3"].Text = "初始刺激量";
+                sheet.Range["M3:Q3"].Merge();
+                sheet.Range["R3:U3"].Text = upDownViews[0].dtup_Standardstimulus.ToString();
+                sheet.Range["R3:U3"].Merge();
+                sheet.Range["V3:Y3"].Text = "步长";
+                sheet.Range["V3:Y3"].Merge();
+                sheet.Range["Z3:AG3"].Text = upDownViews[0].dudt_Stepd.ToString();
+                sheet.Range["Z3:AG3"].Merge();
+                sheet.Range["AH3:AK3"].Text = "台阶数";
+                sheet.Range["AH3:AK3"].Merge();
+                sheet.Range["AL3:AO3"].Text = up.n.ToString();
+                sheet.Range["AL3:AO3"].Merge();
+                sheet.Range["A4:C4"].Text = "假设分布/分析方法";
+                sheet.Range["A4:C4"].Merge();
+                sheet.Range["D4:L4"].Text = LiftingPublic.DistributionState(lr);
+                sheet.Range["D4:L4"].Merge();
+                sheet.Range["M4:Q4"].Text = "翻转响应";
+                sheet.Range["M4:Q4"].Merge();
+                sheet.Range["R4:U4"].Text = upDownExperiment.udt_Flipresponse == 0 ? "否" : "是";
+                sheet.Range["R4:U4"].Merge();
+                sheet.Range["V4:Y4"].Text = "分辨率";
+                sheet.Range["V4:Y4"].Merge();
+                sheet.Range["Z4:AO4"].Text = upDownExperiment.udt_Instrumentresolution.ToString();
+                sheet.Range["Z4:AO4"].Merge();
+                
+                sheet.Range["A5:AO5"].Merge();
+                sheet.Range["A6"].Text = "i";
+                sheet.Range["B6"].Text = "X";
+                for (int i = 0; i < s.Length; i++)
+                {
+                    sheet.Range["" + s[i] + "6"].Text = (i + 1).ToString();
+                }
+                int zero = 0;
+                for (int i = 0; i < up.result_i.Length; i++)
+                {
+                    sheet.Range["A" + count + ""].Text = up.result_i[i].ToString();
+                    sheet.Range["B" + count + ""].Text = (upDownViews[0].dtup_Initialstimulus + (up.result_i[i] * upDownViews[0].dudt_Stepd)).ToString();
+                    if (up.result_i[i] == 0)
+                        zero = count;
+                    count++;
+                }
+                for (int j = 0; j < upDownViews.Count; j++)
+                {
+                    sheet.Range["" + s[j] + "" + zero + ""].Text = upDownViews[j].dtup_response.ToString();
+                    if (upDownViews[j].dtup_response == 1)
+                        zero++;
+                    else
+                        zero--;
+                }
+            }
+            else
+            {
+                sheet.Range["M3:Q3"].Text = "总组数";
+                sheet.Range["M3:Q3"].Merge();
+                sheet.Range["R3:U3"].Text = upDownGroups.Count.ToString();
+                sheet.Range["R3:U3"].Merge();
+                sheet.Range["V3:Y3"].Text = "仪器分辨率";
+                sheet.Range["V3:Y3"].Merge();
+                sheet.Range["Z3:AG3"].Text = upDownExperiment.udt_Instrumentresolution.ToString();
+                sheet.Range["Z3:AG3"].Merge();
+                sheet.Range["A4:C4"].Text = "假设分布/分析方法";
+                sheet.Range["A4:C4"].Merge();
+                sheet.Range["D4:L4"].Text = LiftingPublic.DistributionState(lr);
+                sheet.Range["D4:L4"].Merge();
+                sheet.Range["M4:Q4"].Text = "翻转响应";
+                sheet.Range["M4:Q4"].Merge();
+                sheet.Range["R4:U4"].Text = upDownExperiment.udt_Flipresponse == 0 ? "否" : "是";
+                sheet.Range["R4:U4"].Merge();
+            }
+            if (grop == 0)
+                count = UpDown(up.μ0_final, up.σ0_final, count, sheet, up.Sigma_mu, up.Sigma_sigma, lr, up.n);
+            else
+            {
+                int n = 0;
+                foreach(var i in nj)
+                {
+                    n += i;
+                }
+                count = UpDown(mtr.μ0_final, mtr.σ0_final, count, sheet, mtr.Sigma_mu, mtr.Sigma_sigma, lr, n);
+            }
+            for (int w = 0;w<s.Length;w++)
+            {
+                sheet.Range["" + s[w] + "1:" + s[w] + "" + count + ""].ColumnWidth = 4;
+            }
+            sheet.Range["A2:AO" + count + ""].BorderInside(LineStyleType.Thin, Color.Black);
+            sheet.Range["A2:AO" + count + ""].BorderAround(LineStyleType.Medium, Color.Black);
+            if (grop == 0)
+            {
+                var strFullName = @"C:\Users\Administrator\Desktop\升降法\" + "单组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+                book.SaveToFile(strFullName, ExcelVersion.Version2010);
+            }
+            else
+            {
+                var strFullName = @"C:\Users\Administrator\Desktop\升降法\" + "多组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+                book.SaveToFile(strFullName, ExcelVersion.Version2010);
+            }
+        }
+
+        private static int UpDown(double μ0_final,double σ0_final,int count, Worksheet sheet,double Sigma_mu,double Sigma_sigma,LiftingAlgorithm lr,int n)
+        {
+            sheet.Range["A" + count + ":C" + count + ""].Text = "点估计：";
+            sheet.Range["A" + count + ":C" + count + ""].Merge();
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "均值：" + μ0_final + "      标准差：" + σ0_final + "       均值标准误差：" + Sigma_mu + "        标准差标准误差：" + Sigma_sigma + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "99%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.99) + "      99.9%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.999) + "       99.9999%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.999999) + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "1%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.01) + "      0.1%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.001) + "       0.0001%发火点：" + UpDownIgnition(σ0_final, μ0_final, lr, 0.000001) + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            sheet.Range["A" + count + ":C" + count + ""].Text = "区间估计：";
+            sheet.Range["A" + count + ":C" + count + ""].Merge();
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "置信度：0.95";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            var vfr = lr.VarianceFunctionResponseProbabilityIntervalEstimated(0.999, 0.95, n, μ0_final, σ0_final, Sigma_mu, Sigma_sigma);
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "均值区间估计：（" + vfr[5] + "," + vfr[4] + "）  标准差区间估计：（" + vfr[7] + "," + vfr[6] + "）";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "响应概率为99.9%区间估计：（" + vfr[1] + "," + vfr[0] + "）  单侧置信下限：" + vfr[3] + "        单侧置信上限：" + vfr[2] + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            vfr = lr.VarianceFunctionResponseProbabilityIntervalEstimated(0.001, 0.95, n, μ0_final, σ0_final, Sigma_mu, Sigma_sigma);
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "响应概率为0.1%区间估计：（" + vfr[1] + "," + vfr[0] + "）  单侧置信下限：" + vfr[3] + "        单侧置信上限：" + vfr[2] + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            vfr = lr.VarianceFunctionResponseProbabilityIntervalEstimated(0.999999, 0.95, n, μ0_final, σ0_final, Sigma_mu, Sigma_sigma);
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "响应概率为99.9999%区间估计：（" + vfr[1] + "," + vfr[0] + "）  单侧置信下限：" + vfr[3] + "        单侧置信上限：" + vfr[2] + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            count++;
+            vfr = lr.VarianceFunctionResponseProbabilityIntervalEstimated(0.000001, 0.95, n, μ0_final, σ0_final, Sigma_mu, Sigma_sigma);
+            sheet.Range["D" + count + ":AO" + count + ""].Text = "响应概率为0.0001%区间估计：（" + vfr[1] + "," + vfr[0] + "）  单侧置信下限：" + vfr[3] + "        单侧置信上限：" + vfr[2] + "";
+            sheet.Range["D" + count + ":AO" + count + ""].Merge();
+            return count;
         }
     }
 }

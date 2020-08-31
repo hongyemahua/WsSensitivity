@@ -236,7 +236,7 @@
                                         </div>
                                         <label class="layui-form-label" style="width:auto">Y轴分隔份数</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="Y_Axis" id="Y_Axis" value="20" autocomplete="off" class="layui-input" style="width:99%" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                            <input type="text" name="Y_Axis" id="Y_Axis" value="50" autocomplete="off" class="layui-input" style="width:99%" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                         </div>
                                     </div>
 
@@ -494,10 +494,212 @@
                     }
                 },
                 Likelihood: function () {
-                    alert("似然比法区间计算绘图");
+                     var isConfi = true;
+                    var intervalTypeSelection = 1;
+                    var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
+                    var yMin = parseFloat(document.getElementById("yMin").value);
+                    var yMax = parseFloat(document.getElementById("yMax").value);
+                    var Y_Axis = parseFloat(document.getElementById("Y_Axis").value);
+                    var check = document.getElementsByName("intervalTypeSelection3");
+                    for (var i = 0; i < check.length; i++) {
+                        if (check[i].checked) {
+                            intervalTypeSelection = check[i].value;
+                        }
+                    }
+                    if (BatchConfidenceLevel.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['置信水平不能为空', '#BatchConfidenceLevel3']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel > 1) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin > yMax) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: 'Y轴最小值不能大于Y轴最大值'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴最小值不能为空', '#yMin']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (yMax.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴最大值不能为空', '#yMax']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Y_Axis.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴分隔份数不能为空', '#Y_Axis']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    var load;
+                    if (isConfi) {
+                        load = layer.load();
+                        $.ajax({
+                            type: "post"
+                            , data: {
+                                "BatchConfidenceLevel": BatchConfidenceLevel
+                                , "yMin": yMin
+                                , "yMax": yMax
+                                , "Y_Axis": Y_Axis
+                                , "intervalTypeSelection": intervalTypeSelection
+                                , "favg": @avg
+                                , "fsigma": @sigma
+                                , "ExperimentalId":@ExperimentalId
+                                ,"udg_id":@udg_id,
+                            },
+                            url: '@Url.Action("Likelihood", "UpDownMethod")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , success: function (data) {
+                                layer.close(load);
+                                var index = layer.open({
+                                    type: 2
+                                    , area: ['70%', '80%']
+                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                                    , content: ['../LineChart/LineChart', 'no']
+                                    , btnAlign: 'c'
+                                    , anim: 1
+                                    , closeBtn: 1
+
+                                });
+                            }
+                        });
+                    }
                 },
                 Variancefunction: function () {
-                    alert("方差函数");
+                    var isConfi = true;
+                    var intervalTypeSelection = 1;
+                    var BatchConfidenceLevel = parseFloat(document.getElementById("BatchConfidenceLevel3").value);
+                    var yMin = parseFloat(document.getElementById("yMin").value);
+                    var yMax = parseFloat(document.getElementById("yMax").value);
+                    var Y_Axis = parseFloat(document.getElementById("Y_Axis").value);
+                    var check = document.getElementsByName("intervalTypeSelection3");
+                    for (var i = 0; i < check.length; i++) {
+                        if (check[i].checked) {
+                            intervalTypeSelection = check[i].value;
+                        }
+                    }
+                    if (BatchConfidenceLevel.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['置信水平不能为空', '#BatchConfidenceLevel3']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (BatchConfidenceLevel <= 0 || BatchConfidenceLevel > 1) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: '置信水平取值范围 (0,1]'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin > yMax) {
+                        isConfi = false;
+                        layer.open({
+                            title: '错误提示'
+                            , content: 'Y轴最小值不能大于Y轴最大值'
+                            , time: 3000
+                            , icon: 5
+                        });
+                    }
+                    if (yMin.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴最小值不能为空', '#yMin']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (yMax.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴最大值不能为空', '#yMax']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    if (Y_Axis.toString() == "NaN") {
+                        isConfi = false;
+                        layer.open({
+                            type: 4
+                            , content: ['Y轴分隔份数不能为空', '#Y_Axis']
+                            , tips: [1, '#ff2121']
+                            , time: 3000
+                        });
+                    }
+                    var load;
+                    if (isConfi) {
+                        load = layer.load();
+                        $.ajax({
+                            type: "post"
+                            , data: {
+                                "BatchConfidenceLevel": BatchConfidenceLevel
+                                , "yMin": yMin
+                                , "yMax": yMax
+                                , "Y_Axis": Y_Axis
+                                , "intervalTypeSelection": intervalTypeSelection
+                                , "favg": @avg
+                                , "fsigma": @sigma
+                                , "ExperimentalId":@ExperimentalId
+                                , "textNumber":@text
+                                , "fsigmaavg": @sigmaavg
+                                ,"fsigmasigma":@sigmasigma,
+                            },
+                            url: '@Url.Action("Variancefunction", "UpDownMethod")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                            , success: function (data) {
+                                layer.close(load);
+                                var index = layer.open({
+                                    type: 2
+                                    , area: ['70%', '80%']
+                                    , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                                    , content: ['../LineChart/LineChart', 'no']
+                                    , btnAlign: 'c'
+                                    , anim: 1
+                                    , closeBtn: 1
+
+                                });
+                            }
+                        });
+                    }
                 },
             }
             $('.layui-btn').on('click', function () {

@@ -320,5 +320,8 @@ namespace AlgorithmReconstruct
         {
             return LiftingDistributionSelection.Distribution() + LiftingMethodStandardSelection.MethodStandard();
         }
+
+        public double ResponsePointCalculate(double fq, double favg, double fsigma) => LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(favg) + (LiftingDistributionSelection.QValue(fq) * fsigma));
+
     }
 }

@@ -12,6 +12,7 @@ using System.Web.Security;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.WebSockets;
 using System.Net.Sockets;
+using NPOI.OpenXmlFormats.Dml;
 
 namespace WsSensitivity.Controllers
 {
@@ -123,10 +124,9 @@ namespace WsSensitivity.Controllers
         public ActionResult CalculateCurrentData(int udg_id)
         {
             List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
-            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
             var lr = LiftingPublic.SelectState(upDownExperiment);
-            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, upDownGroup, lr);
+            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, lr);
 
             double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
             double[] rpse = lr.ResponsePointStandardError(up.Sigma_mu, up.Sigma_sigma);
@@ -427,9 +427,8 @@ namespace WsSensitivity.Controllers
         {
             List<UpDownView> list_udv = dbDrive.GetUpDownViews(udg_id);
             UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(list_udv[0].dudt_ExperimentId);
-            UpDownGroup upDownGroup = dbDrive.GetDownGroup(udg_id);
             var lr = LiftingPublic.SelectState(upDownExperiment);
-            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, upDownGroup, lr);
+            var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, lr);
             List<SingleExperimentTable> singleExperimentTables = new List<SingleExperimentTable>();
             for (int w = 0;w< up.result_i.Length;w++)
             {
@@ -456,8 +455,8 @@ namespace WsSensitivity.Controllers
             for (int i=0;i< list_udg.Count;i++)
             {
                 ComprehensiveResultsModel comprehensiveResultsModel = new ComprehensiveResultsModel();
-                List<UpDownView> list_udv = dbDrive.GetUpDownViews_UDEID(list_udg[i].Id);
-                var up = LiftingPublic.Upanddown(list_udv, upDownExperiment, list_udg[i],lr);
+                List<UpDownView> list_udv = dbDrive.GetUpDownViews(list_udg[i].Id);
+                var up = LiftingPublic.Upanddown(list_udv, upDownExperiment,lr);
                 double[] prec = lr.GetPrec(up.μ0_final, up.σ0_final);
                 comprehensiveResultsModel.setNumber = i + 1;
                 comprehensiveResultsModel.stimulusQuantity = list_udv[0].dtup_Initialstimulus;
@@ -537,16 +536,103 @@ namespace WsSensitivity.Controllers
         }
         //似然比绘图
         [HttpPost]
-        public ActionResult Likelihood()
+        public ActionResult Likelihood(double BatchConfidenceLevel,double yMin,double yMax,int Y_Axis,int intervalTypeSelection,double favg,double fsigma,int ExperimentalId,int udg_id)
         {
-            return Json(1);
+            UpDownExperiment ude = dbDrive.GetUpDownExperiment(ExperimentalId);
+            List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
+            var lr = LiftingPublic.SelectState(ude);
+            var xAndV = LiftingPublic.GetXArrayAndVArray(list_udt, ude);
+            var srd = lr.QuasiLikelihoodRatioMethod(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xAndV.xArray, xAndV.vArray, intervalTypeSelection);
+            LangleyPublic.sideReturnData = srd;
+            LangleyPublic.aArray.Clear();
+            LangleyPublic.bArray.Clear();
+            LangleyPublic.cArray.Clear();
+            double ceiling = srd.responsePoints.Min();
+            double lower = srd.responsePoints.Max();
+            for (int i = 0; i < srd.responseProbability.Length; i++)
+            {
+                LangleyPublic.aArray.Add("[" + srd.responsePoints[i] + "," + srd.responseProbability[i] + "]");
+                if (double.IsInfinity(srd.Y_Ceilings[i]))
+                    LangleyPublic.bArray.Add("[" + lower + "," + srd.responseProbability[i] + "]");
+                else
+                    LangleyPublic.bArray.Add("[" + srd.Y_Ceilings[i] + "," + srd.responseProbability[i] + "]");
+                if (double.IsInfinity(srd.Y_LowerLimits[i]))
+                    LangleyPublic.cArray.Add("[" + ceiling + "," + srd.responseProbability[i] + "]");
+                else
+                    LangleyPublic.cArray.Add("[" + srd.Y_LowerLimits[i] + "," + srd.responseProbability[i] + "]");
+            }
+            if (intervalTypeSelection == 0)
+                LangleyPublic.incredibleIntervalType = "拟然比区间计算-单侧置信区间";
+            else
+                LangleyPublic.incredibleIntervalType = "拟然比区间计算-双侧置信区间";
+            LangleyPublic.incredibleLevelName = BatchConfidenceLevel.ToString();
+            return Json(true);
         }
         //方差函数绘图
         [HttpPost]
-        public ActionResult Variancefunction()
+        public ActionResult Variancefunction(double BatchConfidenceLevel, double yMin, double yMax, int Y_Axis, int intervalTypeSelection, double favg, double fsigma, int ExperimentalId,int textNumber,double fsigmaavg,double fsigmasigma)
         {
-            return Json(1);
+            UpDownExperiment ude = dbDrive.GetUpDownExperiment(ExperimentalId);
+            var lr = LiftingPublic.SelectState(ude);
+            var srd = lr.VarianceFunctionMethod(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, intervalTypeSelection, textNumber, fsigmaavg, fsigmasigma);
+            LangleyPublic.sideReturnData = srd;
+            LangleyPublic.aArray.Clear();
+            LangleyPublic.bArray.Clear();
+            LangleyPublic.cArray.Clear();
+            double ceiling = srd.responsePoints.Min();
+            double lower = srd.responsePoints.Max();
+            for (int i = 0; i < srd.responseProbability.Length; i++)
+            {
+                LangleyPublic.aArray.Add("[" + srd.responsePoints[i] + "," + srd.responseProbability[i] + "]");
+                if (double.IsInfinity(srd.Y_Ceilings[i]))
+                    LangleyPublic.bArray.Add("[" + lower + "," + srd.responseProbability[i] + "]");
+                else
+                    LangleyPublic.bArray.Add("[" + srd.Y_Ceilings[i] + "," + srd.responseProbability[i] + "]");
+                if (double.IsInfinity(srd.Y_LowerLimits[i]))
+                    LangleyPublic.cArray.Add("[" + ceiling + "," + srd.responseProbability[i] + "]");
+                else
+                    LangleyPublic.cArray.Add("[" + srd.Y_LowerLimits[i] + "," + srd.responseProbability[i] + "]");
+            }
+            if (intervalTypeSelection == 0)
+                LangleyPublic.incredibleIntervalType = "GJB377单侧区间估计方法";
+            else
+                LangleyPublic.incredibleIntervalType = "GJB377双侧区间估计方法";
+            LangleyPublic.incredibleLevelName = BatchConfidenceLevel.ToString();
+            return Json(true);
         }
         #endregion
+
+        [HttpPost]
+        //导出excel
+        public ActionResult GropingExcel(int udg_id,int ExperimentalId,int grop)
+        {
+            try
+            {
+                UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
+                List<UpDownView> upDownViews = dbDrive.GetUpDownViews(udg_id);
+                List<UpDownView> upDownViews1 = dbDrive.GetUpDownViews_UDEID(ExperimentalId);
+                List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(ExperimentalId);
+                var lr = LiftingPublic.SelectState(upDownExperiment);
+                int[] nj = new int[list_udg.Count];
+                double[] Gj = new double[list_udg.Count];
+                double[] Hj = new double[list_udg.Count];
+                double[] muj = new double[list_udg.Count];
+                double[] sigmaj = new double[list_udg.Count];
+                for (int i = 0; i < list_udg.Count; i++)
+                {
+                    List<UpDownDataTable> upDownDataTables = dbDrive.GetUpDownDataTables(list_udg[i].Id);
+                    var xAndV = LiftingPublic.GetXArrayAndVArray(upDownDataTables, upDownExperiment);
+                    var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownDataTables[0].dtup_Standardstimulus, list_udg[i].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+                    nj[i] = up.n;
+                    Gj[i] = up.G;
+                    Hj[i] = up.H;
+                    muj[i] = up.μ0_final;
+                    sigmaj[i] = up.σ0_final;
+                }
+                FreeSpire.UpDownFreeSpireExcel(upDownExperiment, upDownViews,grop,upDownViews1,nj,Gj,Hj,muj,sigmaj,lr, list_udg);
+            }
+            catch (Exception ex) { }
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
     }
 }

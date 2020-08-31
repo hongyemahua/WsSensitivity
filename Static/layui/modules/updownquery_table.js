@@ -45,15 +45,15 @@ layui.define(['table', 'form'], function(exports){
   table.on('tool(updownquery_list)', function(obj){
     var data = obj.data;
       if (obj.event === 'delete') {  //删除
-        var massage = '确认删除编号'+data.cpmc+'么？'
+          var massage = '确认删除编号' + data.number+'么？'
         layer.confirm(massage, {
             btn: ['确认', '取消'] //按钮
         }, function () {
             $.ajax({
-                url: "../UpDownMethod/GetAllExperiments",
+                url: "../UpDownMethod/Experiment_delete",
                 type: "post",
                 data: {
-                    "ude_id": data.id
+                    "ude_id": data.id,
                 },
                 dataType: "json",
                 success: function (data) {

@@ -152,6 +152,9 @@
                                         <button type="button" class="layui-btn" id="lntervalestimationBtn" name="lntervalestimationBtn" lay-event="lntervalestimation">
                                             <i class="layui-icon layui-icon-senior"></i>单组数据区间估计
                                         </button>
+                                        <button type="button" class="layui-btn" id="GropingExcel" name="GropingExcel" lay-event="GropingExcel">
+                                            <i class="layui-icon layui-icon-senior"></i>导出当前组excel
+                                        </button>
                                         @if (Model.Groupingstate.Equals("多组试验"))
                                         {
                                             if (Model.IsLastGroup)
@@ -359,8 +362,11 @@
                                         <button type="button" class="layui-btn" lay-event="MultipleExperimentsCalculated" id="MultipleCalculated">
                                             <i class="layui-icon layui-icon-chart"></i>计算多组实验结果
                                         </button>
-                                        <button type="button" class="layui-btn layui-btn-disabled" disabled name="lntervalestimationD"id="lntervalestimationD" lay-event="lntervalestimation">
+                                        <button type="button" class="layui-btn layui-btn-disabled" disabled name="lntervalestimationD" id="lntervalestimationD" lay-event="lntervalestimation">
                                             <i class="layui-icon layui-icon-senior"></i>多组数据区间估计
+                                        </button>
+                                        <button type="button" class="layui-btn layui-btn-disabled" disabled name="Excel" id="Excel" lay-event="Excel">
+                                            <i class="layui-icon layui-icon-senior"></i>导出多组实验excel
                                         </button>
                                     </div>
                                 </script>
@@ -1098,6 +1104,27 @@
                 });
                 }
                 break;
+             case 'GropingExcel':
+                if (!flage) {
+                    tishi();
+                } else {
+                    $.ajax({
+                        type: "post"
+                        , data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                           "grop":0,
+                        }
+                        ,url: '@Url.Action("GropingExcel", "UpDownMethod")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                        , success: function (data) {
+                            layer.msg('导出成功');
+                        }
+                    });
+                }
+                break;
             case 'lntervalestimation':
                 if (flage) {
                     var avg = document.getElementById("avg").value;
@@ -1257,6 +1284,8 @@
                         success: function (data) {
                             document.getElementById("responsePointButtonD").classList.remove('layui-btn-disabled');
                             $("#responsePointButtonD").removeAttr("disabled", "disabled");
+                            document.getElementById("Excel").classList.remove('layui-btn-disabled');
+                            $("#Excel").removeAttr("disabled", "disabled");
                             document.getElementById("responseProbabilityButtonD").classList.remove('layui-btn-disabled');
                             $("#responseProbabilityButtonD").removeAttr("disabled", "disabled");
                             document.getElementById("lntervalestimationD").classList.remove('layui-btn-disabled');
@@ -1277,6 +1306,23 @@
                     tishi();
                 }
 
+                break;
+            case 'Excel':
+                 $.ajax({
+                        type: "post"
+                        , data: {
+                            "udg_id":@Model.id,
+                            "ExperimentalId":@Model.ExperimentalId,
+                            "grop": 1,
+                        }
+                        ,url: '@Url.Action("GropingExcel", "UpDownMethod")'
+                            , datatype: "json"
+                            , contenttype: "application/json; charset=utf-8"
+                            , async: false
+                        , success: function (data) {
+                            layer.msg('导出成功');
+                        }
+                    });
                 break;
             case 'lntervalestimation':
                 var avg = document.getElementById("avg2").value;

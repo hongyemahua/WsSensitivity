@@ -143,7 +143,7 @@ namespace WsSensitivity.Controllers
             return count;
         }
 
-        public static Upanddown Upanddown(List<UpDownView> list_udv, UpDownExperiment upDownExperiment, UpDownGroup upDownGroup, LiftingAlgorithm lr)
+        public static Upanddown Upanddown(List<UpDownView> list_udv, UpDownExperiment upDownExperiment, LiftingAlgorithm lr)
         {
             double[] xArray = new double[list_udv.Count];
             int[] vArray = new int[list_udv.Count];
@@ -152,7 +152,7 @@ namespace WsSensitivity.Controllers
                 xArray[i] = list_udv[i].dtup_Standardstimulus;
                 vArray[i] = Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
             }
-            return lr.GetReturn(xArray, vArray, xArray[0], upDownGroup.dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+            return lr.GetReturn(xArray, vArray, xArray[0], list_udv[0].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
         }
 
         public static XArrayAndVArray GetXArrayAndVArray(List<UpDownDataTable> list_udt, UpDownExperiment upDownExperiment)
@@ -174,7 +174,8 @@ namespace WsSensitivity.Controllers
             List<QueryModel> queryModels = new List<QueryModel>();
             for (int i = udes.Count - 1; i >= 0; i--)
             {
-                var upDown_List = GetQueryModel(dbDrive, udes[i]);
+                var lr = SelectState(udes[i]);
+                var upDown_List = GetQueryModel(dbDrive, udes[i],lr);
                 upDown_List.number = i + 1 + first;
                 queryModels.Add(upDown_List);
             }
@@ -186,20 +187,21 @@ namespace WsSensitivity.Controllers
             List<QueryModel> queryModels = new List<QueryModel>();
             for (int i = udes.Count - 1; i >= 0; i--)
             {
-                var upDown_List = GetQueryModel(dbDrive, udes[i]);
+                var lr = SelectState(udes[i]);
+                var upDown_List = GetQueryModel(dbDrive, udes[i],lr);
                 upDown_List.number = i + 1;
                 queryModels.Add(upDown_List);
             }
             return queryModels;
         }
-        private static QueryModel GetQueryModel(IDbDrive dbDrive, UpDownExperiment ude)
+        private static QueryModel GetQueryModel(IDbDrive dbDrive, UpDownExperiment ude, LiftingAlgorithm lr)
         {
             QueryModel query = new QueryModel();
             query.id = ude.id;
             query.InitialStimulus = ude.udt_Initialstimulus;
             query.StepLength = ude.udt_Stepd;
             query.Groping = ude.udt_Groupingstate;
-            query.PublishStatusMethods = DistributionState(ude);
+            query.PublishStatusMethods = DistributionState(lr);
             query.pow = ude.udt_Power;
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ude.id);
             query.GroupNumber = upDownGroups.Count;
@@ -210,9 +212,8 @@ namespace WsSensitivity.Controllers
             return query;
         }
 
-        private static string DistributionState(UpDownExperiment ude)
+        public static string DistributionState(LiftingAlgorithm lr)
         {
-            LiftingAlgorithm lr = SelectState(ude);
             return lr.DistributionNameAndMethodStandardName();
         }
     }

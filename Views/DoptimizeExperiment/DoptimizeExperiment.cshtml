@@ -1041,7 +1041,7 @@
                     });
                 }
               },
-                Excel: function () {
+              Excel: function () {
                     $.ajax({
                         type: "post"
                         , data: { "DoptimizeExpTableId":@Model.det.det_Id}
@@ -1050,7 +1050,7 @@
                             , contenttype: "application/json; charset=utf-8"
                             , async: false
                         , success: function (data) {
-
+                            layer.msg('导出成功');
                         }
                     });
                 },
