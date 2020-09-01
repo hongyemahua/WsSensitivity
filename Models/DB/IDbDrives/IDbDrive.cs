@@ -42,13 +42,13 @@ namespace WsSensitivity.Models.IDbDrives
         #region 兰利实验表操作
         public abstract bool Insert(LangleyExperimentTable let);
 
-        public abstract List<LangleyExperimentTable> GetAllLangleyExperimentTables();
+        public abstract List<LangleyExperimentTable> GetAllLangleyExperimentTables(int admin_id);
 
         public abstract LangleyExperimentTable GetLangleyExperimentTable(int id);
 
-        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime);
+        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime,int admin_id);
 
-        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName);
+        public abstract List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, int admin_id);
 
         public abstract bool Delete(LangleyExperimentTable let);
 
@@ -71,9 +71,9 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract bool Insert(DoptimizeExperimentTable det);
         public abstract DoptimizeExperimentTable GetDoptimizeExperimentTable(int id);
         public abstract bool Update(DoptimizeExperimentTable det);
-        public abstract List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables();
-        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime);
-        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName);
+        public abstract List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables(int admin_id);
+        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime,int admin_id);
+        public abstract List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName,int admin_id);
         public abstract bool Delete(DoptimizeExperimentTable det);
         #endregion
 
@@ -99,9 +99,9 @@ namespace WsSensitivity.Models.IDbDrives
         public abstract List<UpDownView> GetUpDownViews(int id);
         public abstract List<UpDownView> GetUpDownViews_UDEID(int id);
         public abstract List<UpDownGroup> GetUpDownGroups(int id);
-        public abstract List<UpDownExperiment> GetUpDownExperiments();
-        public abstract List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime);
-        public abstract List<UpDownExperiment> QueryExperimentTable(string productName);
+        public abstract List<UpDownExperiment> GetUpDownExperiments(int admin_id);
+        public abstract List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime,int admin_id);
+        public abstract List<UpDownExperiment> QueryExperimentTable(string productName,int admin_id);
         #endregion
     }
 }

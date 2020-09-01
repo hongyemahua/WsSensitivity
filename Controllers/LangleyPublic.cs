@@ -10,6 +10,7 @@ namespace WsSensitivity.Controllers
 {
     public class LangleyPublic
     {
+        public static int adminId;
         public struct Langley_list
         {
             public int number;

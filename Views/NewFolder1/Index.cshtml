@@ -178,7 +178,7 @@
                                 </dl>
                             </li>
                         }
-                        @if (sArray[5] != "close")
+                        @*@if (sArray[5] != "close")
                         {
                             <li data-name="potion" class="layui-nav-item">
                                 <a href="javascript:;" lay-href="#" lay-tips="关于" lay-direction="2">
@@ -186,10 +186,10 @@
                                     <cite>关于</cite>
                                 </a>
                             </li>
-                        }
+                        }*@
 
                         <li data-name="get" class="layui-nav-item">
-                            <a href="javascript:;" lay-href="@Url.Action("PotionList","Potion")" lay-tips="退出" lay-direction="2">
+                            <a href="@Url.Action("AdminLoginoff","AdminHome")" lay-tips="退出" lay-direction="2">
                                 <i class="layui-icon layui-icon-auz"></i>
                                 <cite>退出</cite>
                             </a>
@@ -245,6 +245,7 @@
             var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
             //兰利法参数设置
             var active = {
+                
                 Langlry_ParamSeting: function () {
                     //示范一个公告层
                     var index=layer.open({

@@ -28,6 +28,7 @@ namespace WsSensitivity.Controllers
             var stream = str.ReadToEnd();
             JavaScriptSerializer js = new JavaScriptSerializer();
             LangleyExperimentTable let = js.Deserialize<LangleyExperimentTable>(stream);
+            let.let_RecordEmployeeId = LangleyPublic.adminId;
             let.let_ExperimentalDate = DateTime.Now;
             dbDrive.Insert(let);
             double sq = LangleyPublic.SelectState(let).CalculateStimulusQuantity(xArray, vArray, let.let_StimulusQuantityCeiling, let.let_StimulusQuantityFloor, let.let_PrecisionInstruments);

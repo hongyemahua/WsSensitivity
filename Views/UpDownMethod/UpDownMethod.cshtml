@@ -711,10 +711,7 @@
                     async: false,
                     success: function (data) {
                         flage = true;
-                        document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
-                        $("#responsePointButton").removeAttr("disabled", "disabled");
-                        document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
-                        $("#responseProbabilityButton").removeAttr("disabled", "disabled");
+                        
                         element.tabChange('updown_tab', '22');
                         table.reload('singleunit_list');
                         table.reload('comprehensive_list');
@@ -734,6 +731,16 @@
                         document.getElementById("g").value = data[13];
                         document.getElementById("stcs").value = data[14];
                         document.getElementById("h").value = data[15];
+                        if (data[1] != 0) {
+                            document.getElementById("responsePointButton").classList.remove('layui-btn-disabled');
+                            $("#responsePointButton").removeAttr("disabled", "disabled");
+                            document.getElementById("responseProbabilityButton").classList.remove('layui-btn-disabled');
+                            $("#responseProbabilityButton").removeAttr("disabled", "disabled");
+                        }
+                        else {
+                            document.getElementById("responsePointButton").classList.add('layui-btn-disabled');
+                            document.getElementById("responseProbabilityButton").classList.add('layui-btn-disabled');
+                        }
                     }
                 });
                 break;
@@ -1096,6 +1103,7 @@
                                     document.getElementById("h").value = data[16];
                                     document.getElementById("UpDownName").innerText = data[17];
                                     table.reload('singleunit_list');
+                                    
                                 }
                             });
                         });
@@ -1282,12 +1290,10 @@
                         async: false,
                         cache: false,
                         success: function (data) {
-                            document.getElementById("responsePointButtonD").classList.remove('layui-btn-disabled');
-                            $("#responsePointButtonD").removeAttr("disabled", "disabled");
+                           
                             document.getElementById("Excel").classList.remove('layui-btn-disabled');
                             $("#Excel").removeAttr("disabled", "disabled");
-                            document.getElementById("responseProbabilityButtonD").classList.remove('layui-btn-disabled');
-                            $("#responseProbabilityButtonD").removeAttr("disabled", "disabled");
+                            
                             document.getElementById("lntervalestimationD").classList.remove('layui-btn-disabled');
                             $("#lntervalestimationD").removeAttr("disabled", "disabled");
 
@@ -1300,6 +1306,16 @@
                             document.getElementById("pre_sem999").value = data[5];
                             document.getElementById("pre_sem01").value = data[4];
                             document.getElementById("text_number").value = data[8];
+                            if (data[1] != 0 && data[1] != "NaN") {
+                                document.getElementById("responsePointButtonD").classList.remove('layui-btn-disabled');
+                                $("#responsePointButtonD").removeAttr("disabled", "disabled");
+                                document.getElementById("responseProbabilityButtonD").classList.remove('layui-btn-disabled');
+                                $("#responseProbabilityButtonD").removeAttr("disabled", "disabled");
+                            }
+                            else {
+                                document.getElementById("responsePointButtonD").classList.add('layui-btn-disabled');
+                                document.getElementById("responseProbabilityButtonD").classList.add('layui-btn-disabled');
+                            }
                         }
                     });
                 } else {

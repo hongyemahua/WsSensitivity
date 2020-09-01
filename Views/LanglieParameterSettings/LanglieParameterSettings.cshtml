@@ -1,5 +1,6 @@
 ﻿
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -173,41 +174,6 @@
                     $("#getPow").attr('disabled','disabled');
                 }
             });
-
-            @*var active = {
-                nocyte: function (layero) {
-
-                        $.ajax({
-                            type: "post",
-                            url: '@Url.Action("LanglieParameterSettingsJson")',
-                            datatype: "json",
-                            contenttype: "application/json; charset=utf-8",
-                            data: role/*$("form").serialize()*/,
-                            async: false,
-                            success: function (data) {
-                                if (data) {
-                                    layer.msg('添加成功', {
-                                        icon: 1,
-                                        time: 3000 //1秒关闭（如果不配置，默认是3秒）
-                                    });
-                                    location.href = '@Url.Action("LangleyExperiment", "Langley")';
-
-                                } else {
-                                    layer.msg('添加失败', {
-                                        icon: 2,
-                                        shift: -1,  //震动效果
-                                        time: 1000  //1秒关闭
-                                    });
-                                }
-                            }
-                        });
-                }
-
-            }
-            $('.layui-btn').on('click', function () {
-                var type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });*@
         });
         
         

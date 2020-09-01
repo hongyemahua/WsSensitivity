@@ -26,7 +26,7 @@ namespace WsSensitivity.Models
         public string email { get; set; }
 
         [DisplayName("角色")]
-        public string role { get; set; }
+        public int role { get; set; }
 
         [DisplayName("密码")]
         public string pass { get; set; }

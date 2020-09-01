@@ -42,6 +42,8 @@ namespace WsSensitivity.Models
 
         [DisplayName("创建时间")]
         public DateTime udt_Creationtime { get; set; }
-        
+        [DisplayName("记录员工id")]
+        public int udt_RecordEmployeeId { get; set; }
+
     }
 }

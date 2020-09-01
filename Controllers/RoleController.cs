@@ -70,7 +70,7 @@ namespace WsSensitivity.Controllers
             List<Admin> admins = dbDrive.GetAllAdmins();
             foreach (Admin admin in admins)
             {
-                int roleid = int.Parse(admin.role);
+                int roleid = admin.role;
                 if (roleid==id) {
                     return Json(false);
                 }

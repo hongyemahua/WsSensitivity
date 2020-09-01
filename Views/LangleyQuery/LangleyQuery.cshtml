@@ -4,6 +4,7 @@
 }
 
 @{ 
+    var id = Session["Admin"] == null ? 0 : ((WsSensitivity.Models.Admin)Session["Admin"]).id;
     List<string> pn = (List<string>)ViewData["pn"];
 }
 
@@ -116,7 +117,7 @@
                 table.reload('langley_list', {
                     url: "@Url.Action("Langley_query", "LangleyQuery")"
                     , method: "post"
-                    , where: { "productName": modules, "startTime": start, "endTime": stop}
+                    , where: { "productName": modules, "startTime": start, "endTime": stop,}
                     , contentType: 'application/json'
                     , parseData: function (res) { //res 即为原始返回的数据
                         if (this.page.curr) {

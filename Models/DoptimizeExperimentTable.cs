@@ -34,5 +34,7 @@ namespace WsSensitivity.Models
         public string det_TechnicalConditions { get; set; }
         [DisplayName("日期")]
         public DateTime det_ExperimentalDate { get; set; }
+        [DisplayName("记录人员id")]
+        public int det_RecordEmployeeId { get; set; }
     }
 }

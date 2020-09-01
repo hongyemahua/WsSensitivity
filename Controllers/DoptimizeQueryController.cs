@@ -15,7 +15,7 @@ namespace WsSensitivity.Controllers
         //D优化法查询界面
         public ActionResult DoptimizeQuery()
         {
-            var dets = dbDrive.GetAllDoptimizeExperimentTables();
+            var dets = dbDrive.GetAllDoptimizeExperimentTables(LangleyPublic.adminId);
             List<string> productName = new List<string>();
             foreach (var det in dets)
             {
@@ -29,7 +29,7 @@ namespace WsSensitivity.Controllers
         //获取全部D优化法实验数据
         public ActionResult GetAllDoptimizeExperiment(int page = 1, int limit = 20)
         {
-            List<DoptimizeExperimentTable> det_list = dbDrive.GetAllDoptimizeExperimentTables();
+            List<DoptimizeExperimentTable> det_list = dbDrive.GetAllDoptimizeExperimentTables(LangleyPublic.adminId);
             List<DoptimizeExperimentTable> PagesLet = new List<DoptimizeExperimentTable>();
             int last = det_list.Count - (page - 1) * limit;
             int first = 0;
@@ -52,10 +52,10 @@ namespace WsSensitivity.Controllers
             {
                 DateTime st = Convert.ToDateTime(startTime);
                 DateTime et = Convert.ToDateTime(endTime);
-                det_list = dbDrive.QueryDoptimizeExperimentTable(productName, st, et.AddDays(1));
+                det_list = dbDrive.QueryDoptimizeExperimentTable(productName, st, et.AddDays(1),LangleyPublic.adminId);
             }
             else
-                det_list = dbDrive.QueryDoptimizeExperimentTable(productName);
+                det_list = dbDrive.QueryDoptimizeExperimentTable(productName,LangleyPublic.adminId);
             return Json(new { code = 0, msg = "", count = det_list.Count, data = DoptimizePublic.Doptimization_list(dbDrive,det_list) }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]

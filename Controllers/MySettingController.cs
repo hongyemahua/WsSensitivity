@@ -28,7 +28,7 @@ namespace WsSensitivity.Controllers
         {
             int adminid = int.Parse(str_adminid);
             Admin admin = dbDrive.FindAdmin(adminid);
-            int roleid = int.Parse(admin.role);
+            int roleid = admin.role;
             Role role = dbDrive.FindRole(roleid);
             admin.rolename = role.rolename;
             return Json(new { admin }, JsonRequestBehavior.AllowGet);

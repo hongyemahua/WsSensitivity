@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -60,9 +61,12 @@ namespace WsSensitivity.Controllers
             sbHtml.Append("</table>");
 
             string incredibleIntervalType = LangleyPublic.incredibleIntervalType;
-            //第一种:使用FileContentResult
-            byte[] fileContents = Encoding.Default.GetBytes(sbHtml.ToString());
-            return File(fileContents, "application/ms-excel", "" + incredibleIntervalType + ".xls");
+            ////第一种:使用FileContentResult
+            byte[] fileContents = Encoding.UTF8.GetBytes(sbHtml.ToString());
+            //return File(fileContents, "application/ms-excel", "" + incredibleIntervalType + ".xlsx");
+            //第二种:使用FileStreamResult
+            var fileStream = new MemoryStream(fileContents);
+            return File(fileStream, "application/ms-excel", "" + incredibleIntervalType + ".xls");
         }
     }
 }

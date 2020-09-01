@@ -15,7 +15,7 @@ layui.define(['table', 'form'], function(exports){
     table.render({
         elem: '#langley_list'
         , url: '../LangleyQuery/GetAllLangleysExperiment' //模拟接口
-        //, data: { 'page': Id }
+        //, data: { 'u': Id }
       , height: 'full-130' //高度最大化减去差值
       , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
           layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局

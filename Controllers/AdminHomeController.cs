@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WsSensitivity.Controllers;
 
 namespace Navigation.Controllers
 {
@@ -55,10 +56,11 @@ namespace Navigation.Controllers
             if (loginadmin != null)
             {
                 if (loginadmin.state.Equals("禁用")) return Json(false);
-                int roleid = int.Parse(loginadmin.role);
+                int roleid = loginadmin.role;
                 Role role = dbDrive.FindRole(roleid);
                 Session["limit"] = role.limit;
                 Session["Admin"] = loginadmin;
+                LangleyPublic.adminId = loginadmin.id;
                 return Json(true);
             }
             return Json(false);

@@ -75,7 +75,7 @@ layui.define(['table', 'form'], function(exports){
         });
       }
       else if (obj.event === 'edit') {     //编辑
-          top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?udg_id=' + data.id, '编辑' + data.projectname + '升降法实验')
+          top.layui.index.openTabsPage('/UpDownMethod/UpDownMethod?udg_id=' + data.udg_id, '编辑' + data.projectname + '升降法实验')
       }
     });
 

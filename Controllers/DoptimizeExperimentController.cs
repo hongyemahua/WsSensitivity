@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using WsSensitivity.Models;
 using WsSensitivity.Models.IDbDrives;
+using static WsSensitivity.Models.AlgorithmReconstruct;
 
 namespace WsSensitivity.Controllers
 {
@@ -178,12 +179,46 @@ namespace WsSensitivity.Controllers
                 string filename = file.FileName;
                 string savePath = Server.MapPath("/UploadExcel/") + filename;
                 file.SaveAs(savePath);
+                int s = filename.LastIndexOf(".");
                 var list_excels = ExcelHelper.ExcelToDataTable(savePath);
+                var eLower = list_excels.Select(x => x.Lower).ToArray();
+                var eProbability = list_excels.Select(x => x.Probability).ToArray();
+                var eStimulus = list_excels.Select(x => x.Stimulus).ToArray();
+                var eUpper = list_excels.Select(x => x.Upper).ToArray();
+                var econfidence = list_excels.Select(x => x.Confidence).ToArray();
+                LangleyPublic.aArray.Clear();
+                LangleyPublic.bArray.Clear();
+                LangleyPublic.cArray.Clear();
+                SideReturnData srd = new SideReturnData();
+                srd.responseProbability = eProbability;
+                srd.Y_Ceilings = eUpper;
+                srd.Y_LowerLimits = eLower;
+                srd.responsePoints = eStimulus;
+                double ceiling = srd.responsePoints.Min();
+                double lower = srd.responsePoints.Max();
+                for (int i = 0; i < srd.responseProbability.Length; i++)
+                {
+                    LangleyPublic.aArray.Add("[" + srd.responsePoints[i] + "," + srd.responseProbability[i] + "]");
+                    if (double.IsInfinity(srd.Y_Ceilings[i]))
+                        LangleyPublic.bArray.Add("[" + lower + "," + srd.responseProbability[i] + "]");
+                    else
+                        LangleyPublic.bArray.Add("[" + srd.Y_Ceilings[i] + "," + srd.responseProbability[i] + "]");
+                    if (double.IsInfinity(srd.Y_LowerLimits[i]))
+                        LangleyPublic.cArray.Add("[" + ceiling + "," + srd.responseProbability[i] + "]");
+                    else
+                        LangleyPublic.cArray.Add("[" + srd.Y_LowerLimits[i] + "," + srd.responseProbability[i] + "]");
+                }
+                LangleyPublic.incredibleIntervalType = filename.Substring(0,s);
+                LangleyPublic.incredibleLevelName = econfidence[0].ToString();
+
             }
+
             catch (Exception ex)
-            { 
+            {
+                return Json(false);
             }
-            return View();
+
+            return Json(true);
         }
 
         [HttpPost]

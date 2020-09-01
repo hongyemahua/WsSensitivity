@@ -590,26 +590,7 @@
                     }
 
                 });
-            //文件上传
-            var layerindex;
-            var uploadInst = upload.render({
-                elem: '#excel'
-                , url: '../DoptimizeExperiment/InputIntervalCalculation'
-                , accept: 'file'
-                , acceptMime: 'file/xls,file/xlsx'
-                , exts: 'xls|xlsx'
-                ,choose: function(obj) {
-                    layerindex=layer.load();
-                 }
-                , done: function (res, index, upload) {//上传成功回调
-                    layer.msg("上传成功", {icon:1});
-                    layer.close(layerindex);
-                }
-                , error: function (index, upload) {//上传失败回调
-                    layer.msg("上传失败", {icon:2});
-                    layer.close(layerindex);
-                }
-            });
+           
 
           var active = {
                 //技术条件
@@ -1001,11 +982,13 @@
                             , time: 3000
                         });
                     }
+                    var load;
                     if (isConfi) {
                         document.getElementById("IntervalCalculation").classList.add('layui-btn-disabled');
                         $("#IntervalCalculation").attr('disabled','disabled');
-                        document.getElementById("excel").classList.add('layui-btn-disabled');
-                        $("#excel").attr('disabled','disabled');
+                        //document.getElementById("excel").classList.add('layui-btn-disabled');
+                        //$("#excel").attr('disabled','disabled');
+                        load = layer.load();
                     $.ajax({
                         type: "post"
                         , data: {
@@ -1025,8 +1008,9 @@
                         , success: function (data) {
                             document.getElementById("IntervalCalculation").classList.remove('layui-btn-disabled');
                             $("#IntervalCalculation").removeAttr("disabled");
-                            document.getElementById("excel").classList.remove('layui-btn-disabled');
-                            $("#execl").removeAttr("disabled");
+                            //document.getElementById("excel").classList.remove('layui-btn-disabled');
+                            //$("#execl").removeAttr("disabled");
+                            layer.close(load);
                             var index = layer.open({
                                 type: 2
                                 , area: ['70%', '80%']
@@ -1054,7 +1038,36 @@
                         }
                     });
                 },
-          }
+            }
+            //文件上传
+            var layerindex;
+            var uploadInst = upload.render({
+                elem: '#excel'
+                , url: '../DoptimizeExperiment/InputIntervalCalculation'
+                , accept: 'file'
+                , acceptMime: 'file/xls,file/xlsx'
+                , exts: 'xls|xlsx'
+                , done: function (res) {
+                    if (res) {
+                        layer.msg('上传成功');
+                        console.log(res);
+
+                        var index = layer.open({
+                            type: 2
+                            , area: ['70%', '80%']
+                            , id: 'LAY_layuipro1' //设定一个id，防止重复弹出
+                            , content: ['../LineChart/LineChart', 'no']
+                            , btnAlign: 'c'
+                            , anim: 1
+                            , closeBtn: 1
+
+                        });
+                    }
+                    else {
+                        layer.msg('上传文件格式内容不正确');
+                    }
+                }
+            });
             $('.layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';

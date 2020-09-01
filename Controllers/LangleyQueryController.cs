@@ -14,7 +14,7 @@ namespace WsSensitivity.Controllers
         // GET: LangleyQuery
         public ActionResult LangleyQuery()
         {
-            var lets = dbDrive.GetAllLangleyExperimentTables();
+            var lets = dbDrive.GetAllLangleyExperimentTables(LangleyPublic.adminId);
             List<string> productName = new List<string>();
             foreach (var let in lets)
             {
@@ -32,16 +32,16 @@ namespace WsSensitivity.Controllers
             {
                 DateTime st = Convert.ToDateTime(startTime);
                 DateTime et = Convert.ToDateTime(endTime);
-                lets = dbDrive.QueryLangleyExperimentTable(productName, st, et.AddDays(1));
+                lets = dbDrive.QueryLangleyExperimentTable(productName, st, et.AddDays(1),LangleyPublic.adminId);
             }
             else
-                lets = dbDrive.QueryLangleyExperimentTable(productName);
+                lets = dbDrive.QueryLangleyExperimentTable(productName, LangleyPublic.adminId);
             return Json(new { code = 0, msg = "", count = lets.Count, data = LangleyPublic.Langley_lists(dbDrive, lets) }, JsonRequestBehavior.AllowGet);
         }
         //获取全部的兰利法实验并分页显示(前台带参访问)
         public ActionResult GetAllLangleysExperiment(int page = 1, int limit = 20)
         {
-            List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables();
+            List<LangleyExperimentTable> lets = dbDrive.GetAllLangleyExperimentTables(LangleyPublic.adminId);
             List<LangleyExperimentTable> PagesLet = new List<LangleyExperimentTable>();
             int last = lets.Count - (page - 1) * limit;
             int first = 0;

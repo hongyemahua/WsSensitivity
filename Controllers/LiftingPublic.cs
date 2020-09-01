@@ -89,6 +89,7 @@ namespace WsSensitivity.Controllers
     public class QueryModel
     {
         public int id { get; set; }
+        public int udg_id { get; set; }
         public string projectname { get; set; }
         public int number { get; set; }
         public double InitialStimulus { get; set; }
@@ -204,6 +205,7 @@ namespace WsSensitivity.Controllers
             query.PublishStatusMethods = DistributionState(lr);
             query.pow = ude.udt_Power;
             List<UpDownGroup> upDownGroups = dbDrive.GetUpDownGroups(ude.id);
+            query.udg_id = upDownGroups[0].Id;
             query.GroupNumber = upDownGroups.Count;
             List<UpDownView> upDownViews = dbDrive.GetUpDownViews_UDEID(ude.id);
             query.TotalNumberSaples = upDownViews.Count;

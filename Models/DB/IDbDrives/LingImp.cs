@@ -197,9 +197,14 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
-        public override List<LangleyExperimentTable> GetAllLangleyExperimentTables()
+        public override List<LangleyExperimentTable> GetAllLangleyExperimentTables(int admin_id)
         {
-            List<LangleyExperimentTable> lets = db.LangleyExperimentTable.ToList();
+            List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
+            if (admin.role == 1)
+                lets = db.LangleyExperimentTable.ToList();
+            else
+                lets = db.LangleyExperimentTable.Where(m => m.let_RecordEmployeeId == admin_id).ToList();
             return lets;
         }
 
@@ -248,17 +253,25 @@ namespace WsSensitivity.Models.IDbDrives
         }
 
 
-        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, DateTime startTime, DateTime endTime, int admin_id)
         {
             List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
-            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime, m.let_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.let_ExperimentalDate) >= 0).ToList();
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
+            if (admin.role == 1)
+                lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime, m.let_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.let_ExperimentalDate) >= 0).ToList();
+            else
+                lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && DateTime.Compare(startTime, m.let_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.let_ExperimentalDate) >= 0 && m.let_RecordEmployeeId == admin_id).ToList();
             return lets;
         }
 
-        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName)
+        public override List<LangleyExperimentTable> QueryLangleyExperimentTable(string productName, int admin_id)
         {
             List<LangleyExperimentTable> lets = new List<LangleyExperimentTable>();
-            lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName)).ToList();
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
+            if (admin.role ==1)
+                lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName)).ToList();
+            else
+                lets = db.LangleyExperimentTable.Where(m => m.let_ProductName.Contains(productName) && m.let_RecordEmployeeId == admin_id).ToList();
             return lets;
         }
         #endregion
@@ -344,22 +357,35 @@ namespace WsSensitivity.Models.IDbDrives
             return true;
         }
 
-        public override List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables()
+        public override List<DoptimizeExperimentTable> GetAllDoptimizeExperimentTables(int admin_id)
         {
-            List<DoptimizeExperimentTable> det = db.DoptimizeExperimentTable.ToList();
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
+            List<DoptimizeExperimentTable> det = new List<DoptimizeExperimentTable>();
+            if (admin.role == 1)
+                det = db.DoptimizeExperimentTable.ToList();
+            else
+                det = db.DoptimizeExperimentTable.Where(m => m.det_RecordEmployeeId == admin_id).ToList();
             return det;
         }
 
-        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName, DateTime startTime, DateTime endTime,int admin_id)
         {
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
             List<DoptimizeExperimentTable> det_list = new List<DoptimizeExperimentTable>();
-            det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName) && DateTime.Compare(startTime, m.det_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.det_ExperimentalDate) >= 0).ToList();
+            if(admin.role == 1)
+                det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName) && DateTime.Compare(startTime, m.det_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.det_ExperimentalDate) >= 0).ToList();
+            else
+                det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName) && DateTime.Compare(startTime, m.det_ExperimentalDate) <= 0 && DateTime.Compare(endTime, m.det_ExperimentalDate) >= 0 && m.det_RecordEmployeeId == admin_id).ToList();
             return det_list;
         }
-        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName)
+        public override List<DoptimizeExperimentTable> QueryDoptimizeExperimentTable(string productName,int admin_id)
         {
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
             List<DoptimizeExperimentTable> det_list = new List<DoptimizeExperimentTable>();
-            det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName)).ToList();
+            if(admin.role == 1)
+                det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName)).ToList();
+            else
+                det_list = db.DoptimizeExperimentTable.Where(m => m.det_ProductName.Contains(productName) && m.det_RecordEmployeeId == admin_id).ToList();
             return det_list;
         }
         public override bool Delete(DoptimizeExperimentTable det)
@@ -520,7 +546,7 @@ namespace WsSensitivity.Models.IDbDrives
         public override UpDownGroup GetDownGroup(int id)
         {
             UpDownGroup udg = new UpDownGroup();
-            udg = db.UpDownGroup.Where(m => m.Id == id).ToList()[0];
+            udg = db.UpDownGroup.Where(m => m.Id == id).First();
             return udg;
         }
 
@@ -617,24 +643,36 @@ namespace WsSensitivity.Models.IDbDrives
             return udvs;
         }
 
-        public override List<UpDownExperiment> GetUpDownExperiments()
+        public override List<UpDownExperiment> GetUpDownExperiments(int admin_id)
         {
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
             List<UpDownExperiment> udes = new List<UpDownExperiment>();
-            udes = db.UpDownExperiment.ToList();
+            if(admin.role == 1)
+                udes = db.UpDownExperiment.ToList();
+            else
+                udes = db.UpDownExperiment.Where(m => m.udt_RecordEmployeeId == admin_id).ToList();
             return udes;
         }
 
-        public override List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime)
+        public override List<UpDownExperiment> QueryExperimentTable(string productName, DateTime startTime, DateTime endTime,int admin_id)
         {
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
             List<UpDownExperiment> udes = new List<UpDownExperiment>();
-            udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName) && DateTime.Compare(startTime, m.udt_Creationtime) <= 0 && DateTime.Compare(endTime, m.udt_Creationtime) >= 0).ToList();
+            if(admin.role == 1)
+                udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName) && DateTime.Compare(startTime, m.udt_Creationtime) <= 0 && DateTime.Compare(endTime, m.udt_Creationtime) >= 0).ToList();
+            else
+                udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName) && DateTime.Compare(startTime, m.udt_Creationtime) <= 0 && DateTime.Compare(endTime, m.udt_Creationtime) >= 0 && m.udt_RecordEmployeeId == admin_id).ToList();
             return udes;
         }
 
-        public override List<UpDownExperiment> QueryExperimentTable(string productName)
+        public override List<UpDownExperiment> QueryExperimentTable(string productName,int admin_id)
         {
+            Admin admin = db.Admin.Where(m => m.id == admin_id).First();
             List<UpDownExperiment> udes = new List<UpDownExperiment>();
-            udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName)).ToList();
+            if(admin.role == 1)
+                udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName)).ToList();
+            else
+                udes = db.UpDownExperiment.Where(m => m.udt_ProdectName.Contains(productName) && m.udt_RecordEmployeeId == admin_id).ToList();
             return udes;
         }
 

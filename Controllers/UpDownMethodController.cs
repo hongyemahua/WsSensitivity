@@ -46,7 +46,7 @@ namespace WsSensitivity.Controllers
         }
         public ActionResult Query()
         {
-            var udes = dbDrive.GetUpDownExperiments();
+            var udes = dbDrive.GetUpDownExperiments(LangleyPublic.adminId);
             List<string> productName = new List<string>();
             foreach (var ude in udes)
             {
@@ -328,6 +328,7 @@ namespace WsSensitivity.Controllers
             JavaScriptSerializer js = new JavaScriptSerializer();
             UpDownExperiment experiment = js.Deserialize<UpDownExperiment>(stream);
             experiment.udt_Creationtime = DateTime.Now;
+            experiment.udt_RecordEmployeeId = LangleyPublic.adminId;
             dbDrive.Insert(experiment);
             UpDownGroup upDownGroup = new UpDownGroup();
             upDownGroup.dudt_ExperimentId = experiment.id;
@@ -346,7 +347,7 @@ namespace WsSensitivity.Controllers
         //获取全部试验数据
         public ActionResult GetAllExperiments(int page = 1, int limit = 20)
         {
-            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments();
+            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments(LangleyPublic.adminId);
             List<UpDownExperiment> PagesLet = new List<UpDownExperiment>();
             int last = udes.Count - (page - 1) * limit;
             int first = 0;
@@ -389,15 +390,15 @@ namespace WsSensitivity.Controllers
         [HttpPost]
         public ActionResult Experiment_query(string cpmc, string startdate, string stopdate)
         {
-            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments();
+            List<UpDownExperiment> udes = dbDrive.GetUpDownExperiments(LangleyPublic.adminId);
             if (startdate != "" && stopdate != "")
             {
                 DateTime st = Convert.ToDateTime(startdate);
                 DateTime et = Convert.ToDateTime(stopdate);
-                udes = dbDrive.QueryExperimentTable(cpmc, st, et.AddDays(1));
+                udes = dbDrive.QueryExperimentTable(cpmc, st, et.AddDays(1),LangleyPublic.adminId);
             }
             else
-                udes = dbDrive.QueryExperimentTable(cpmc);
+                udes = dbDrive.QueryExperimentTable(cpmc,LangleyPublic.adminId);
             return Json(new { code = 0, msg = "", fenye = 5, count = udes.Count, data = LiftingPublic.GetQueryModels(dbDrive, udes) }, JsonRequestBehavior.AllowGet);
         }
         //查询当前ID下的所有当组实验数据
