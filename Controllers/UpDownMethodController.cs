@@ -247,14 +247,14 @@ namespace WsSensitivity.Controllers
             var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownExperiment.udt_Initialstimulus, upDownGroup.dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
             UpDownDataTable upDownDataTable = new UpDownDataTable();
             upDownDataTable.dtup_DataTableId = udg_id;
-            upDownDataTable.dtup_Initialstimulus = z;
+            upDownDataTable.dtup_Initialstimulus = z1;
             upDownDataTable.dtup_response = 0;
-            upDownDataTable.dtup_Standardstimulus = z1;
+            upDownDataTable.dtup_Standardstimulus = z;
             bool isTure = dbDrive.Insert(upDownDataTable);
             List<UpDownGroup> list_udg = dbDrive.GetUpDownGroups(upDownExperiment.id);
             List<UpDownDataTable> list_udtInsert = dbDrive.GetUpDownDataTables(udg_id);
             var xAndVInsert = LiftingPublic.GetXArrayAndVArray(list_udtInsert, upDownExperiment);
-            string[] value = { isTure.ToString(), LiftingPublic.CurrentSetNumber(list_udg, udg_id).ToString(), (list_udtInsert.Count).ToString(), lr.StepsNumber(xAndVInsert.xArray, xAndVInsert.vArray).ToString(), z.ToString() };
+            string[] value = { isTure.ToString(), LiftingPublic.CurrentSetNumber(list_udg, udg_id).ToString(), (list_udtInsert.Count).ToString(), lr.StepsNumber(xAndVInsert.xArray, xAndVInsert.vArray).ToString(), z1.ToString() };
             return Json(value);
         }
         #endregion
@@ -607,6 +607,7 @@ namespace WsSensitivity.Controllers
         //导出excel
         public ActionResult GropingExcel(int udg_id,int ExperimentalId,int grop)
         {
+            var strFullName = "";
             try
             {
                 UpDownExperiment upDownExperiment = dbDrive.GetUpDownExperiment(ExperimentalId);
@@ -630,10 +631,10 @@ namespace WsSensitivity.Controllers
                     muj[i] = up.μ0_final;
                     sigmaj[i] = up.σ0_final;
                 }
-                FreeSpire.UpDownFreeSpireExcel(upDownExperiment, upDownViews,grop,upDownViews1,nj,Gj,Hj,muj,sigmaj,lr, list_udg);
+                strFullName =  FreeSpire.UpDownFreeSpireExcel(upDownExperiment, upDownViews,grop,upDownViews1,nj,Gj,Hj,muj,sigmaj,lr, list_udg);
             }
             catch (Exception ex) { }
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return Json(strFullName, JsonRequestBehavior.AllowGet);
         }
     }
 }

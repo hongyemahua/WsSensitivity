@@ -225,14 +225,15 @@ namespace WsSensitivity.Controllers
         //导出excel
         public JsonResult ExportXls(int DoptimizeExpTableId)
         {
+            var strFullName = "";
             try
             {
                 DoptimizeExperimentTable doptimizeExperimentTable = dbDrive.GetDoptimizeExperimentTable(DoptimizeExpTableId);
                 List<DoptimizeDataTable> ddts = dbDrive.GetDoptimizeDataTables(doptimizeExperimentTable.det_Id);
-                FreeSpire.DoptimizeFreeSpireExcel(doptimizeExperimentTable, ddts);
+                strFullName = FreeSpire.DoptimizeFreeSpireExcel(doptimizeExperimentTable, ddts);
             }
             catch (Exception ex) { }
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return Json(strFullName, JsonRequestBehavior.AllowGet);
         }
     }
 }

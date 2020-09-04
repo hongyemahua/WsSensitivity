@@ -197,14 +197,15 @@ namespace WsSensitivity.Controllers
         //导出excel
         public JsonResult ExportXls(int langlryExpTableId)
         {
+            var strFullName = "";
             try
             {
                 LangleyExperimentTable langlryExpTable = dbDrive.GetLangleyExperimentTable(langlryExpTableId);
                 List<LangleyDataTable> ldts = dbDrive.GetAllLangleyDataTable(langlryExpTable.let_Id);
-                FreeSpire.LangleyFreeSpireExcel(langlryExpTable, ldts);
+                strFullName = FreeSpire.LangleyFreeSpireExcel(langlryExpTable, ldts);
             }
             catch (Exception ex) { }
-            return Json(true, JsonRequestBehavior.AllowGet);
+            return Json(strFullName, JsonRequestBehavior.AllowGet);
         }
     }
 }

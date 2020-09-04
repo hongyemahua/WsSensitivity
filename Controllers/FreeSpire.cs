@@ -12,7 +12,7 @@ namespace WsSensitivity.Controllers
 {
     public class FreeSpire
     {
-        public static void LangleyFreeSpireExcel(LangleyExperimentTable langlryExpTable, List<LangleyDataTable> ldts)
+        public static string LangleyFreeSpireExcel(LangleyExperimentTable langlryExpTable, List<LangleyDataTable> ldts)
         {
             var lr = LangleyPublic.SelectState(langlryExpTable);
             ldts.RemoveRange(ldts.Count - 1, 1);
@@ -107,11 +107,12 @@ namespace WsSensitivity.Controllers
             sheet.Range["F" + count + ""].Text = "试验人";
             //设置行宽
             sheet.Range["A1:H1"].RowHeight = 20;
-            var strFullName = @"C:\Users\Administrator\Desktop\兰利法\" + "兰利法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+            var strFullName = @"C:\兰利法\" + "兰利法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
             book.SaveToFile(strFullName, ExcelVersion.Version2010);
+            return strFullName;
         }
 
-        public static void DoptimizeFreeSpireExcel(DoptimizeExperimentTable doptimizeExperimentTable, List<DoptimizeDataTable> ddts)
+        public static string DoptimizeFreeSpireExcel(DoptimizeExperimentTable doptimizeExperimentTable, List<DoptimizeDataTable> ddts)
         {
             var lr = DoptimizePublic.SelectState(doptimizeExperimentTable);
             ddts.RemoveRange(ddts.Count - 1, 1);
@@ -202,8 +203,9 @@ namespace WsSensitivity.Controllers
             sheet.Range["F" + count + ""].Text = "试验人";
             //设置行宽
             sheet.Range["A1:H1"].RowHeight = 20;
-            var strFullName = @"C:\Users\Administrator\Desktop\D-优化法\" + "D-优化法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+            var strFullName = @"C:\D-优化法\" + "D-优化法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
             book.SaveToFile(strFullName, ExcelVersion.Version2010);
+            return strFullName;
         }
 
         private static void TableHead(Worksheet sheet)
@@ -274,7 +276,7 @@ namespace WsSensitivity.Controllers
             return StandardDeviation == 0 ? "0" : "" + lr.ResponsePointCalculate(probability, Mean, StandardDeviation) + "";
         }
 
-        public static void UpDownFreeSpireExcel(UpDownExperiment upDownExperiment, List<UpDownView> upDownViews, int grop, List<UpDownView> upDownViews1, int[] nj, double[] Gj, double[] Hj,double[] muj,double[] sigmaj,LiftingAlgorithm lr,List<UpDownGroup> upDownGroups)
+        public static string UpDownFreeSpireExcel(UpDownExperiment upDownExperiment, List<UpDownView> upDownViews, int grop, List<UpDownView> upDownViews1, int[] nj, double[] Gj, double[] Hj,double[] muj,double[] sigmaj,LiftingAlgorithm lr,List<UpDownGroup> upDownGroups)
         {
             var up = LiftingPublic.Upanddown(upDownViews, upDownExperiment, lr);
             var mtr = lr.MultigroupTestResult(nj, Gj, Hj, muj, sigmaj);
@@ -313,7 +315,7 @@ namespace WsSensitivity.Controllers
             {
                 sheet.Range["M3:Q3"].Text = "初始刺激量";
                 sheet.Range["M3:Q3"].Merge();
-                sheet.Range["R3:U3"].Text = upDownViews[0].dtup_Standardstimulus.ToString();
+                sheet.Range["R3:U3"].Text = upDownViews[0].dtup_Initialstimulus.ToString();
                 sheet.Range["R3:U3"].Merge();
                 sheet.Range["V3:Y3"].Text = "步长";
                 sheet.Range["V3:Y3"].Merge();
@@ -339,6 +341,12 @@ namespace WsSensitivity.Controllers
                 sheet.Range["A5:AO5"].Merge();
                 sheet.Range["A6"].Text = "i";
                 sheet.Range["B6"].Text = "X";
+                if (upDownExperiment.udt_Standardstate == 1)
+                    sheet.Range["C6"].Text = "Ln";
+                else if (upDownExperiment.udt_Standardstate == 2)
+                    sheet.Range["C6"].Text = "Log";
+                else if (upDownExperiment.udt_Standardstate == 3)
+                    sheet.Range["C6"].Text = "幂";
                 for (int i = 0; i < s.Length; i++)
                 {
                     sheet.Range["" + s[i] + "6"].Text = (i + 1).ToString();
@@ -347,13 +355,15 @@ namespace WsSensitivity.Controllers
                 for (int i = 0; i < up.result_i.Length; i++)
                 {
                     sheet.Range["A" + count + ""].Text = up.result_i[i].ToString();
-                    sheet.Range["B" + count + ""].Text = (upDownViews[0].dtup_Initialstimulus + (up.result_i[i] * upDownViews[0].dudt_Stepd)).ToString();
                     if (up.result_i[i] == 0)
                         zero = count;
                     count++;
                 }
                 for (int j = 0; j < upDownViews.Count; j++)
                 {
+                    sheet.Range["B" + zero + ""].Text = upDownViews[j].dtup_Initialstimulus.ToString();
+                    if (upDownExperiment.udt_Standardstate != 0)
+                        sheet.Range["C" + zero + ""].Text = upDownViews[j].dtup_Standardstimulus.ToString();
                     sheet.Range["" + s[j] + "" + zero + ""].Text = upDownViews[j].dtup_response.ToString();
                     if (upDownViews[j].dtup_response == 1)
                         zero++;
@@ -381,7 +391,12 @@ namespace WsSensitivity.Controllers
                 sheet.Range["R4:U4"].Merge();
             }
             if (grop == 0)
+            {
                 count = UpDown(up.μ0_final, up.σ0_final, count, sheet, up.Sigma_mu, up.Sigma_sigma, lr, up.n);
+                count++;
+                sheet.Range["A"+count+":AO"+count+""].Text = "升降法中间数据：试探次数："+up.n+",A:"+up.A+",B:"+up.B+",M:"+up.M+",b:"+up.b+",G:"+up.G+"";
+                sheet.Range["A" + count + ":AO" + count + ""].Merge();
+            }
             else
             {
                 int n = 0;
@@ -399,13 +414,16 @@ namespace WsSensitivity.Controllers
             sheet.Range["A2:AO" + count + ""].BorderAround(LineStyleType.Medium, Color.Black);
             if (grop == 0)
             {
-                var strFullName = @"C:\Users\Administrator\Desktop\升降法\" + "单组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+                var strFullName = @"C:\升降法\" + "单组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
                 book.SaveToFile(strFullName, ExcelVersion.Version2010);
+                return strFullName;
+
             }
             else
             {
-                var strFullName = @"C:\Users\Administrator\Desktop\升降法\" + "多组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
+                var strFullName = @"C:\升降法\" + "多组升降法" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".xlsx";
                 book.SaveToFile(strFullName, ExcelVersion.Version2010);
+                return strFullName;
             }
         }
 

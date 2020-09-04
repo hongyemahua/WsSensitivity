@@ -153,7 +153,7 @@ namespace WsSensitivity.Controllers
                 xArray[i] = list_udv[i].dtup_Standardstimulus;
                 vArray[i] = Filp(list_udv[i].dtup_response, upDownExperiment.udt_Flipresponse);
             }
-            return lr.GetReturn(xArray, vArray, xArray[0], list_udv[0].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+            return lr.GetReturn(xArray, vArray, list_udv[0].dtup_Initialstimulus, list_udv[0].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
         }
 
         public static XArrayAndVArray GetXArrayAndVArray(List<UpDownDataTable> list_udt, UpDownExperiment upDownExperiment)
@@ -209,6 +209,7 @@ namespace WsSensitivity.Controllers
             query.GroupNumber = upDownGroups.Count;
             List<UpDownView> upDownViews = dbDrive.GetUpDownViews_UDEID(ude.id);
             query.TotalNumberSaples = upDownViews.Count;
+            query.FilpResponse = ude.udt_Flipresponse;
             query.DateTime = ude.udt_Creationtime.ToString();
             query.projectname = ude.udt_ProdectName;
             return query;
