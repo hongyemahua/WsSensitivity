@@ -213,21 +213,22 @@ namespace AlgorithmReconstruct
         public SideReturnData QuasiLikelihoodRatioMethod(double Y_Ceiling, double Y_LowerLimit, int Y_PartitionNumber, double ConfidenceLevel, double favg, double fsigma, double[] xArray, int[] vArray, int intervalChoose)
         {
             var sideReturnData = GetSideReturnDataValue(Y_Ceiling, Y_LowerLimit, Y_PartitionNumber);
+            xArray = LiftingMethodStandardSelection.InverseProcessArray(xArray);
             for (int i = 0; i < sideReturnData.responseProbability.Length; i++)
             {
                 IntervalEstimation ie = new IntervalEstimation();
                 if (intervalChoose == 0)
                 {
-                    ie = SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel,favg ,fsigma );
+                    ie = GetIntervalEstimationValue(SingleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel,LiftingMethodStandardSelection.InverseProcessValue(favg) ,fsigma ));
                 }
                 else
                 {
-                    ie = DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel,favg,fsigma);
+                    ie = GetIntervalEstimationValue(DoubleSideEstimation(xArray, vArray, sideReturnData.responseProbability[i], ConfidenceLevel, LiftingMethodStandardSelection.InverseProcessValue(favg), fsigma));
                 }
                 sideReturnData.Y_LowerLimits[i] = ie.Confidence.Down;
                 sideReturnData.Y_Ceilings[i] = ie.Confidence.Up;
                 double fq = sideReturnData.responseProbability[i];
-                sideReturnData.responsePoints[i] = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(favg) + (LiftingDistributionSelection.QValue(fq) * fsigma));
+                sideReturnData.responsePoints[i] = LiftingMethodStandardSelection.ProcessValue(LiftingMethodStandardSelection.InverseProcessValue(favg) + LiftingDistributionSelection.QValue(fq) * fsigma);
             }
             return sideReturnData;
         }

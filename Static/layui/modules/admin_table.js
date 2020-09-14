@@ -17,7 +17,7 @@ layui.define(['table', 'form'], function(exports){
     ,url: '../Admin/GetAllAdmins' //模拟接口
     , height: 'full-130' //高度最大化减去差值
     ,cols: [[
-      {field: 'id',title: '序号', sort: true}
+       { field: 'number',title: '序号', sort: true}
       ,{field: 'name',title: '名称', minWidth: 100}
       ,{field: 'sex',title: '性别'}
       ,{field: 'phone',title: '手机'}

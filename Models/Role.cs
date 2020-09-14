@@ -34,6 +34,7 @@ namespace WsSensitivity.Models
         public string mysetting = "close";
         [NotMapped]
         public string about = "close";
-
+        [NotMapped]
+        public int number;
     }
 }

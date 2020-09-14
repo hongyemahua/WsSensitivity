@@ -36,5 +36,7 @@ namespace WsSensitivity.Models
 
         [NotMapped]
         public string rolename;
+        [NotMapped]
+        public int number;
     }
 }

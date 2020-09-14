@@ -48,15 +48,18 @@ namespace WsSensitivity.Controllers
         {
             List<Admin> admins = dbDrive.GetAllAdmins();
             List<Role> roles = dbDrive.GetAllRoles();
+            int number = 1;
             foreach (Admin admin in admins)
             {
                 int roleid = admin.role;
+                admin.number = number;
                 foreach (Role role in roles)
                 {
                     if (roleid == role.id) {
                         admin.rolename = role.rolename;
                     }
                 }
+                number++;
             }
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
             return Json(new { code = 0, msg = "", count = admins.Count, data = admins }, JsonRequestBehavior.AllowGet);

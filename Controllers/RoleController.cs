@@ -30,6 +30,12 @@ namespace WsSensitivity.Controllers
         public ActionResult GetAllRoles()
         {
             List<Role> roles = dbDrive.GetAllRoles();
+            int number = 1;
+            foreach (var role in roles)
+            {
+                role.number = number;
+                number++;
+            }
             //code--信息状态，默认为0，msg--返回信息，count--数据条数，data--数据
             return Json(new { code = 0, msg = "", count = roles.Count, data = roles }, JsonRequestBehavior.AllowGet);
         }

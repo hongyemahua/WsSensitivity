@@ -307,7 +307,7 @@ namespace WsSensitivity.Controllers
             {
                 List<UpDownDataTable> upDownDataTables = dbDrive.GetUpDownDataTables(list_udg[i].Id);
                 var xAndV = LiftingPublic.GetXArrayAndVArray(upDownDataTables, upDownExperiment);
-                var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownDataTables[0].dtup_Standardstimulus, list_udg[i].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
+                var up = lr.GetReturn(xAndV.xArray, xAndV.vArray, upDownDataTables[0].dtup_Initialstimulus, list_udg[i].dudt_Stepd, out double z, upDownExperiment.udt_Instrumentresolution, out double z1);
                 nj[i] = up.n;
                 Gj[i] = up.G;
                 Hj[i] = up.H;
@@ -542,8 +542,14 @@ namespace WsSensitivity.Controllers
             UpDownExperiment ude = dbDrive.GetUpDownExperiment(ExperimentalId);
             List<UpDownDataTable> list_udt = dbDrive.GetUpDownDataTables(udg_id);
             var lr = LiftingPublic.SelectState(ude);
-            var xAndV = LiftingPublic.GetXArrayAndVArray(list_udt, ude);
-            var srd = lr.QuasiLikelihoodRatioMethod(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xAndV.xArray, xAndV.vArray, intervalTypeSelection);
+            double[] xArray = new double[list_udt.Count];
+            int[] vArray = new int[list_udt.Count];
+            for (int i = 0; i < list_udt.Count; i++)
+            {
+                xArray[i] = list_udt[i].dtup_Initialstimulus;
+                vArray[i] = LiftingPublic.Filp(list_udt[i].dtup_response, ude.udt_Flipresponse);
+            }
+            var srd = lr.QuasiLikelihoodRatioMethod(yMax, yMin, Y_Axis, BatchConfidenceLevel, favg, fsigma, xArray, vArray, intervalTypeSelection);
             LangleyPublic.sideReturnData = srd;
             LangleyPublic.aArray.Clear();
             LangleyPublic.bArray.Clear();

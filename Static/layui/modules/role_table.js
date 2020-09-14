@@ -17,7 +17,7 @@ layui.define(['table', 'form'], function (exports) {
         , url: '../Role/GetAllRoles' //模拟接口
         , height: 'full-130' //高度最大化减去差值
         , cols: [[
-            { field: 'id', width: 80, title: 'id', sort: true }
+            { field: 'number', width: 80, title: '序号', sort: true }
             , { field: 'rolename', title: '角色名' }
             , { field: 'limit', title: '拥有权限', templet: '#button_limit', minWidth: 400, align: 'center' }
             , { field: 'descr', title: '具体描述' }
