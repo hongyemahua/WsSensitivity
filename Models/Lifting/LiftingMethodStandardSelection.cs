@@ -21,6 +21,7 @@ namespace AlgorithmReconstruct
             return ret;
         }
         public abstract string MethodStandard();
+        public abstract bool IsStandard();
     }
 
     public class LiftingStandard : LiftingMethodStandardSelection
@@ -32,6 +33,8 @@ namespace AlgorithmReconstruct
         public override string MethodStandard() => "标准";
 
         public override double ProcessValue(double value) => value;
+
+        public override bool IsStandard() => true;
     }
 
     public class LiftingLn : LiftingMethodStandardSelection
@@ -50,6 +53,8 @@ namespace AlgorithmReconstruct
         public override string MethodStandard() => "Ln";
 
         public override double ProcessValue(double value) => Math.Exp(value);
+
+        public override bool IsStandard() => false;
     }
 
     public class LiftingLog : LiftingMethodStandardSelection
@@ -68,6 +73,8 @@ namespace AlgorithmReconstruct
         public override string MethodStandard() => "Log";
 
         public override double ProcessValue(double value) => Math.Pow(10, value);
+
+        public override bool IsStandard() => false;
     }
 
     public class LiftingPow : LiftingMethodStandardSelection
@@ -82,5 +89,7 @@ namespace AlgorithmReconstruct
         public override string MethodStandard() => "幂 = "+ pow +"";
 
         public override double ProcessValue(double value) => Math.Pow(value, 1 / pow);
+
+        public override bool IsStandard() => false;
     }
 }

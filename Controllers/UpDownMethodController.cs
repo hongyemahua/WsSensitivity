@@ -262,15 +262,15 @@ namespace WsSensitivity.Controllers
         #region 单组数据
 
         //单组数据区间估计
-        public ActionResult LntervalEstimation(int udg_id, int ExperimentalId, string res, double avg, double sigma, double sigmaavg, double sigmasigma, int text)
+        public ActionResult LntervalEstimation(int udg_id, int ExperimentalId, string res, string avg, string sigma, string sigmaavg, string sigmasigma, int text)
         {
             ViewData["res"] = res;
             ViewData["udg_id"] = udg_id;
             ViewData["ExperimentalId"] = ExperimentalId;
-            ViewData["avg"] = avg;
-            ViewData["sigma"] = sigma;
-            ViewData["sigmaavg"] = sigmaavg;
-            ViewData["sigmasigma"] = sigmasigma;
+            ViewData["avg"] = double.Parse(avg.Replace(" ",""));
+            ViewData["sigma"] = double.Parse(sigma.Replace(" ", ""));
+            ViewData["sigmaavg"] = double.Parse(sigmaavg.Replace(" ", ""));
+            ViewData["sigmasigma"] = double.Parse(sigmasigma.Replace(" ", ""));
             ViewData["text"] = text;
             return View();
         }

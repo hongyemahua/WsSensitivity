@@ -240,7 +240,8 @@ namespace AlgorithmReconstruct
             for (int i = 0; i < sideReturnData.responseProbability.Length; i++)
             {
                 double[] vfrpie = VarianceFunctionResponseProbabilityIntervalEstimated(sideReturnData.responseProbability[i], ConfidenceLevel, textNumber, favg, fsigma, fsigmaavg, fsigmasigma);
-                sideReturnData.responsePoints[i] = favg + LiftingDistributionSelection.QValue(sideReturnData.responseProbability[i]) * fsigma;
+                sideReturnData.responsePoints[i] = LiftingDistributionSelection.IsNormal() && LiftingMethodStandardSelection.IsStandard() ? (favg + pub_function.qnorm(Y_LowerLimit) * fsigma) : 0;
+                
                 if (intervalChoose == 1)
                 {
                     sideReturnData.Y_Ceilings[i] = vfrpie[0];

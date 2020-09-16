@@ -16,6 +16,7 @@ namespace AlgorithmReconstruct
         double PValue(double fq,double favg,double fsigma);
         IntervalEstimation IntervalDistribution(double[] xArray, int[] vArray, double reponseProbability, double confidenceLevel,double favg,double fsigma);
         string Distribution();
+        bool IsNormal();
     }
 
     public abstract class LiftingNormal : LiftingDistributionSelection
@@ -31,6 +32,8 @@ namespace AlgorithmReconstruct
             MLR_polar.Likelihood_Ratio_Polar(xArray, vArray, "normal", favg, fsigma, reponseProbability, confidenceLevel, out var final_result);
             return IntervalEstimation.Parse(final_result);
         }
+
+        public bool IsNormal() => true;
 
         public double PValue(double fq, double favg, double fsigma) => pub_function.pnorm(fq,favg,fsigma);
 
@@ -53,6 +56,8 @@ namespace AlgorithmReconstruct
             MLR_polar.Likelihood_Ratio_Polar(xArray, vArray, "logistic", favg, fsigma, reponseProbability, confidenceLevel, out var final_result);
             return IntervalEstimation.Parse(final_result);
         }
+
+        public bool IsNormal() => false;
 
         public double PValue(double fq, double favg, double fsigma) => pub_function.plogis(fq,favg,fsigma);
 
